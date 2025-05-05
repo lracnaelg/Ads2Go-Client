@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import UserNavbar from './components/UserNavbar';
 import AdminNavbar from './components/AdminNavbar';
-import AdminRoute from './routes/AdminRoute';
+import AdminRoute from './routes/AdminRoutes';
 
 // Import regular user components
 import Login from './pages/AUTH/Login';

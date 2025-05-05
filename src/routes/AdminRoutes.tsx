@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext"; // Adjust path if needed
 
-const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+const AdminRoutes = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth(); // Fetch user from context
 
-  console.log("AdminRoute Check:", user); // Debug log
+  console.log("AdminRoutes Check:", user); // Debug log
 
   if (!user) {
     console.log("🔴 No user found, redirecting to login...");
@@ -21,4 +21,4 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-export default AdminRoute;
+export default AdminRoutes;
