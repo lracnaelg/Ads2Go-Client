@@ -1,5 +1,4 @@
 import React from "react";
-import ThemeToggle from "./ThemeToggle";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
@@ -18,9 +17,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white flex flex-col">
-      {/* Theme Toggle */}
       <div className="absolute top-4 right-4">
-        <ThemeToggle />
       </div>
 
       {/* Hero Section */}

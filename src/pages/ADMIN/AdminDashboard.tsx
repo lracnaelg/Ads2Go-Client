@@ -1,6 +1,6 @@
 import React from 'react';
 
-import adminBackground from '../../assets/adminbackround.webp'; // Adjust the path as needed
+import adminBackground from '../../assets/images/admin/adminbackround.webp'; // Adjust the path as needed
 
 const AdminDashboard: React.FC = () => {
   return (

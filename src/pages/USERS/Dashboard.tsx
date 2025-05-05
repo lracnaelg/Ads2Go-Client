@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_USER_PROFILE } from '../services/graphql';
+import { GET_USER_PROFILE } from '../../services/graphql';
 
 interface User {
   id: string;

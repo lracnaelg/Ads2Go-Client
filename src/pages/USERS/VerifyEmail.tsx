@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { VERIFY_EMAIL_MUTATION, RESEND_VERIFICATION_CODE_MUTATION } from '../services/graphql';
+import { VERIFY_EMAIL_MUTATION, RESEND_VERIFICATION_CODE_MUTATION } from '../../services/graphql';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
-import ThemeToggle from './ThemeToggle';
+import { useAuth } from '../../contexts/AuthContext';
 
 const VerifyEmail: React.FC = () => {
   const [verificationCode, setVerificationCode] = useState('');
@@ -14,12 +12,10 @@ const VerifyEmail: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const { navigate, setUser, setUserEmail, userEmail, debugToken } = useAuth();
-  const { theme } = useTheme();
 
   const [verifyEmail, { loading: verifyLoading }] = useMutation(VERIFY_EMAIL_MUTATION);
   const [resendVerificationCode, { loading: resendLoading }] = useMutation(RESEND_VERIFICATION_CODE_MUTATION);
 
-  // Countdown Timer
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -29,7 +25,6 @@ const VerifyEmail: React.FC = () => {
     }
   }, [countdown]);
 
-  // Clear any previous messages on page load
   useEffect(() => {
     setError('');
     setSuccessMessage('');
@@ -48,8 +43,6 @@ const VerifyEmail: React.FC = () => {
 
         if (token) {
           localStorage.setItem('token', token);
-
-          // Decode the token and update user context
           const decoded = debugToken(token);
           if (decoded) {
             setUser(decoded);
@@ -58,7 +51,7 @@ const VerifyEmail: React.FC = () => {
         }
 
         setSuccessMessage('Email verified successfully! Redirecting to login...');
-        setTimeout(() => navigate('/login'), 2000); // Redirect to login (change to home if necessary)
+        setTimeout(() => navigate('/login'), 2000);
       } else {
         setError('Verification failed. Please try again.');
       }
@@ -89,14 +82,11 @@ const VerifyEmail: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-dark-primary' : 'bg-gray-50'} py-12 px-4 sm:px-6 lg:px-8`}>
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <form onSubmit={handleVerification} className={`${theme === 'dark' ? 'bg-dark-secondary' : 'bg-white'} shadow-md rounded px-8 pt-6 pb-8`}>
+        <form onSubmit={handleVerification} className="bg-white shadow-md rounded px-8 pt-6 pb-8">
           <div className="mb-4">
-            <label className={`block ${theme === 'dark' ? 'text-white' : 'text-gray-700'} text-sm font-bold mb-2`}>
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Enter Verification Code
             </label>
             <input
@@ -104,9 +94,7 @@ const VerifyEmail: React.FC = () => {
               maxLength={6}
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
-              className={`shadow appearance-none border rounded w-full py-2 px-3 ${
-                theme === 'dark' ? 'bg-dark-tertiary text-white' : 'text-gray-700 border-gray-300'
-              } leading-tight focus:outline-none focus:shadow-outline`}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 border-gray-300 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="6-digit code"
             />
           </div>
@@ -138,7 +126,7 @@ const VerifyEmail: React.FC = () => {
           </button>
 
           <div className="text-center mt-4">
-            <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className="text-sm text-gray-600">
               Didn't receive the code?{' '}
               <button
                 type="button"

@@ -6,7 +6,6 @@ import client from './services/apolloClient';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
 
 const AppWrapper: React.FC = () => {
   const navigate = useNavigate();
@@ -14,9 +13,7 @@ const AppWrapper: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <AuthProvider navigate={navigate}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
+        <App />
       </AuthProvider>
     </ApolloProvider>
   );
