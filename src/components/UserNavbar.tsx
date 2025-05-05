@@ -18,6 +18,7 @@ const UserNavbar: React.FC = () => {
       </div>
       <div className="space-x-6">
         <Link to="/home" className="hover:text-blue-400">Home</Link>
+        <Link to="/dashboard" className="hover:text-blue-400">Dashboard</Link>
         <Link to="/settings" className="hover:text-blue-400">Settings</Link>
         <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600">Logout</button>
       </div>
