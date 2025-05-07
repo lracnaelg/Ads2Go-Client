@@ -14,6 +14,7 @@ import Dashboard from './pages/USERS/Dashboard';
 import VerifyEmail from './pages/USERS/VerifyEmail';
 import Home from './pages/USERS/Home';
 import Settings from './pages/USERS/Settings';
+import Payment from './pages/USERS/Payment';
 
 // Admin pages
 import AdminDashboard from './pages/ADMIN/AdminDashboard';
@@ -56,6 +57,8 @@ const AppContent: React.FC = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/payment" element={<Payment />} />
+
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />} />
