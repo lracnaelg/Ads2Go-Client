@@ -11,7 +11,7 @@ import { LOGIN_MUTATION, REGISTER_MUTATION, LOGOUT_MUTATION } from '../services/
 import { jwtDecode } from 'jwt-decode';
 
 // Types
-type UserRole = "ADMIN" | "USER"; // Match backend
+type UserRole = "ADMIN" | "USER" | "SUPERADMIN"; // Include SUPERADMIN
 
 interface User {
   userId: string;
@@ -99,70 +99,63 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
     checkAuthentication();
   }, [checkAuthentication]);
 
-  // Login function
-  const login = async (email: string, password: string): Promise<User | null> => {
-    try {
-      console.log(`Attempting login for email: ${email}`);
-  
-      // Device Info
-      const deviceInfo = {
-        deviceId: 'web',
-        deviceType: 'browser',
-        deviceName: navigator.userAgent,
-      };
-  
-      const { data, errors } = await loginMutation({ variables: { email, password, deviceInfo } });
-  
-      if (errors) {
-        console.error('GraphQL errors:', errors);
-        alert('An error occurred while logging in. Please try again.');
-        return null;
-      }
-  
-      console.log('Login response data:', data);
-  
-      if (data?.login?.token) {
-        const token = data.login.token;
-        localStorage.setItem('token', token);
-  
-        const decoded = jwtDecode<User>(token);
-        console.log('🔍 Decoded Token:', decoded); // Debugging step
-  
-        setUser(decoded);
-        setUserEmail(decoded.email);
-
-
-        console.log("🟢 Stored User Role in Context:", user?.role);
-
-        console.log(`✅ Login successful! Role: ${decoded.role}`);
-        
-  
-        // Ensure role-based redirection works properly
-        if (decoded.role.toLowerCase() === 'admin') {
-          console.log('🔴 Redirecting to Admin Dashboard...');
-          navigate('/admin');
-        } else {
-          console.log('🔵 Redirecting to User Homepage...');
-          navigate('/home');
-        }
-        
-        
-  
-        return decoded;
-      }
-  
-      if (data?.login?.error) {
-        console.log('Login error message:', data.login.error);
-        alert(data.login.error);
-      }
-  
-      return null;
-    } catch (error) {
-      console.error('❌ Login error:', error);
-      alert('An error occurred while logging in. Please try again.');
-      return null;
-    }
+  // Simulated static login function
+const login = async (email: string, password: string): Promise<User | null> => {
+  const mockUsers: { [key: string]: User } = {
+    'admin@example.com': {
+      userId: '1',
+      email: 'admin@example.com',
+      role: 'ADMIN',
+      isEmailVerified: true,
+      name: 'Admin User',
+    },
+    'superadmin@example.com': {
+      userId: '2',
+      email: 'superadmin@example.com',
+      role: 'SUPERADMIN' as UserRole,
+      isEmailVerified: true,
+      name: 'Super Admin',
+    },
+    'user@example.com': {
+      userId: '3',
+      email: 'user@example.com',
+      role: 'USER',
+      isEmailVerified: true,
+      name: 'Regular User',
+    },
   };
+
+  const user = mockUsers[email.toLowerCase()];
+  const validPassword = password === '123'; // simple check
+
+  if (user && validPassword) {
+    setUser(user);
+    setUserEmail(user.email);
+
+    if (!user.isEmailVerified) {
+      navigate('/verify-email');
+      return user;
+    }
+
+    // Role-based navigation
+    switch (user.role) {
+      case 'ADMIN':
+        navigate('/admin');
+        break;
+      case 'SUPERADMIN':
+        navigate('/sadmin-dashboard');
+        break;
+      default:
+        navigate('/home');
+    }
+
+    return user;
+  }
+
+  alert('Invalid email or password');
+  return null;
+};
+
   
   
 
