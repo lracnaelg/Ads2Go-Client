@@ -1,7 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
+// 🔌 Mock Data (replace with GraphQL or API later)
 const adData = [
   { day: "Mon", impressions: 1200, clicks: 80 },
   { day: "Tue", impressions: 1900, clicks: 150 },
@@ -17,9 +26,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white flex flex-col">
-      <div className="absolute top-4 right-4">
-      </div>
-
       {/* Hero Section */}
       <header className="w-full text-center py-16 bg-opacity-10 backdrop-blur-lg border-b border-gray-700 shadow-lg">
         <h1 className="text-5xl font-extrabold text-cyan-400 tracking-wide drop-shadow-lg">
@@ -30,26 +36,27 @@ const Home: React.FC = () => {
         </p>
       </header>
 
+      {/* Main Content */}
       <main className="container mx-auto px-6 py-8 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Advertisement Performance Chart */}
+          {/* Chart Card */}
           <div className="bg-gray-800/60 backdrop-blur-lg rounded-xl p-6 shadow-xl">
-            <h2 className="text-xl font-semibold text-cyan-300 text-center">📊 Ad Performance</h2>
-            <ResponsiveContainer width="100%" height={200}>
+            <h2 className="text-xl font-semibold text-cyan-300 text-center mb-4">📊 Weekly Ad Performance</h2>
+            <ResponsiveContainer width="100%" height={250}>
               <LineChart data={adData}>
-                <XAxis dataKey="day" stroke="#8884d8" />
-                <YAxis stroke="#ddd" />
-                <Tooltip />
+                <XAxis dataKey="day" stroke="#aaa" />
+                <YAxis stroke="#aaa" />
+                <Tooltip contentStyle={{ backgroundColor: "#222", border: "none" }} />
                 <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                <Line type="monotone" dataKey="impressions" stroke="#00f2ff" strokeWidth={3} />
-                <Line type="monotone" dataKey="clicks" stroke="#ff0099" strokeWidth={3} />
+                <Line type="monotone" dataKey="impressions" stroke="#00f2ff" strokeWidth={2.5} />
+                <Line type="monotone" dataKey="clicks" stroke="#ff0099" strokeWidth={2.5} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-10 flex justify-center space-x-6">
+        {/* Call to Action */}
+        <div className="mt-12 flex justify-center">
           <button
             onClick={() => navigate("/create-campaign")}
             className="px-8 py-3 text-lg font-semibold bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 transition-all"

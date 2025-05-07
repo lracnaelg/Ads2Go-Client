@@ -4,11 +4,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
+  const { user, navigateToRegister, login } = useAuth();  // Removed <User> type argument
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const { login, navigateToRegister } = useAuth();
   const navigate = useNavigate();
 
   const handleRegisterClick = useCallback(() => {
@@ -30,6 +30,8 @@ const Login: React.FC = () => {
       // Ensure user and role exist before redirecting
       if (user?.role?.toUpperCase() === 'ADMIN') {
         navigate('/admin');
+      } else if (user?.role?.toUpperCase() === 'SUPERADMIN') {
+        navigate('/sadmin-dashboard');
       } else {
         navigate('/home');
       }

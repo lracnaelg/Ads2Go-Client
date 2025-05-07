@@ -123,12 +123,20 @@ const Register: React.FC<RegisterProps> = ({
     if (!validateForm()) return;
 
     try {
+      // Split the name into first, middle, and last
+      const nameParts = name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts[nameParts.length - 1];
+      const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : null;
+
       const registrationData = {
-        name: name.trim(),
+        firstName,
+        middleName,
+        lastName,
         email: email.trim(),
         password,
-        houseAddress: houseAddress.trim(),
-        contactNumber: contactNumber.trim()
+        contactNumber: contactNumber.trim(),
+        houseAddress: houseAddress.trim()
       };
 
       const success = await register(registrationData);
