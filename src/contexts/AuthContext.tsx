@@ -18,8 +18,13 @@ interface User {
   email: string;
   role: UserRole;
   isEmailVerified: boolean;
-  name?: string;  // Added name field
-  id?: string;    // Added id field
+  name?: string;
+  id?: string;
+  address?: string;
+  companyName?: string;
+  companyAddress?: string;
+  contactNumber?: string;
+  profilePicture?: string;
 }
 
 
