@@ -58,7 +58,7 @@ const Home: React.FC = () => {
         {/* Call to Action */}
         <div className="mt-12 flex justify-center">
           <button
-            onClick={() => navigate("/create-advertisement")}
+            onClick={() => navigate("/create-campaign")}
             className="px-8 py-3 text-lg font-semibold bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 transition-all"
           >
             ➕ Launch an Ad Campaign
