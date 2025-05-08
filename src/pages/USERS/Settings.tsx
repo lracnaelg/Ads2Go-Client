@@ -6,100 +6,321 @@ const Settings: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    address: '',
+    companyName: '',
+    companyAddress: '',
+    contactNumber: '',
+    password: '',
+    profilePicture: '',
   });
-  const [message, setMessage] = useState('');
 
-  // Simulating fetch for user data (static mock-up)
+  const [formErrors, setFormErrors] = useState({
+    name: '',
+    contactNumber: '',
+  });
+
+  const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [imagePreview, setImagePreview] = useState('');
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user?.name || '',  // If name is undefined, default to an empty string
-        email: user?.email || '', // If email is undefined, default to an empty string
+        name: user.name || '',
+        email: user.email || '',
+        address: user.address || '',
+        companyName: user.companyName || '',
+        companyAddress: user.companyAddress || '',
+        contactNumber: user.contactNumber || '',
+        password: '',
+        profilePicture: user.profilePicture || '',
       });
+      setImagePreview(user.profilePicture || '');
     }
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value.trimStart() }));
+    const trimmedValue = value.trimStart();
+
+    setFormData((prev) => ({ ...prev, [name]: trimmedValue }));
+
+    // Validation logic
+    if (name === 'name') {
+      const nameRegex = /^[A-Za-z\s]+$/;
+      setFormErrors((prev) => ({
+        ...prev,
+        name: nameRegex.test(trimmedValue) ? '' : 'Full Name must only contain letters and spaces.',
+      }));
+    }
+
+    if (name === 'contactNumber') {
+      const contactRegex = /^09\d{9}$/;
+      setFormErrors((prev) => ({
+        ...prev,
+        contactNumber: contactRegex.test(trimmedValue) ? '' : 'Contact must start with 09 and be 11 digits.',
+      }));
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({
+          ...prev,
+          profilePicture: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user || !user.id) {
-      console.error('User data is missing or invalid');
+    if (!user || !user.userId) return;
+
+    if (formErrors.name || formErrors.contactNumber) {
+      setMessage('❌ Please fix form errors before submitting.');
+      setShowModal(true);
+      setTimeout(() => setShowModal(false), 3000);
       return;
     }
 
-    // Simulate API request to update user data
     setTimeout(() => {
-      // Dynamically update user details via API (mock for now)
       setUser({
         ...user,
-        id: user.id, // Make sure id is not undefined
-        name: formData.name || '',  // Ensure non-undefined values
-        email: formData.email || '', // Ensure non-undefined values
+        name: formData.name,
+        email: formData.email,
+        address: formData.address,
+        companyName: formData.companyName,
+        companyAddress: formData.companyAddress,
+        contactNumber: formData.contactNumber,
+        profilePicture: formData.profilePicture,
       });
       setMessage('✅ Profile updated successfully!');
-    }, 1000); // Simulating delay
+      setShowModal(true);
+      setIsEditing(false);
+
+      setTimeout(() => setShowModal(false), 3000);
+    }, 1000);
+  };
+
+  const handleCancel = () => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        address: user.address || '',
+        companyName: user.companyName || '',
+        companyAddress: user.companyAddress || '',
+        contactNumber: user.contactNumber || '',
+        password: '',
+        profilePicture: user.profilePicture || '',
+      });
+      setImagePreview(user.profilePicture || '');
+    }
+    setFormErrors({ name: '', contactNumber: '' });
+    setIsEditing(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-black dark:text-white">
-      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Settings</h2>
-        {message && (
-          <div
-            className="text-green-500 text-sm text-center mb-4"
-            aria-live="polite"
-          >
-            {message}
-            <button
-              onClick={() => setMessage('')}
-              className="ml-2 text-xs text-red-400 hover:underline"
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
+    <div className="min-h-screen bg-white py-10 px-4">
+      <div className="w-full bg-white rounded-lg overflow-hidden flex">
+        <aside className="w-1/4 bg-white border-r p-6">
+          <h2 className="text-xl font-bold mb-6">Settings</h2>
+          <ul className="space-y-4">
+            <li className="text-pink-600 font-semibold">Account</li>
+            <li className="text-gray-600">Notifications</li>
+            <li className="text-gray-600">Privacy</li>
+            <li className="text-gray-600">Languages</li>
+            <li className="text-gray-600">Help</li>
+          </ul>
+        </aside>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium">
-              Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md bg-gray-200 dark:bg-gray-700"
-            />
-          </div>
+        <main className="w-3/4 p-8">
+          <h2 className="text-2xl font-bold mb-6">Account Settings</h2>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md bg-gray-200 dark:bg-gray-700"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="flex items-center gap-6">
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold">
+                  {user?.name ? user.name[0] : '?'}
+                </div>
+              )}
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-          >
-            Update Profile
-          </button>
-        </form>
+              {isEditing && (
+                <div className="flex flex-col gap-2">
+                  <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">
+                    Upload Photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                  {imagePreview && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImagePreview('');
+                        setFormData((prev) => ({ ...prev, profilePicture: '' }));
+                      }}
+                      className="text-red-600 text-sm"
+                    >
+                      Remove Photo
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium mb-1">Full Name</label>
+                <input
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={`w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105 ${formErrors.name && 'border-red-500'}`}
+                  readOnly={!isEditing}
+                />
+                {formErrors.name && (
+                  <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
+                  readOnly={!isEditing}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Address</label>
+                <input
+                  name="address"
+                  type="text"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
+                  readOnly={!isEditing}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Contact Number</label>
+                <input
+                  name="contactNumber"
+                  type="text"
+                  value={formData.contactNumber}
+                  onChange={handleChange}
+                  className={`w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105 ${formErrors.contactNumber && 'border-red-500'}`}
+                  readOnly={!isEditing}
+                />
+                {formErrors.contactNumber && (
+                  <p className="text-red-500 text-sm mt-1">{formErrors.contactNumber}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Company Name</label>
+                <input
+                  name="companyName"
+                  type="text"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
+                  readOnly={!isEditing}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Company Address</label>
+                <input
+                  name="companyAddress"
+                  type="text"
+                  value={formData.companyAddress}
+                  onChange={handleChange}
+                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
+                  readOnly={!isEditing}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Password</label>
+                <input
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
+                  placeholder="Enter new password"
+                  readOnly={!isEditing}
+                />
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-blue-600 text-sm mt-1"
+                  >
+                    {showPassword ? 'Hide' : 'Show'} Password
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-4">
+              {!isEditing ? (
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100"
+                >
+                  Edit Profile
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="bg-gray-200 px-6 py-2 rounded-md hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100"
+                  >
+                    Save Changes
+                  </button>
+                </>
+              )}
+            </div>
+
+            {showModal && (
+              <div className="fixed bottom-4 right-4 p-4 bg-[#F6C794] border rounded-xl shadow-md z-50">
+                <p className="text-black">{message}</p>
+              </div>
+            )}
+          </form>
+        </main>
       </div>
     </div>
   );
