@@ -43,9 +43,9 @@ const Login: React.FC = () => {
   return (
     <div 
       className="w-full min-h-screen flex items-center justify-center bg-cover bg-center text-white px-4 sm:px-6 lg:px-8"
-      style={{ backgroundImage: "url('/1.png')" }}
+      style={{ backgroundImage: "url('/image/image.jpeg')" }}
     >
-      <div className="w-full max-w-4xl bg-black bg-opacity-60 p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center md:items-start">
+      <div className="w-full max-w-4xl bg-black bg-opacity-80 p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center md:items-start">
         
         {/* Left Side - Login Form */}
         <div className="w-full md:w-1/2 flex flex-col justify-center p-6">
