@@ -20,9 +20,9 @@ const CreateAdvertisement: React.FC = () => {
   const planOptions = ['Weekly', 'Monthly'];
 
   const materialOptionsMap: Record<string, string[]> = {
-    Car: ['LCD Screen', 'Stickers', 'Posters'],
-    Motorcycle: ['Posters'],
-    'Electric Tricycle': ['Posters'],
+    Car: ['LCD Screen', 'Stickers', 'Posters', 'LCD HEAD DRESS'],
+    Motorcycle: ['Posters', 'LCD Screen'],
+    'Electric Tricycle': ['Posters', 'LCD Screen'],
   };
 
   const priceMap: Record<string, Record<string, Record<string, number>>> = {

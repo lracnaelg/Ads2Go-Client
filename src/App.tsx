@@ -22,6 +22,9 @@ import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
 import AdminDashboard from './pages/ADMIN/AdminDashboard';
 import ManageUsers from './pages/ADMIN/ManageUsers';
 import SiteSettings from './pages/ADMIN/SiteSettings';
+import ManageRiders from './pages/ADMIN/ManageRiders';
+import AdminAdsControl from './pages/ADMIN/AdminAdsControl'; // adjust path if needed
+import Materials from './pages/ADMIN/Materials'; // adjust path if needed
 
 // Super Admin pages
 import SadminDashboard from './pages/SUPERADMIN/SadminDashboard'; // Import SadminDashboard
@@ -68,7 +71,10 @@ const AppContent: React.FC = () => {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<ManageUsers />} />
         <Route path="/admin/settings" element={<SiteSettings />} />
-
+        <Route path="/admin/riders" element={<ManageRiders />} />
+        <Route path="/admin/ads" element={<AdminAdsControl />} />
+        <Route path="/admin/materials" element={<Materials />} />
+ 
         {/* Super Admin Routes */}
         <Route path="/sadmin-dashboard" element={<SadminDashboard />} />
 
