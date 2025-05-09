@@ -132,7 +132,7 @@ const CreateAdvertisement: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center bg-[#F6C794] bg-cover px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen flex justify-center bg-white bg-cover px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl w-full md:w-1/2 mt-10 p-6">
         <h1 className="text-4xl font-bold mb-6 text-center">Create Advertisement</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -142,7 +142,7 @@ const CreateAdvertisement: React.FC = () => {
             placeholder="Title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
           />
 
@@ -151,7 +151,7 @@ const CreateAdvertisement: React.FC = () => {
             placeholder="Description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
           />
 
@@ -159,7 +159,7 @@ const CreateAdvertisement: React.FC = () => {
             name="vehicleType"
             value={formData.vehicleType}
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
           >
             <option value="">Select Vehicle Type</option>
@@ -172,7 +172,7 @@ const CreateAdvertisement: React.FC = () => {
             name="materialsUsed"
             value={formData.materialsUsed}
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
             disabled={!formData.vehicleType}
           >
@@ -186,7 +186,7 @@ const CreateAdvertisement: React.FC = () => {
             name="plan"
             value={formData.plan}
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
           >
             <option value="">Select Plan</option>
@@ -207,7 +207,7 @@ const CreateAdvertisement: React.FC = () => {
             name="adFormat"
             value={formData.adFormat}
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
           >
             <option value="">Select Format</option>
@@ -222,14 +222,14 @@ const CreateAdvertisement: React.FC = () => {
             name="media"
             accept="image/*,video/*"
             onChange={handleChange}
-            className="w-full border rounded-[5px] p-2 hover:scale-105 transition-all duration-400"
+            className="w-full border rounded-[5px] p-2 hover:border-[#FF9D3D] hover:scale-105 transition-all duration-400"
             required
           />
 
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-[#578FCA] text-white px-14 rounded-[8px] py-2 hover:bg-[#AFDDFF] hover:text-black hover:scale-105 transition duration-300"
+              className="bg-[#FF9D3D] text-black px-14 rounded-[8px] py-2 hover:bg-[#FF9D3D] hover:text-black hover:scale-105 transition duration-300"
             >
               Create
             </button>

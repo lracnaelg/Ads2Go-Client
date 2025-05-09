@@ -157,7 +157,7 @@ const Payment: React.FC = () => {
   }, [success]);
 
   return (
-    <div className="w-full min-h-screen flex justify-center bg-[#F6C794] bg-cover px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen flex justify-center bg-white bg-cover px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl w-full md:w-1/2 mt-10">
         <h1 className="text-4xl font-bold text-center mb-6">Complete Your Payment</h1>
         <p className="text-center text-gray-600 text-base mb-8">
@@ -166,7 +166,7 @@ const Payment: React.FC = () => {
 
         <div className="grid grid-cols-1 gap-6">
           {/* Ad Details Card */}
-          <div className="bg-white border rounded-lg shadow-sm p-5">
+          <div className=" border rounded-lg shadow-sm p-5">
             <h2 className="font-semibold text-3xl text-center mb-3">Ad Summary</h2>
             <div className="space-y-1 text-md text-gray-700">
               <p><strong>Title:</strong> {formData.title || 'N/A'}</p>
@@ -192,8 +192,8 @@ const Payment: React.FC = () => {
             <h2 className="font-semibold text-lg mb-3">Payment Method</h2>
             <div className="grid grid-cols-3 gap-3 mb-4">
               <button
-                className={`flex flex-col items-center justify-center p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
-                  paymentType === 'cash' ? 'bg-[#AFDDFF]' : ''
+                className={`flex flex-col items-center justify-center rounded-[8px] p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
+                  paymentType === 'cash' ? 'rounded-[8px] bg-[#AFDDFF]' : ''
                 }`}
                 onClick={() => setPaymentType('cash')}
               >
@@ -201,8 +201,8 @@ const Payment: React.FC = () => {
                 <span className="text-sm font-medium">Cash</span>
               </button>
               <button
-                className={`flex flex-col items-center justify-center p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
-                  paymentType === 'card' ? 'bg-[#AFDDFF]' : ''
+                className={`flex flex-col items-center justify-center rounded-[8px] p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
+                  paymentType === 'card' ? 'rounded-[8px] bg-[#AFDDFF]' : ''
                 }`}
                 onClick={() => setPaymentType('card')}
               >
@@ -210,8 +210,8 @@ const Payment: React.FC = () => {
                 <span className="text-sm font-medium">Card</span>
               </button>
               <button
-                className={`flex flex-col items-center justify-center p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
-                  paymentType === 'gcash' ? 'bg-[#AFDDFF]' : ''
+                className={`flex flex-col items-center justify-center rounded-[8px] p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
+                  paymentType === 'gcash' ? 'rounded-[8px] bg-[#AFDDFF]' : ''
                 }`}
                 onClick={() => setPaymentType('gcash')}
               >
@@ -320,7 +320,7 @@ const Payment: React.FC = () => {
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-[#578FCA] text-white text-sm font-semibold py-3 rounded hover:text-black/80 hover:bg-[#AFDDFF] transition hover:scale-105 transition-all duration-300 flex-1"
+              className="bg-[#FF9D3D] text-black text-sm font-semibold py-3 rounded hover:text-black/80 hover:bg-[#FF9D3D] transition hover:scale-105 transition-all duration-300 flex-1"
             >
               Submit Payment
             </button>
