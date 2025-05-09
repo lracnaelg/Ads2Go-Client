@@ -195,12 +195,16 @@ const Register: React.FC<RegisterProps> = ({
   }, [registrationSuccess, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 text-gray-900">
-      <div className="max-w-md w-full space-y-8 p-10 rounded-xl shadow-lg bg-white">
-        <h2 className="text-center text-3xl font-extrabold">
+    <div
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-cover bg-center"
+      style={{ backgroundImage: "url('image/image.jpeg')" }}
+    >
+      <div className="max-w-md w-full space-y-8 p-10 rounded-xl shadow-lg bg-white bg-opacity-90">
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
           Create your account
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Form fields remain unchanged */}
           <InputField
             id="name"
             label="Full Name"
@@ -274,7 +278,7 @@ const Register: React.FC<RegisterProps> = ({
       </div>
     </div>
   );
-};
+}
 
 const InputField = ({
   id,

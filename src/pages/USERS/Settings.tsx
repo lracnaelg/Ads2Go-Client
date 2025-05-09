@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Settings: React.FC = () => {
   const { user, setUser } = useAuth();
+  const navigate = useNavigate(); // Initialize navigate
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -287,6 +290,14 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="flex justify-end gap-4">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="bg-gray-100 px-6 py-2 rounded-md hover:bg-gray-200"
+              >
+                ← Back
+              </button>
+
               {!isEditing ? (
                 <button
                   type="button"
