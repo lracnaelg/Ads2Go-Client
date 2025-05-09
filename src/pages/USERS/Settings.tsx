@@ -136,16 +136,16 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-10 px-4">
+    <div className="min-h-screen bg-white py-10 pr-4 pl-14">
       <div className="w-full bg-white rounded-lg overflow-hidden flex">
-        <aside className="w-1/4 bg-white border-r p-6">
-          <h2 className="text-xl font-bold mb-6">Settings</h2>
+        <aside className="w-1/4 bg-[#F6C794] border-r p-6">
+          <h2 className="text-2xl font-bold mb-6">Settings</h2>
           <ul className="space-y-4">
-            <li className="text-pink-600 font-semibold">Account</li>
-            <li className="text-gray-600">Notifications</li>
-            <li className="text-gray-600">Privacy</li>
-            <li className="text-gray-600">Languages</li>
-            <li className="text-gray-600">Help</li>
+            <li className="text-[#578FCA] font-bold">Account</li>
+            <li className="text-black hover:scale-105 transition-all duration-200">Notifications</li>
+            <li className="text-black hover:scale-105 transition-all duration-300">Privacy</li>
+            <li className="text-black hover:scale-105 transition-all duration-300">Languages</li>
+            <li className="text-black hover:scale-105 transition-all duration-300">Help</li>
           </ul>
         </aside>
 
@@ -161,7 +161,7 @@ const Settings: React.FC = () => {
                   className="w-24 h-24 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold">
+                <div className="w-24 h-24 rounded-full bg-[#C9E6F0] flex items-center justify-center text-2xl font-bold">
                   {user?.name ? user.name[0] : '?'}
                 </div>
               )}
@@ -302,7 +302,7 @@ const Settings: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsEditing(true)}
-                  className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100"
+                  className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100 hover:scale-105 transition-all duration-200"
                 >
                   Edit Profile
                 </button>
@@ -311,13 +311,13 @@ const Settings: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="bg-gray-200 px-6 py-2 rounded-md hover:bg-gray-300"
+                    className="bg-gray-200 px-6 py-2 rounded-md hover:bg-gray-300 hover:scale-105 transition-all duration-200"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100"
+                    className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100 hover:scale-105 transition-all duration-200"
                   >
                     Save Changes
                   </button>
