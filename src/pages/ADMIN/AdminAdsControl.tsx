@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
 
 interface Ad {
   id: string;
@@ -6,7 +7,10 @@ interface Ad {
   vehicleType: string;
   status: 'Playing' | 'Paused';
   duration: string;
+  thumbnail: string;
 }
+
+const lcdVehicleTypes = ['Car', 'Motorcycle', 'Electric Tricycle'];
 
 const mockAds: Ad[] = [
   {
@@ -15,6 +19,7 @@ const mockAds: Ad[] = [
     vehicleType: 'Car',
     status: 'Playing',
     duration: '30s',
+    thumbnail: '/thumbnails/ad1.jpg',
   },
   {
     id: 'A2',
@@ -22,6 +27,7 @@ const mockAds: Ad[] = [
     vehicleType: 'Motorcycle',
     status: 'Paused',
     duration: '45s',
+    thumbnail: '/thumbnails/ad2.jpg',
   },
   {
     id: 'A3',
@@ -29,13 +35,16 @@ const mockAds: Ad[] = [
     vehicleType: 'Electric Tricycle',
     status: 'Playing',
     duration: '60s',
+    thumbnail: '/thumbnails/ad3.jpg',
   },
 ];
 
 const AdminAdsControl: React.FC = () => {
-  const [ads, setAds] = useState<Ad[]>(mockAds);
-  const [filterVehicle, setFilterVehicle] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [ads, setAds] = useState<Ad[]>(
+    mockAds.filter((ad) => lcdVehicleTypes.includes(ad.vehicleType))
+  );
+  const [mode, setMode] = useState<'centralized' | 'individual'>('individual');
+  const [centralAdId, setCentralAdId] = useState<string>(ads[0]?.id || '');
 
   const toggleAdStatus = (id: string) => {
     setAds((prev) =>
@@ -47,71 +56,119 @@ const AdminAdsControl: React.FC = () => {
     );
   };
 
-  const filteredAds = ads.filter((ad) => {
-    return (
-      (filterVehicle ? ad.vehicleType === filterVehicle : true) &&
-      (filterStatus ? ad.status === filterStatus : true)
-    );
-  });
+  const centralAd = ads.find((ad) => ad.id === centralAdId);
 
   return (
     <div className="p-8 bg-gray-900 min-h-screen text-white">
-      <h1 className="text-2xl font-bold mb-6">Admin Ad Control Panel</h1>
+      <h1 className="text-2xl font-bold mb-6">Ad Control Panel - LCD Equipped</h1>
 
-      <div className="flex flex-wrap gap-4 mb-4">
-        <select
-          value={filterVehicle}
-          onChange={(e) => setFilterVehicle(e.target.value)}
-          className="p-2 bg-gray-800 text-white border border-gray-600 rounded"
-        >
-          <option value="">All Vehicle Types</option>
-          <option value="Car">Car</option>
-          <option value="Motorcycle">Motorcycle</option>
-          <option value="Electric Tricycle">Electric Tricycle</option>
-        </select>
-
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="p-2 bg-gray-800 text-white border border-gray-600 rounded"
-        >
-          <option value="">All Status</option>
-          <option value="Playing">Playing</option>
-          <option value="Paused">Paused</option>
-        </select>
+      {/* Mode Switcher */}
+      <div className="mb-6 flex items-center gap-4">
+        <label className="flex items-center space-x-2">
+          <input
+            type="radio"
+            name="mode"
+            value="individual"
+            checked={mode === 'individual'}
+            onChange={() => setMode('individual')}
+          />
+          <span>Individual Control</span>
+        </label>
+        <label className="flex items-center space-x-2">
+          <input
+            type="radio"
+            name="mode"
+            value="centralized"
+            checked={mode === 'centralized'}
+            onChange={() => setMode('centralized')}
+          />
+          <span>Centralized Control</span>
+        </label>
       </div>
 
-      <table className="w-full bg-gray-800 rounded-lg overflow-hidden shadow-md">
-        <thead className="bg-gray-700 text-white">
-          <tr>
-            <th className="p-3 text-left">Ad Title</th>
-            <th className="p-3 text-left">Vehicle Type</th>
-            <th className="p-3 text-left">Duration</th>
-            <th className="p-3 text-left">Status</th>
-            <th className="p-3 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAds.map((ad) => (
-            <tr key={ad.id} className="border-b border-gray-600">
-              <td className="p-3">{ad.title}</td>
-              <td className="p-3">{ad.vehicleType}</td>
-              <td className="p-3">{ad.duration}</td>
-              <td className="p-3">{ad.status}</td>
-              <td className="p-3">
-                <button
-                  onClick={() => toggleAdStatus(ad.id)}
-                  className={`px-3 py-1 rounded ${
-                    ad.status === 'Playing' ? 'bg-yellow-500' : 'bg-green-500'
-                  } hover:opacity-80`}
-                >
-                  {ad.status === 'Playing' ? 'Pause' : 'Play'}
-                </button>
-              </td>
-            </tr>
+      {mode === 'centralized' ? (
+        <div className="space-y-4">
+          <label className="block text-sm mb-2 font-medium">
+            Select Ad for All LCD Vehicles
+          </label>
+          <select
+            value={centralAdId}
+            onChange={(e) => setCentralAdId(e.target.value)}
+            className="w-full p-2 bg-gray-800 border border-gray-600 rounded"
+          >
+            {ads.map((ad) => (
+              <option key={ad.id} value={ad.id}>
+                {ad.title} ({ad.duration})
+              </option>
+            ))}
+          </select>
+
+          {centralAd && (
+            <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden mt-4">
+              <img
+                src={centralAd.thumbnail}
+                alt={centralAd.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-4 flex justify-between items-center">
+                <div>
+                  <h2 className="text-lg font-bold">{centralAd.title}</h2>
+                  <p className="text-sm text-gray-400">{centralAd.vehicleType}</p>
+                  <p className="text-sm">Duration: {centralAd.duration}</p>
+                </div>
+                <span className="text-sm px-3 py-1 bg-green-600 rounded-full">Playing</span>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ads.map((ad) => (
+            <div
+              key={ad.id}
+              className="bg-gray-800 rounded-lg overflow-hidden shadow-md flex flex-col"
+            >
+              <img
+                src={ad.thumbnail}
+                alt={ad.title}
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold">{ad.title}</h2>
+                  <p className="text-sm text-gray-400">{ad.vehicleType}</p>
+                  <p className="text-sm">Duration: {ad.duration}</p>
+                </div>
+                <div className="flex justify-between items-center mt-4">
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      ad.status === 'Playing'
+                        ? 'bg-green-600'
+                        : 'bg-yellow-600'
+                    }`}
+                  >
+                    {ad.status}
+                  </span>
+                  <button
+                    onClick={() => toggleAdStatus(ad.id)}
+                    className={`p-2 rounded-full ${
+                      ad.status === 'Playing'
+                        ? 'bg-yellow-500 hover:bg-yellow-600'
+                        : 'bg-green-500 hover:bg-green-600'
+                    }`}
+                  >
+                    {ad.status === 'Playing' ? (
+                      <PauseIcon className="w-5 h-5 text-white" />
+                    ) : (
+                      <PlayIcon className="w-5 h-5 text-white" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      )}
     </div>
   );
 };
