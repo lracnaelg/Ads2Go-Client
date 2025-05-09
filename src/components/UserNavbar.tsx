@@ -19,25 +19,22 @@ const UserNavbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white text-black shadow-lg py-3 px-6 flex justify-between items-center">
-      <div className="text-xl font-bold ml-11">
-        <Link to="/home" className="flex items-center space-x-2 hover:text-blue-400 transition-all duration-300">
-          <img src="/image/black-logo.png" alt="AdSystem Logo" className="w-8 h-8" />
-          <span>AdSystem</span>
-        </Link>
+    <nav className="bg-gray-800 text-white shadow-lg py-3 px-6 flex justify-between items-center">
+      <div className="text-xl font-bold">
+        <Link to="/home" className="hover:text-blue-400">AdSystem</Link>
       </div>
       <div className="flex items-center space-x-6">
-        <Link to="/home" className="hover:text-blue-400 hover:scale-105 transition-all duration-300">Home</Link>
-        <Link to="/dashboard" className="hover:text-blue-400 hover:scale-105 transition-all duration-300">Dashboard</Link>
+        <Link to="/home" className="hover:text-blue-400">Home</Link>
+        <Link to="/dashboard" className="hover:text-blue-400">Dashboard</Link>
         <div 
-          className="w-10 h-10 rounded-full bg-[#FF9D3D] flex items-center justify-center cursor-pointer hover:bg-[#F6C794] hover:scale-105 transition-all duration-300"
+          className="w-10 h-10 rounded-full bg-[#FF9D3D] flex items-center justify-center cursor-pointer hover:bg-[#F6C794] transition-colors"
           onClick={() => navigate('/settings')}
         >
           <span className="font-semibold text-white">
             {getInitials(user?.name)}
           </span>
         </div>
-        <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-transform duration-300">Logout</button>
+        <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600">Logout</button>
       </div>
     </nav>
   );
