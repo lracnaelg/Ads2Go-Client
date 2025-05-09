@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Settings: React.FC = () => {
   const { user, setUser } = useAuth();
@@ -140,7 +141,14 @@ const Settings: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6">Settings</h2>
           <ul className="space-y-4">
             <li className="text-[#578FCA] font-bold">Account</li>
-            <li className="text-black hover:scale-105 transition-all duration-200">History</li>
+            <li>
+              <Link
+              to="/history"
+              className="text-black hover:scale-105 transition-all duration-300"
+              >
+                History
+                </Link>
+              </li>
             <li className="text-black hover:scale-105 transition-all duration-200">Notifications</li>
             <li className="text-black hover:scale-105 transition-all duration-300">Privacy</li>
             <li className="text-black hover:scale-105 transition-all duration-300">Help</li>

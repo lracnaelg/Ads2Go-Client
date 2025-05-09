@@ -21,7 +21,7 @@ const UserNavbar: React.FC = () => {
   return (
     <nav className="bg-white text-black shadow-lg py-3 px-6 flex justify-between items-center">
       <div className="text-xl font-bold ml-11">
-        <Link to="/home" className="flex items-center space-x-2 hover:text-blue-400 transition-all duration-300">
+        <Link to="/home" className="flex items-center space-x-2 transition-all duration-300">
           <img src="/image/black-logo.png" alt="AdSystem Logo" className="w-8 h-8" />
           <span>AdSystem</span>
         </Link>
@@ -37,7 +37,7 @@ const UserNavbar: React.FC = () => {
             {getInitials(user?.name)}
           </span>
         </div>
-        <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 hover:scale-105 transition-transform duration-300">Logout</button>
+        <button onClick={handleLogout} className="bg-[#D2665A] px-4 py-2 rounded-md text-white hover:scale-105 transition-transform duration-300">Logout</button>
       </div>
     </nav>
   );

@@ -85,6 +85,9 @@ const Payment: React.FC = () => {
     if (!validateInputs()) return;
     setSuccess('Payment submitted successfully!');
     // Backend call
+    setTimeout(() => {
+      navigate('/history');
+    }, 3000);
   };
 
   const handleBack = () => {
@@ -100,10 +103,10 @@ const Payment: React.FC = () => {
 
     if (isImage) {
       return (
-        <video
+        <img
           src={URL.createObjectURL(formData.media)}
-          controls
-          className="w-full h-auto max-h-64 rounded-lg"
+          alt="Uploaded media"
+          className="w-full h-auto max-h-64 object-contain rounded-lg"
         />
       );
     } else if (isVideo) {
@@ -189,7 +192,7 @@ const Payment: React.FC = () => {
             <h2 className="font-semibold text-lg mb-3">Payment Method</h2>
             <div className="grid grid-cols-3 gap-3 mb-4">
               <button
-                className={`flex flex-col items-center justify-center  p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
+                className={`flex flex-col items-center justify-center p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
                   paymentType === 'cash' ? 'bg-[#AFDDFF]' : ''
                 }`}
                 onClick={() => setPaymentType('cash')}
@@ -198,7 +201,7 @@ const Payment: React.FC = () => {
                 <span className="text-sm font-medium">Cash</span>
               </button>
               <button
-                className={`flex flex-col items-center justify-center  p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
+                className={`flex flex-col items-center justify-center p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
                   paymentType === 'card' ? 'bg-[#AFDDFF]' : ''
                 }`}
                 onClick={() => setPaymentType('card')}
@@ -207,7 +210,7 @@ const Payment: React.FC = () => {
                 <span className="text-sm font-medium">Card</span>
               </button>
               <button
-                className={`flex flex-col items-center justify-center  p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
+                className={`flex flex-col items-center justify-center p-4 hover:bg-gray-100 hover:scale-105 transition duration-300 ${
                   paymentType === 'gcash' ? 'bg-[#AFDDFF]' : ''
                 }`}
                 onClick={() => setPaymentType('gcash')}
