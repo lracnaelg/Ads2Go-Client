@@ -19,6 +19,11 @@ const AdminNavbar: React.FC = () => {
       <div className="space-x-6">
         <Link to="/admin" className="hover:text-blue-400">Dashboard</Link>
         <Link to="/admin/users" className="hover:text-blue-400">Manage Users</Link>
+        <Link to="/admin/riders" className="hover:text-blue-400">Manage Riders</Link>
+        <Link to="/admin/settings" className="hover:text-blue-400">Settings</Link>
+        <Link to="/admin/ads" className="hover:text-blue-400">Ad Control</Link>
+        <Link to="/admin/materials" className="hover:text-blue-400">Materials</Link>
+
         <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600">Logout</button>
       </div>
     </nav>
