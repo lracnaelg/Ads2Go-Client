@@ -91,6 +91,7 @@ const ManageUsers: React.FC = () => {
 
   return (
     <div className="p-8 bg-gray-900 min-h-screen text-white">
+      <h1 className="text-2xl font-bold mb-4">Manage Users</h1>
       <div className="flex gap-4 mb-6">
         <button
           onClick={() => setTab('users')}

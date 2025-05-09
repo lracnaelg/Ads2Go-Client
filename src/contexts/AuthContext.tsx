@@ -11,7 +11,7 @@ import { LOGIN_MUTATION, REGISTER_MUTATION, LOGOUT_MUTATION } from '../services/
 import { jwtDecode } from 'jwt-decode';
 
 // Types
-type UserRole = "ADMIN" | "USER" | "SUPERADMIN"; // Include SUPERADMIN
+type UserRole = "ADMIN" | "USER" | "SUPERADMIN";
 
 interface User {
   userId: string;
@@ -27,7 +27,6 @@ interface User {
   profilePicture?: string;
 }
 
-
 interface AuthContextType {
   user: User | null;
   userEmail: string;
@@ -36,10 +35,12 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<User | null>;
   register: (userData: any) => Promise<boolean>;
   logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<boolean>; // Added resetPassword
   isAuthenticated: boolean;
   navigate: (path: string) => void;
   debugToken: (token: string) => User | null;
   navigateToRegister: () => void;
+  navigateToLogin: () => void;
 }
 
 // Context
@@ -61,8 +62,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
     navigate('/register');
   }, [navigate]);
 
+  const navigateToLogin = useCallback(() => {
+    navigate('/login');
+  }, [navigate]);
+
   // Public pages that unauthenticated users can access
-  const publicPages = ['/login', '/register', '/forgot-password'];
+  const publicPages = ['/login', '/register', '/forgot-pass']; // Updated to /forgot-pass
 
   // Authentication check
   const checkAuthentication = useCallback(() => {
@@ -96,8 +101,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
       }
     }
   }, [navigate]);
-  
-  
 
   // Run check on first load
   useEffect(() => {
@@ -105,64 +108,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
   }, [checkAuthentication]);
 
   // Simulated static login function
-const login = async (email: string, password: string): Promise<User | null> => {
-  const mockUsers: { [key: string]: User } = {
-    'admin@example.com': {
-      userId: '1',
-      email: 'admin@example.com',
-      role: 'ADMIN',
-      isEmailVerified: true,
-      name: 'Admin User',
-    },
-    'superadmin@example.com': {
-      userId: '2',
-      email: 'superadmin@example.com',
-      role: 'SUPERADMIN' as UserRole,
-      isEmailVerified: true,
-      name: 'Super Admin',
-    },
-    'user@example.com': {
-      userId: '3',
-      email: 'user@example.com',
-      role: 'USER',
-      isEmailVerified: true,
-      name: 'Regular User',
-    },
-  };
+  const login = async (email: string, password: string): Promise<User | null> => {
+    const mockUsers: { [key: string]: User } = {
+      'admin@example.com': {
+        userId: '1',
+        email: 'admin@example.com',
+        role: 'ADMIN',
+        isEmailVerified: true,
+        name: 'Admin User',
+      },
+      'superadmin@example.com': {
+        userId: '2',
+        email: 'superadmin@example.com',
+        role: 'SUPERADMIN' as UserRole,
+        isEmailVerified: true,
+        name: 'Super Admin',
+      },
+      'user@example.com': {
+        userId: '3',
+        email: 'user@example.com',
+        role: 'USER',
+        isEmailVerified: true,
+        name: 'Regular User',
+      },
+    };
 
-  const user = mockUsers[email.toLowerCase()];
-  const validPassword = password === '123'; // simple check
+    const user = mockUsers[email.toLowerCase()];
+    const validPassword = password === '123'; // simple check
 
-  if (user && validPassword) {
-    setUser(user);
-    setUserEmail(user.email);
+    if (user && validPassword) {
+      setUser(user);
+      setUserEmail(user.email);
 
-    if (!user.isEmailVerified) {
-      navigate('/verify-email');
+      if (!user.isEmailVerified) {
+        navigate('/verify-email');
+        return user;
+      }
+
+      // Role-based navigation
+      switch (user.role) {
+        case 'ADMIN':
+          navigate('/admin');
+          break;
+        case 'SUPERADMIN':
+          navigate('/sadmin-dashboard');
+          break;
+        default:
+          navigate('/home');
+      }
+
       return user;
     }
 
-    // Role-based navigation
-    switch (user.role) {
-      case 'ADMIN':
-        navigate('/admin');
-        break;
-      case 'SUPERADMIN':
-        navigate('/sadmin-dashboard');
-        break;
-      default:
-        navigate('/home');
-    }
-
-    return user;
-  }
-
-  alert('Invalid email or password');
-  return null;
-};
-
-  
-  
+    return null;
+  };
 
   // Register function
   const register = async (userData: any): Promise<boolean> => {
@@ -188,6 +187,58 @@ const login = async (email: string, password: string): Promise<User | null> => {
     } catch (error) {
       console.error('Registration error:', error);
       return false;
+    }
+  };
+
+  // Reset password function (mock implementation)
+  const resetPassword = async (email: string): Promise<boolean> => {
+    try {
+      // Mock implementation: Check if email exists in mockUsers
+      const mockUsers: { [key: string]: User } = {
+        'admin@example.com': {
+          userId: '1',
+          email: 'admin@example.com',
+          role: 'ADMIN',
+          isEmailVerified: true,
+          name: 'Admin User',
+        },
+        'superadmin@example.com': {
+          userId: '2',
+          email: 'superadmin@example.com',
+          role: 'SUPERADMIN' as UserRole,
+          isEmailVerified: true,
+          name: 'Super Admin',
+        },
+        'user@example.com': {
+          userId: '3',
+          email: 'user@example.com',
+          role: 'USER',
+          isEmailVerified: true,
+          name: 'Regular User',
+        },
+      };
+
+      if (mockUsers[email.toLowerCase()]) {
+        console.log(`Mock: Password reset email sent to ${email}`);
+        return true;
+      } else {
+        throw new Error('Email not found');
+      }
+
+      // TODO: Uncomment and implement actual GraphQL mutation when available
+      /*
+      const { data } = await resetPasswordMutation({
+        variables: { email },
+      });
+
+      if (data?.resetPassword?.success) {
+        return true;
+      }
+      return false;
+      */
+    } catch (error) {
+      console.error('Reset password error:', error);
+      throw error; // Rethrow to be handled in ForgotPassword.tsx
     }
   };
 
@@ -224,10 +275,12 @@ const login = async (email: string, password: string): Promise<User | null> => {
       login,
       register,
       logout,
+      resetPassword, // Added resetPassword
       isAuthenticated: !!user,
       navigate,
       debugToken,
       navigateToRegister,
+      navigateToLogin,
     }),
     [user, userEmail, navigate]
   );

@@ -16,6 +16,7 @@ import Home from './pages/USERS/Home';
 import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement'; 
+import ForgotPassword from './pages/USERS/ForgotPassword';
 
 
 // Admin pages
@@ -35,7 +36,7 @@ const AppContent: React.FC = () => {
   const location = useLocation();
 
   // List of public pages
-  const hideNavbarOnRoutes = ['/login', '/register', '/verify-email'];
+  const hideNavbarOnRoutes = ['/login', '/register', '/verify-email', '/forgot-pass'];
 
   // Don't show the navbar on the public routes
   if (hideNavbarOnRoutes.includes(location.pathname)) {
@@ -44,6 +45,7 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-pass" element={<ForgotPassword />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     );
@@ -65,8 +67,7 @@ const AppContent: React.FC = () => {
         <Route path="/settings" element={<Settings />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/create-advertisement" element={<CreateAdvertisement />} />
-
-
+        <Route path="/forgot-pass" element={<ForgotPassword />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />} />
