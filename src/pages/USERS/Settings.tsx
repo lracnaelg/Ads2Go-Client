@@ -1,338 +1,207 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, ChangeEvent } from "react";
+import {
+  FiSettings,
+  FiHome,
+  FiCreditCard,
+  FiUser,
+  FiHelpCircle,
+  FiGrid,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
+
+interface FormData {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  companyName: string;
+  companyAddress: string;
+  contactNumber: string;
+  email: string;
+  profilePicture: string;
+}
 
 const Settings: React.FC = () => {
-  const { user, setUser } = useAuth();
-  const navigate = useNavigate(); // Initialize navigate
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    address: '',
-    companyName: '',
-    companyAddress: '',
-    contactNumber: '',
-    password: '',
-    profilePicture: '',
-  });
-
-  const [formErrors, setFormErrors] = useState({
-    name: '',
-    contactNumber: '',
-  });
-
-  const [message, setMessage] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [imagePreview, setImagePreview] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    companyName: "",
+    companyAddress: "",
+    contactNumber: "",
+    email: "",
+    profilePicture: "",
+  });
 
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        address: user.address || '',
-        companyName: user.companyName || '',
-        companyAddress: user.companyAddress || '',
-        contactNumber: user.contactNumber || '',
-        password: '',
-        profilePicture: user.profilePicture || '',
-      });
-      setImagePreview(user.profilePicture || '');
-    }
-  }, [user]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const trimmedValue = value.trimStart();
-
-    setFormData((prev) => ({ ...prev, [name]: trimmedValue }));
-
-    // Validation logic
-    if (name === 'name') {
-      const nameRegex = /^[A-Za-z\s]+$/;
-      setFormErrors((prev) => ({
-        ...prev,
-        name: nameRegex.test(trimmedValue) ? '' : 'Full Name must only contain letters and spaces.',
-      }));
-    }
-
-    if (name === 'contactNumber') {
-      const contactRegex = /^09\d{9}$/;
-      setFormErrors((prev) => ({
-        ...prev,
-        contactNumber: contactRegex.test(trimmedValue) ? '' : 'Contact must start with 09 and be 11 digits.',
-      }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onload = () => {
         setFormData((prev) => ({
           ...prev,
           profilePicture: reader.result as string,
         }));
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(e.target.files[0]);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!user || !user.userId) return;
-
-    if (formErrors.name || formErrors.contactNumber) {
-      setMessage('❌ Please fix form errors before submitting.');
-      setShowModal(true);
-      setTimeout(() => setShowModal(false), 3000);
-      return;
+  const toggleEdit = () => {
+    if (isEditing) {
+      // Save logic here (e.g., send to backend)
+      console.log("Saving profile data:", formData);
     }
-
-    setTimeout(() => {
-      setUser({
-        ...user,
-        name: formData.name,
-        email: formData.email,
-        address: formData.address,
-        companyName: formData.companyName,
-        companyAddress: formData.companyAddress,
-        contactNumber: formData.contactNumber,
-        profilePicture: formData.profilePicture,
-      });
-      setMessage('✅ Profile updated successfully!');
-      setShowModal(true);
-      setIsEditing(false);
-
-      setTimeout(() => setShowModal(false), 3000);
-    }, 1000);
+    setIsEditing((prev) => !prev);
   };
 
-  const handleCancel = () => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        address: user.address || '',
-        companyName: user.companyName || '',
-        companyAddress: user.companyAddress || '',
-        contactNumber: user.contactNumber || '',
-        password: '',
-        profilePicture: user.profilePicture || '',
-      });
-      setImagePreview(user.profilePicture || '');
-    }
-    setFormErrors({ name: '', contactNumber: '' });
-    setIsEditing(false);
+  const handleChangePassword = () => {
+    alert("Change password functionality triggered");
   };
 
   return (
-    <div className="min-h-screen bg-white py-10 pr-4 pl-14">
-      <div className="w-full bg-white rounded-lg overflow-hidden flex">
-        <aside className="w-1/4 bg-[#F6C794] border-r p-6">
-          <h2 className="text-2xl font-bold mb-6">Settings</h2>
-          <ul className="space-y-4">
-            <li className="text-[#578FCA] font-bold">Account</li>
-            <li className="text-black hover:scale-105 transition-all duration-200">Notifications</li>
-            <li className="text-black hover:scale-105 transition-all duration-300">Privacy</li>
-            <li className="text-black hover:scale-105 transition-all duration-300">Languages</li>
-            <li className="text-black hover:scale-105 transition-all duration-300">Help</li>
-          </ul>
-        </aside>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#0D1730] text-white flex flex-col p-6">
+        <div className="text-white font-bold text-lg mb-10 flex items-center space-x-2">
+          <FiGrid className="text-gray-300" size={24} />
+          <span>Ads2Go</span>
+        </div>
 
-        <main className="w-3/4 p-8">
-          <h2 className="text-2xl font-bold mb-6">Account Settings</h2>
+        <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">
+          Menu
+        </div>
+        <nav className="mb-6 space-y-2">
+          <Link
+            to="/dashboard"
+            className="flex items-center space-x-2 text-gray-300 hover:text-white cursor-pointer"
+          >
+            <FiGrid size={20} />
+            <span>Dashboard</span>
+          </Link>
+          <Link
+            to="/home"
+            className="flex items-center space-x-2 text-gray-300 hover:text-white cursor-pointer"
+          >
+            <FiHome size={20} />
+            <span>Home</span>
+          </Link>
+        </nav>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="flex items-center gap-6">
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-[#C9E6F0] flex items-center justify-center text-2xl font-bold">
-                  {user?.name ? user.name[0] : '?'}
-                </div>
-              )}
+        <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">
+          Others
+        </div>
+        <nav className="space-y-2">
+          <Link
+            to="/settings"
+            className="flex items-center space-x-2 text-gray-300 cursor-pointer hover:text-white"
+          >
+            <FiSettings size={20} />
+            <span>Settings</span>
+          </Link>
+          <Link
+            to="/payment"
+            className="flex items-center space-x-2 text-gray-300 hover:text-white cursor-pointer"
+          >
+            <FiCreditCard size={20} />
+            <span>Payment</span>
+          </Link>
+          <Link
+            to="/accounts"
+            className="flex items-center space-x-2 text-gray-300 hover:text-white cursor-pointer"
+          >
+            <FiUser size={20} />
+            <span>Accounts</span>
+          </Link>
+          <Link
+            to="/help"
+            className="flex items-center space-x-2 text-gray-300 hover:text-white cursor-pointer"
+          >
+            <FiHelpCircle size={20} />
+            <span>Help</span>
+          </Link>
+        </nav>
+      </aside>
 
-              {isEditing && (
-                <div className="flex flex-col gap-2">
-                  <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">
-                    Upload Photo
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                    />
-                  </label>
-                  {imagePreview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImagePreview('');
-                        setFormData((prev) => ({ ...prev, profilePicture: '' }));
-                      }}
-                      className="text-red-600 text-sm"
-                    >
-                      Remove Photo
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Main Settings Panel */}
+      <main className="flex-1 bg-white text-gray-800 p-8">
+        <div className="max-w-5xl mx-auto">
+          {/* Header and Profile Section */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-4">
+              <img
+                src={formData.profilePicture || "https://via.placeholder.com/100"}
+                alt="Profile"
+                className="w-20 h-20 rounded-full object-cover"
+              />
               <div>
-                <label className="block text-sm font-medium mb-1">Full Name</label>
-                <input
-                  name="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105 ${formErrors.name && 'border-red-500'}`}
-                  readOnly={!isEditing}
-                />
-                {formErrors.name && (
-                  <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
-                <input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
-                  readOnly={!isEditing}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Address</label>
-                <input
-                  name="address"
-                  type="text"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
-                  readOnly={!isEditing}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Contact Number</label>
-                <input
-                  name="contactNumber"
-                  type="text"
-                  value={formData.contactNumber}
-                  onChange={handleChange}
-                  className={`w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105 ${formErrors.contactNumber && 'border-red-500'}`}
-                  readOnly={!isEditing}
-                />
-                {formErrors.contactNumber && (
-                  <p className="text-red-500 text-sm mt-1">{formErrors.contactNumber}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Company Name</label>
-                <input
-                  name="companyName"
-                  type="text"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
-                  readOnly={!isEditing}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Company Address</label>
-                <input
-                  name="companyAddress"
-                  type="text"
-                  value={formData.companyAddress}
-                  onChange={handleChange}
-                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
-                  readOnly={!isEditing}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Password</label>
-                <input
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full border px-4 py-2 rounded transition-all duration-300 hover:scale-105"
-                  placeholder="Enter new password"
-                  readOnly={!isEditing}
-                />
-                {isEditing && (
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-blue-600 text-sm mt-1"
-                  >
-                    {showPassword ? 'Hide' : 'Show'} Password
-                  </button>
-                )}
+                <h2 className="text-xl font-semibold">
+                  {formData.firstName || "User Name"}
+                </h2>
+                <p className="text-gray-500">{formData.email || "user@email.com"}</p>
               </div>
             </div>
+            <button
+              onClick={toggleEdit}
+              className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            >
+              {isEditing ? "Save" : "Edit"}
+            </button>
+          </div>
 
-            <div className="flex justify-end gap-4">
-              <button
-                type="button"
-                onClick={() => navigate('/')}
-                className="bg-gray-100 px-6 py-2 rounded-md hover:bg-gray-200"
-              >
-                ← Back
-              </button>
+          {/* Form Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              ["firstName", "First Name"],
+              ["middleName", "Middle Name"],
+              ["lastName", "Last Name"],
+              ["companyName", "Company Name"],
+              ["companyAddress", "Company Address"],
+              ["contactNumber", "Contact Number"],
+              ["email", "Email Address"],
+            ].map(([key, label]) => (
+              <div key={key}>
+                <label className="block text-sm font-medium mb-1">{label}</label>
+                <input
+                  name={key}
+                  value={formData[key as keyof FormData]}
+                  onChange={handleInputChange}
+                  placeholder={`Your ${label}`}
+                  disabled={!isEditing}
+                  className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
+                />
+              </div>
+            ))}
 
-              {!isEditing ? (
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(true)}
-                  className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100 hover:scale-105 transition-all duration-200"
-                >
-                  Edit Profile
-                </button>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    onClick={handleCancel}
-                    className="bg-gray-200 px-6 py-2 rounded-md hover:bg-gray-300 hover:scale-105 transition-all duration-200"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-[#FF9D3D] text-black px-6 py-2 rounded-md hover:bg-[#F6C794] hover:text-black/100 hover:scale-105 transition-all duration-200"
-                  >
-                    Save Changes
-                  </button>
-                </>
-              )}
-            </div>
-
-            {showModal && (
-              <div className="fixed bottom-4 right-4 p-4 bg-[#F6C794] border rounded-xl shadow-md z-50">
-                <p className="text-black">{message}</p>
+            {/* Profile Picture Upload */}
+            {isEditing && (
+              <div>
+                <label className="block text-sm font-medium mb-1">Profile Picture</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full text-sm"
+                />
               </div>
             )}
-          </form>
-        </main>
-      </div>
+          </div>
+
+          {/* Change Password Button */}
+          <div className="mt-10 flex justify-center">
+            <button
+              onClick={handleChangePassword}
+              className="bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-700 transition"
+            >
+              Change Password
+            </button>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
