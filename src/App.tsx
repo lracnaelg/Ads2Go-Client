@@ -12,7 +12,7 @@ import Login from './pages/AUTH/Login';
 import Register from './pages/USERS/Register';
 import Dashboard from './pages/USERS/Dashboard';
 import VerifyEmail from './pages/USERS/VerifyEmail';
-import Landing from './pages/USERS/Landing';
+import Landing from './pages/USERS/Landing'; // Ensure this is the correct import path
 import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
