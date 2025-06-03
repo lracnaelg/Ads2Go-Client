@@ -12,23 +12,21 @@ import Login from './pages/AUTH/Login';
 import Register from './pages/USERS/Register';
 import Dashboard from './pages/USERS/Dashboard';
 import VerifyEmail from './pages/USERS/VerifyEmail';
-import Home from './pages/USERS/Home';
+import Landing from './pages/USERS/Landing';
 import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
-import CreateAdvertisement from './pages/USERS/CreateAdvertisement'; 
-
+import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
 
 // Admin pages
 import AdminDashboard from './pages/ADMIN/AdminDashboard';
 import ManageUsers from './pages/ADMIN/ManageUsers';
 import SiteSettings from './pages/ADMIN/SiteSettings';
 import ManageRiders from './pages/ADMIN/ManageRiders';
-import AdminAdsControl from './pages/ADMIN/AdminAdsControl'; // adjust path if needed
-import Materials from './pages/ADMIN/Materials'; // adjust path if needed
-
+import AdminAdsControl from './pages/ADMIN/AdminAdsControl';
+import Materials from './pages/ADMIN/Materials';
 
 // Super Admin pages
-import SadminDashboard from './pages/SUPERADMIN/SadminDashboard'; // Import SadminDashboard
+import SadminDashboard from './pages/SUPERADMIN/SadminDashboard';
 
 const AppContent: React.FC = () => {
   const { user } = useAuth();  // Access the user data from context
@@ -44,7 +42,7 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/landing" />} /> {/* changed */}
       </Routes>
     );
   }
@@ -61,12 +59,10 @@ const AppContent: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/landing" element={<Landing />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/create-advertisement" element={<CreateAdvertisement />} />
-
-
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />} />
@@ -80,7 +76,7 @@ const AppContent: React.FC = () => {
         <Route path="/sadmin-dashboard" element={<SadminDashboard />} />
 
         {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/" element={<Navigate to="/landing" />} /> {/* changed */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </div>

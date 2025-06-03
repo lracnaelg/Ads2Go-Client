@@ -31,7 +31,7 @@ const Login: React.FC = () => {
       } else if (user?.role?.toUpperCase() === 'SUPERADMIN') {
         navigate('/sadmin-dashboard');
       } else {
-        navigate('/home');
+        navigate('/Dashboard');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
