@@ -177,7 +177,7 @@ const Settings: React.FC = () => {
               </div>
             ))}
 
-            {/* Profile Picture Upload */}
+            
             {isEditing && (
               <div>
                 <label className="block text-sm font-medium mb-1">Profile Picture</label>
@@ -191,7 +191,7 @@ const Settings: React.FC = () => {
             )}
           </div>
 
-          {/* Change Password Button */}
+          
           <div className="mt-10 flex justify-center">
             <button
               onClick={handleChangePassword}
