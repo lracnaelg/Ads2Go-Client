@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const { user, navigateToRegister, login } = useAuth();  // Removed <User> type argument
+  const { navigateToRegister, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -21,13 +21,11 @@ const Login: React.FC = () => {
 
     try {
       const user = await login(email, password);
-
       if (!user) {
         setError('Login failed. Please check your credentials.');
         return;
       }
 
-      // Ensure user and role exist before redirecting
       if (user?.role?.toUpperCase() === 'ADMIN') {
         navigate('/admin');
       } else if (user?.role?.toUpperCase() === 'SUPERADMIN') {
@@ -41,67 +39,80 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div 
-      className="w-full min-h-screen flex items-center justify-center bg-cover bg-center text-white px-4 sm:px-6 lg:px-8"
-      style={{ backgroundImage: "url('/image/image.jpeg')" }}
-    >
-      <div className="w-full max-w-4xl bg-black bg-opacity-80 p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center md:items-start">
-        
-        {/* Left Side - Login Form */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center p-6">
-          <h2 className="text-3xl font-extrabold mb-6 text-center md:text-left">LOG IN</h2>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                autoComplete="email"
-                required
-                className="w-full px-3 py-2 border rounded-md bg-opacity-50 bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  autoComplete="current-password"
-                  required
-                  className="w-full px-3 py-2 border rounded-md bg-opacity-50 bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeSlashIcon className="h-5 w-5 text-black" /> : <EyeIcon className="h-5 w-5 text-black" />}
-                </button>
-              </div>
-            </div>
-            {error && <div className="text-red-300 text-sm">{error}</div>}
-            <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">Submit</button>
-          </form>
+    <div className="flex min-h-screen bg-white">
+      
+      {/* Left Side - Login Form */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center px-10">
+        <div className="mb-10">
+          <h1 className="text-2xl font-bold text-gray-900">Artificial Intelligence Driving Results For The Travel Industry</h1>
+          <p className="text-sm text-gray-500 mt-2">Welcome back! Please login to your account.</p>
         </div>
 
-        {/* Right Side - Sign Up Section */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6 mt-6 md:mt-0">
-          <h2 className="text-2xl font-bold mb-2 text-center md:text-left">New Here?</h2>
-          <p className="text-gray-300 text-center text-sm mb-4">Join us today and start exploring amazing features.</p>
-          <button 
-            onClick={handleRegisterClick} 
-            className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition"
-          >
-            Sign Up
-          </button>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeSlashIcon className="h-5 w-5 text-gray-500" /> : <EyeIcon className="h-5 w-5 text-gray-500" />}
+              </button>
+            </div>
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <div className="flex justify-between items-center text-sm">
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" />
+              Remember Me
+            </label>
+            <a href="#" className="text-indigo-600 hover:underline">Forgot Password?</a>
+          </div>
+
+          <button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md transition">Login</button>
+        </form>
+
+        <p className="text-sm mt-4 text-gray-600">
+          Don’t have an account?{' '}
+          <button onClick={handleRegisterClick} className="text-indigo-600 hover:underline">Sign Up</button>
+        </p>
+      </div>
+
+      {/* Right Side - Image and Navbar */}
+      <div className="hidden md:flex w-1/2 flex-col relative bg-[#0e2a47]">
+        <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center text-white">
+          <div className="text-xl font-bold">Ads2Go</div>
+          <nav className="space-x-6">
+            <a href="#" className="text-indigo-400 underline">Home</a>
+            <a href="#" className="hover:text-indigo-300">About us</a>
+            <a href="#" className="hover:text-indigo-300">Blog</a>
+            <a href="#" className="hover:text-indigo-300">Pricing</a>
+          </nav>
         </div>
+        <img src="/image/image.jpeg" alt="Scooter Advertisement" className="w-full h-full object-cover" />
       </div>
     </div>
   );
