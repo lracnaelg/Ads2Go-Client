@@ -1,134 +1,179 @@
 import React, { useState } from 'react';
+import { CreditCard, User, Calendar, Lock } from 'lucide-react';
 
 const Payment: React.FC = () => {
-  const [paymentType, setPaymentType] = useState<string>('cash');
-  const [amount] = useState<number>(1500);
-
+  const [paymentType, setPaymentType] = useState<string>('');
   const [cardDetails, setCardDetails] = useState({
     number: '',
     holder: '',
     expiry: '',
-    cvv: ''
+    cvv: '',
+    type: '',
   });
 
-  const [gcashNumber, setGcashNumber] = useState('');
-  const [errors, setErrors] = useState<string[]>([]);
+  const [personalInfo, setPersonalInfo] = useState({
+    address: 'P.o.Box 1223',
+    city: 'Arusha',
+    state: 'Arusha, Tanzania',
+    postalCode: '9090',
+  });
 
-  const validateInputs = () => {
-    const errs: string[] = [];
-
-    if (paymentType === 'card') {
-      const cardNumberRegex = /^\d{16}$/;
-      const expiryRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
-      const cvvRegex = /^\d{3}$/;
-
-      if (!cardNumberRegex.test(cardDetails.number)) errs.push('Card number must be 16 digits.');
-      if (!cardDetails.holder.trim()) errs.push('Card holder name is required.');
-      if (!expiryRegex.test(cardDetails.expiry)) errs.push('Expiry must be in MM/YY format.');
-      if (!cvvRegex.test(cardDetails.cvv)) errs.push('CVV must be 3 digits.');
-    }
-
-    if (paymentType === 'gcash') {
-      const gcashRegex = /^(09|\+639)\d{9}$/;
-      if (!gcashRegex.test(gcashNumber)) errs.push('GCash number must be a valid 11-digit Philippine number.');
-    }
-
-    setErrors(errs);
-    return errs.length === 0;
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+    setPersonalInfo({ ...personalInfo, [key]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    if (!validateInputs()) return;
-    alert('Payment submitted successfully!');
-    // call backend here
+  const detectCardType = (number: string) => {
+    const cleaned = number.replace(/\D/g, '');
+    if (/^4[0-9]{12}(?:[0-9]{3})?$/.test(cleaned)) return 'Visa';
+    if (/^5[1-5][0-9]{14}$/.test(cleaned)) return 'Mastercard';
+    return 'Unknown';
+  };
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const number = e.target.value;
+    const type = detectCardType(number);
+    setCardDetails({ ...cardDetails, number, type });
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Payment for Advertisement</h1>
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-xl rounded-xl">
+      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Payment Information</h1>
 
-      <div className="bg-white p-4 rounded shadow mb-6">
-        <h2 className="text-lg font-semibold mb-2">Ad Details</h2>
-        <p><strong>Title:</strong> Company Launch Ad</p>
-        <p><strong>Vehicle Type:</strong> Sedan</p>
-        <p><strong>Materials Used:</strong> LCD Screen</p>
-        <p><strong>Total Amount:</strong> ₱{amount.toFixed(2)}</p>
-      </div>
-
-      <div className="bg-white p-4 rounded shadow mb-6">
-        <h2 className="text-lg font-semibold mb-2">Select Payment Method</h2>
-        <select
-          className="border p-2 rounded w-full"
-          value={paymentType}
-          onChange={(e) => setPaymentType(e.target.value)}
-        >
-          <option value="cash">Cash</option>
-          <option value="card">Card</option>
-          <option value="gcash">GCash</option>
-        </select>
-
-        {paymentType === 'card' && (
-          <div className="mt-4">
+      {/* Personal Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {['address', 'city', 'state', 'postalCode'].map((field) => (
+          <div key={field}>
+            <label className="text-sm font-medium text-gray-700 mb-1 block capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
             <input
               type="text"
-              placeholder="Card Number (16 digits)"
-              className="w-full p-2 border rounded mb-2"
-              value={cardDetails.number}
-              onChange={(e) => setCardDetails({ ...cardDetails, number: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Card Holder"
-              className="w-full p-2 border rounded mb-2"
-              value={cardDetails.holder}
-              onChange={(e) => setCardDetails({ ...cardDetails, holder: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Expiry Date (MM/YY)"
-              className="w-full p-2 border rounded mb-2"
-              value={cardDetails.expiry}
-              onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="CVV (3 digits)"
-              className="w-full p-2 border rounded"
-              value={cardDetails.cvv}
-              onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
+              value={personalInfo[field as keyof typeof personalInfo]}
+              onChange={(e) => handleInput(e, field)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
+        ))}
+      </div>
+
+      {/* Payment Methods */}
+      <div className="mb-6">
+        <h2 className="font-semibold text-gray-700 mb-3">Select Payment Method</h2>
+        <div className="flex flex-wrap gap-4">
+          {["card", "gcash", "paypal", "gpay", "maya", "cash"].map((method) => (
+            <button
+              key={method}
+              onClick={() => setPaymentType(method)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition 
+                ${paymentType === method ? 'bg-teal-500 text-white border-teal-500' : 'bg-white border-gray-300 hover:border-teal-400'}`}
+            >
+              <img src={`/icons/${method}.png`} alt={method} className="h-6 w-6" />
+              <span className="capitalize">{method}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Conditional Payment Fields */}
+      <div className="mb-8">
+        {paymentType === "card" && (
+          <>
+            <h2 className="font-semibold text-gray-700 mb-3">Card Information</h2>
+            <div className="space-y-4">
+              <div className="relative">
+                <User className="absolute left-3 top-3 text-gray-400" size={18} />
+                <input
+                  type="text"
+                  placeholder="Cardholder Name"
+                  className="pl-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500"
+                  value={cardDetails.holder}
+                  onChange={(e) => setCardDetails({ ...cardDetails, holder: e.target.value })}
+                />
+              </div>
+              <div className="relative">
+                <CreditCard className="absolute left-3 top-3 text-gray-400" size={18} />
+                <input
+                  type="text"
+                  placeholder="Card Number"
+                  className="pl-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500"
+                  value={cardDetails.number}
+                  onChange={handleCardNumberChange}
+                />
+              </div>
+              {cardDetails.type && (
+                <p className="text-sm text-gray-500 ml-1">Detected: {cardDetails.type}</p>
+              )}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-3 text-gray-400" size={18} />
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    className="pl-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500"
+                    value={cardDetails.expiry}
+                    onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })}
+                  />
+                </div>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 text-gray-400" size={18} />
+                  <input
+                    type="text"
+                    placeholder="CVC"
+                    className="pl-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500"
+                    value={cardDetails.cvv}
+                    onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+          </>
         )}
 
         {paymentType === 'gcash' && (
-          <div className="mt-4">
-            <input
-              type="text"
-              placeholder="GCash Mobile Number"
-              className="w-full p-2 border rounded"
-              value={gcashNumber}
-              onChange={(e) => setGcashNumber(e.target.value)}
-            />
+          <>
+            <h2 className="font-semibold text-gray-700 mb-3">GCash Details</h2>
+            <input type="text" placeholder="GCash Number" className="w-full border px-3 py-2 mb-3 rounded-lg" />
+            <input type="text" placeholder="Account Holder Name" className="w-full border px-3 py-2 rounded-lg" />
+          </>
+        )}
+
+        {paymentType === 'paypal' && (
+          <>
+            <h2 className="font-semibold text-gray-700 mb-3">PayPal Email</h2>
+            <input type="email" placeholder="example@paypal.com" className="w-full border px-3 py-2 rounded-lg" />
+          </>
+        )}
+
+        {paymentType === 'gpay' && (
+          <>
+            <h2 className="font-semibold text-gray-700 mb-3">Google Pay</h2>
+            <input type="email" placeholder="GPay Email or Phone" className="w-full border px-3 py-2 rounded-lg" />
+          </>
+        )}
+
+        {paymentType === 'maya' && (
+          <>
+            <h2 className="font-semibold text-gray-700 mb-3">Maya Details</h2>
+            <input type="text" placeholder="Maya Account Number" className="w-full border px-3 py-2 mb-3 rounded-lg" />
+            <input type="text" placeholder="Account Holder Name" className="w-full border px-3 py-2 rounded-lg" />
+          </>
+        )}
+
+        {paymentType === 'cash' && (
+          <div className="bg-yellow-50 p-4 border-l-4 border-yellow-400 rounded-lg">
+            <h2 className="font-semibold text-gray-700 mb-2">Pay at Office</h2>
+            <p className="text-sm text-gray-600">
+              Please visit our office at <strong>123 Main Street, Arusha</strong> between <strong>8:00 AM – 4:00 PM</strong>, Monday–Friday.
+            </p>
           </div>
         )}
       </div>
 
-      {errors.length > 0 && (
-        <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
-          <ul className="list-disc ml-5">
-            {errors.map((err, index) => (
-              <li key={index}>{err}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <button
-        onClick={handleSubmit}
-        className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition"
-      >
-        Submit Payment
-      </button>
+      {/* Navigation */}
+      <div className="flex justify-between pt-4">
+        <button className="px-5 py-2 rounded-lg border border-gray-400 hover:bg-gray-100">Back</button>
+        <button className="px-6 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow">
+          Continue
+        </button>
+      </div>
     </div>
   );
 };
