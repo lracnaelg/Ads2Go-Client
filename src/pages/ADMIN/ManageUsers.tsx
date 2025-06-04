@@ -1,240 +1,229 @@
 import React, { useState } from 'react';
-import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface User {
-  id: string;
-  name: string;
+  id: number;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  company: string;
+  address: string;
+  contact: string;
   email: string;
-  role: string;
-  houseAddress: string;
-  contactNumber: string;
-  isEmailVerified: boolean;
-}
-
-interface Ad {
-  id: string;
-  title: string;
-  submittedBy: string;
-  status: 'Pending' | 'Approved' | 'Rejected';
-  category: string;
-  description: string;
 }
 
 const mockUsers: User[] = [
   {
-    id: '1',
-    name: 'Jane Doe',
-    email: 'jane@example.com',
-    role: 'USER',
-    houseAddress: '123 Elm Street',
-    contactNumber: '09123456789',
-    isEmailVerified: true,
+    id: 1,
+    lastName: 'Dominic',
+    firstName: 'Dequina',
+    middleName: 'hihihi',
+    company: 'Nike',
+    address: '1000 LA Street',
+    contact: '09170001111',
+    email: 'Domss@nike.com',
   },
   {
-    id: '2',
-    name: 'John Smith',
-    email: 'john@example.com',
-    role: 'ADMIN',
-    houseAddress: '456 Oak Avenue',
-    contactNumber: '09987654321',
-    isEmailVerified: false,
+    id: 2,
+    lastName: 'Glean',
+    firstName: 'Carl',
+    middleName: 'yyyyyy',
+    company: 'Under Armour',
+    address: '500 Oakland Ave',
+    contact: '09220002222',
+    email: 'Glean@ua.com',
+  },
+  {
+    id: 3,
+    lastName: 'Lang',
+    firstName: 'Jairhon',
+    middleName: 'dhskahd',
+    company: 'Adidas',
+    address: '300 Brooklyn Blvd',
+    contact: '09330003333',
+    email: 'jai@adidas.com',
+  },
+  {
+    id: 4,
+    lastName: 'Inocencio',
+    firstName: 'Bianca',
+    middleName: 'Panget',
+    company: 'Tisnelas',
+    address: '23 Chicago St',
+    contact: '09440004444',
+    email: 'Panget@tsinelas.com',
   },
 ];
 
-const mockAds: Ad[] = [
-  {
-    id: 'AD1',
-    title: 'Concrete Sale Promo',
-    submittedBy: 'Jane Doe',
-    status: 'Pending',
-    category: 'Construction',
-    description: '50% off premium concrete materials.',
-  },
-  {
-    id: 'AD2',
-    title: 'Waterproofing Service',
-    submittedBy: 'Jane Doe',
-    status: 'Approved',
-    category: 'Services',
-    description: 'Reliable waterproofing for any structure.',
-  },
-];
+const places = ['Metro Manila', 'Cebu', 'Davao', 'Iloilo', 'Baguio'];
 
 const ManageUsers: React.FC = () => {
-  const [tab, setTab] = useState<'users' | 'ads'>('users');
-  const [users, setUsers] = useState<User[]>(mockUsers);
-  const [ads, setAds] = useState<Ad[]>(mockAds);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
+  const totalPages = Math.ceil(mockUsers.length / usersPerPage);
+
+  const [selectedPlaces, setSelectedPlaces] = useState<string[]>([]);
+  const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState('');
-  const [filterVerified, setFilterVerified] = useState('');
 
-  const handleDeleteUser = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      setUsers((prev) => prev.filter((u) => u.id !== id));
-    }
-  };
-
-  const handleAdStatusChange = (id: string, status: Ad['status']) => {
-    setAds((prev) =>
-      prev.map((ad) => (ad.id === id ? { ...ad, status } : ad))
+  const handlePlaceToggle = (place: string) => {
+    setSelectedPlaces((prev) =>
+      prev.includes(place) ? prev.filter((p) => p !== place) : [...prev, place]
     );
   };
 
-  const filteredUsers = users.filter((user) => {
-    return (
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterRole ? user.role === filterRole : true) &&
-      (filterVerified ? (filterVerified === 'Verified' ? user.isEmailVerified : !user.isEmailVerified) : true)
-    );
-  });
+  const handleClearFilters = () => {
+    setSelectedPlaces([]);
+  };
+
+  const filteredUsers = mockUsers.filter((user) =>
+    user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const displayedUsers = filteredUsers.slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage
+  );
 
   return (
-    <div className="p-8 bg-gray-900 min-h-screen text-white">
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setTab('users')}
-          className={`px-4 py-2 rounded ${tab === 'users' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-        >
-          Manage Users
-        </button>
-        <button
-          onClick={() => setTab('ads')}
-          className={`px-4 py-2 rounded ${tab === 'ads' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-        >
-          Manage Ads
-        </button>
+    <div className="flex p-4">
+      {/* Sidebar Filter */}
+      <div className="w-1/4 pr-4">
+        <div className="bg-white rounded-lg p-4 shadow">
+          <h3 className="text-lg font-semibold mb-4">Filter</h3>
+          <div className="mb-4">
+            <h4 className="text-sm font-semibold mb-2">Places</h4>
+            {places.map((place) => (
+              <div key={place} className="flex items-center mb-2">
+                <input
+                  type="checkbox"
+                  checked={selectedPlaces.includes(place)}
+                  onChange={() => handlePlaceToggle(place)}
+                  className="w-4 h-4 border border-gray-400 rounded bg-white appearance-none checked:bg-blue-500"
+                />
+                <label className="ml-2 text-sm">{place}</label>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={handleClearFilters}
+            className="px-3 py-1 border border-gray-400 rounded text-sm"
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
-      {tab === 'users' ? (
-        <>
-          <h1 className="text-2xl font-bold mb-4">Manage Users</h1>
-          <div className="mb-4 flex flex-wrap gap-4">
+      {/* Main Content */}
+      <div className="w-3/4">
+        {/* Top Tabs */}
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => setShowSearch(true)}
+            className={`bg-white border border-gray-300 px-4 py-2 rounded shadow-sm ${
+              showSearch ? 'font-bold' : ''
+            }`}
+          >
+            Find person
+          </button>
+          <button
+            onClick={() => {
+              setShowSearch(false);
+              setSearchTerm('');
+            }}
+            className={`bg-white border border-gray-300 px-4 py-2 rounded shadow-sm ${
+              !showSearch ? 'font-bold' : ''
+            }`}
+          >
+            All people
+          </button>
+        </div>
+
+        {/* Search Bar */}
+        {showSearch && (
+          <div className="mb-4">
             <input
               type="text"
-              placeholder="Search by email..."
+              placeholder="Search by first name..."
+              className="w-full px-3 py-2 border border-gray-300 rounded"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-2 bg-gray-800 text-white border border-gray-600 rounded w-64"
             />
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="p-2 bg-gray-800 text-white border border-gray-600 rounded"
-            >
-              <option value="">All Roles</option>
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-            <select
-              value={filterVerified}
-              onChange={(e) => setFilterVerified(e.target.value)}
-              className="p-2 bg-gray-800 text-white border border-gray-600 rounded"
-            >
-              <option value="">All Status</option>
-              <option value="Verified">Verified</option>
-              <option value="Not Verified">Not Verified</option>
-            </select>
           </div>
+        )}
 
-          <table className="w-full bg-gray-800 rounded-lg overflow-hidden shadow-md">
-            <thead className="bg-gray-700 text-white">
-              <tr>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Email</th>
-                <th className="p-3 text-left">Address</th>
-                <th className="p-3 text-left">Contact</th>
-                <th className="p-3 text-left">Role</th>
-                <th className="p-3 text-left">Verified</th>
-                <th className="p-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="border-b border-gray-600">
-                  <td className="p-3 cursor-pointer" onClick={() => setSelectedUser(user)}>{user.name}</td>
-                  <td className="p-3">{user.email}</td>
-                  <td className="p-3">{user.houseAddress}</td>
-                  <td className="p-3">{user.contactNumber}</td>
-                  <td className="p-3">{user.role}</td>
-                  <td className="p-3">{user.isEmailVerified ? '✅' : '❌'}</td>
-                  <td className="p-3 flex space-x-3">
-                    <button
-                      onClick={() => setSelectedUser(user)}
-                      className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 flex items-center"
-                    >
-                      <TrashIcon className="w-4 h-4 mr-1" /> Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <>
-          <h1 className="text-2xl font-bold mb-4">Manage Ads</h1>
-          <table className="w-full bg-gray-800 rounded-lg overflow-hidden shadow-md">
-            <thead className="bg-gray-700 text-white">
-              <tr>
-                <th className="p-3 text-left">Title</th>
-                <th className="p-3 text-left">Category</th>
-                <th className="p-3 text-left">Submitted By</th>
-                <th className="p-3 text-left">Status</th>
-                <th className="p-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ads.map((ad) => (
-                <tr key={ad.id} className="border-b border-gray-600">
-                  <td className="p-3">{ad.title}</td>
-                  <td className="p-3">{ad.category}</td>
-                  <td className="p-3">{ad.submittedBy}</td>
-                  <td className="p-3">
-                    {ad.status === 'Pending' ? '🕒' : ad.status === 'Approved' ? '✅' : '❌'} {ad.status}
-                  </td>
-                  <td className="p-3 flex gap-2">
-                    <button
-                      onClick={() => handleAdStatusChange(ad.id, 'Approved')}
-                      className="bg-green-600 px-2 py-1 rounded hover:bg-green-700"
-                    >
-                      <CheckIcon className="w-4 h-4 inline" /> Approve
-                    </button>
-                    <button
-                      onClick={() => handleAdStatusChange(ad.id, 'Rejected')}
-                      className="bg-red-600 px-2 py-1 rounded hover:bg-red-700"
-                    >
-                      <XMarkIcon className="w-4 h-4 inline" /> Reject
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
-
-      {/* User Detail Modal */}
-      {selectedUser && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-gray-800 p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">User Details</h2>
-            <p><strong>Name:</strong> {selectedUser.name}</p>
-            <p><strong>Email:</strong> {selectedUser.email}</p>
-            <p><strong>Role:</strong> {selectedUser.role}</p>
-            <p><strong>Address:</strong> {selectedUser.houseAddress}</p>
-            <p><strong>Contact:</strong> {selectedUser.contactNumber}</p>
-            <p><strong>Verified:</strong> {selectedUser.isEmailVerified ? 'Yes' : 'No'}</p>
-            <button onClick={() => setSelectedUser(null)} className="mt-4 bg-gray-600 px-3 py-1 rounded">Close</button>
-          </div>
+        {/* Result Count */}
+        <div className="bg-white rounded-t-md px-4 py-2 border border-b-0">
+          <p className="font-semibold">Found: {filteredUsers.length}</p>
         </div>
-      )}
+
+        {/* User Table */}
+        <div className="bg-white rounded-b-md border">
+          <table className="w-full border-collapse">
+            <thead>
+            <tr className="bg-green-500 text-white text-sm font-semibold text-left">
+                <th className="p-2 border">Last Name</th>
+                <th className="p-2 border">First Name</th>
+                <th className="p-2 border">Middle Name</th>
+                <th className="p-2 border">Company Name</th>
+                <th className="p-2 border">Company Address</th>
+                <th className="p-2 border">Contact Number</th>
+                <th className="p-2 border">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayedUsers.map((user, index) => (
+                <tr
+                  key={user.id}
+                  className={index % 2 === 0 ? 'bg-white' : 'bg-teal-50'}
+                >
+                  <td className="p-2 border">{user.lastName}</td>
+                  <td className="p-2 border">{user.firstName}</td>
+                  <td className="p-2 border">{user.middleName}</td>
+                  <td className="p-2 border">{user.company}</td>
+                  <td className="p-2 border">{user.address}</td>
+                  <td className="p-2 border">{user.contact}</td>
+                  <td className="p-2 border">{user.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center items-center space-x-2 mt-4 text-sm">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            className="text-black hover:text-blue-500"
+          >
+            &lt; Previous
+          </button>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button
+              key={n}
+              onClick={() => setCurrentPage(n)}
+              className={`px-2 py-1 rounded ${
+                currentPage === n
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white border'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          <span>...</span>
+          <button onClick={() => setCurrentPage(totalPages)}>{totalPages}</button>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            className="text-black hover:text-blue-500"
+          >
+            Next →
+          </button>
+          <button className="text-black hover:text-blue-500">Show all</button>
+        </div>
+      </div>
     </div>
   );
 };
