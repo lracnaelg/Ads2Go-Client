@@ -19,6 +19,7 @@ import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
 
 // Admin pages
+import AdminLogin from './pages/AUTH/AdminLogin';
 import AdminDashboard from './pages/ADMIN/AdminDashboard';
 import ManageUsers from './pages/ADMIN/ManageUsers';
 import SiteSettings from './pages/ADMIN/SiteSettings';
@@ -33,18 +34,26 @@ const AppContent: React.FC = () => {
   const { user } = useAuth();  // Access the user data from context
   const location = useLocation();
 
-  // List of public pages
-const hideNavbarOnRoutes = ['/login', '/register', '/verify-email', '/forgot-password'];
+  // List of public pages where navbar is hidden
+  const hideNavbarOnRoutes = [
+    '/admin-login',
+    '/login',
+    '/register',
+    '/verify-email',
+    '/forgot-password'
+  ];
 
   // Don't show the navbar on the public routes
   if (hideNavbarOnRoutes.includes(location.pathname)) {
     return (
       <Routes>
+        <Route path="/admin-login" element={<AdminLogin />} />  {/* Added here */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/" element={<Navigate to="/landing" />} /> {/* changed */}
+        <Route path="/" element={<Navigate to="/landing" />} /> {/* redirect */}
+        <Route path="*" element={<Navigate to="/login" />} /> {/* catch all */}
       </Routes>
     );
   }
@@ -58,6 +67,7 @@ const hideNavbarOnRoutes = ['/login', '/register', '/verify-email', '/forgot-pas
 
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -78,7 +88,7 @@ const hideNavbarOnRoutes = ['/login', '/register', '/verify-email', '/forgot-pas
         <Route path="/sadmin-dashboard" element={<SadminDashboard />} />
 
         {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/landing" />} /> {/* changed */}
+        <Route path="/" element={<Navigate to="/landing" />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </div>
