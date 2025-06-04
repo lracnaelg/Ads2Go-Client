@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const { navigateToRegister, login } = useAuth();
@@ -40,17 +40,22 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      
       {/* Left Side - Login Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center px-10">
         <div className="mb-10">
-          <h1 className="text-2xl font-bold text-gray-900">Artificial Intelligence Driving Results For The Travel Industry</h1>
-          <p className="text-sm text-gray-500 mt-2">Welcome back! Please login to your account.</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Artificial Intelligence Driving Results For The Travel Industry
+          </h1>
+          <p className="text-sm text-gray-500 mt-2">
+            Welcome back! Please login to your account.
+          </p>
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
             <input
               type="email"
               id="email"
@@ -62,7 +67,9 @@ const Login: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -77,7 +84,11 @@ const Login: React.FC = () => {
                 className="absolute inset-y-0 right-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <EyeSlashIcon className="h-5 w-5 text-gray-500" /> : <EyeIcon className="h-5 w-5 text-gray-500" />}
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <EyeIcon className="h-5 w-5 text-gray-500" />
+                )}
               </button>
             </div>
           </div>
@@ -89,15 +100,24 @@ const Login: React.FC = () => {
               <input type="checkbox" className="mr-2" />
               Remember Me
             </label>
-            <a href="#" className="text-indigo-600 hover:underline">Forgot Password?</a>
+            <Link to="/forgot-password" className="text-indigo-600 hover:underline">
+              Forgot Password?
+            </Link>
           </div>
 
-          <button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md transition">Login</button>
+          <button
+            type="submit"
+            className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md transition"
+          >
+            Login
+          </button>
         </form>
 
         <p className="text-sm mt-4 text-gray-600">
           Don’t have an account?{' '}
-          <button onClick={handleRegisterClick} className="text-indigo-600 hover:underline">Sign Up</button>
+          <button onClick={handleRegisterClick} className="text-indigo-600 hover:underline">
+            Sign Up
+          </button>
         </p>
       </div>
 
@@ -106,10 +126,18 @@ const Login: React.FC = () => {
         <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center text-white">
           <div className="text-xl font-bold">Ads2Go</div>
           <nav className="space-x-6">
-            <a href="#" className="text-indigo-400 underline">Home</a>
-            <a href="#" className="hover:text-indigo-300">About us</a>
-            <a href="#" className="hover:text-indigo-300">Blog</a>
-            <a href="#" className="hover:text-indigo-300">Pricing</a>
+            <Link to="/" className="text-indigo-400 underline">
+              Home
+            </Link>
+            <Link to="/about" className="hover:text-indigo-300">
+              About us
+            </Link>
+            <Link to="/blog" className="hover:text-indigo-300">
+              Blog
+            </Link>
+            <Link to="/pricing" className="hover:text-indigo-300">
+              Pricing
+            </Link>
           </nav>
         </div>
         <img src="/image/image.jpeg" alt="Scooter Advertisement" className="w-full h-full object-cover" />

@@ -10,6 +10,7 @@ import SadminNavbar from './components/SadminNavbar'; // Add SadminNavbar
 // Regular user pages
 import Login from './pages/AUTH/Login';
 import Register from './pages/USERS/Register';
+import ForgotPass from './pages/USERS/ForgotPass';
 import Dashboard from './pages/USERS/Dashboard';
 import VerifyEmail from './pages/USERS/VerifyEmail';
 import Landing from './pages/USERS/Landing'; // Ensure this is the correct import path
@@ -33,7 +34,7 @@ const AppContent: React.FC = () => {
   const location = useLocation();
 
   // List of public pages
-  const hideNavbarOnRoutes = ['/login', '/register', '/verify-email'];
+const hideNavbarOnRoutes = ['/login', '/register', '/verify-email', '/forgot-password'];
 
   // Don't show the navbar on the public routes
   if (hideNavbarOnRoutes.includes(location.pathname)) {
@@ -41,6 +42,7 @@ const AppContent: React.FC = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/" element={<Navigate to="/landing" />} /> {/* changed */}
       </Routes>
