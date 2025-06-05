@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext'; // Import your useAuth hook
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Import Navbars
 import UserNavbar from './components/UserNavbar';
@@ -34,62 +35,145 @@ const AppContent: React.FC = () => {
   const { user } = useAuth();  // Access the user data from context
   const location = useLocation();
 
-  // List of public pages where navbar is hidden
-  const hideNavbarOnRoutes = [
+  // Pages that do NOT require authentication
+  const publicPages = [
     '/admin-login',
     '/login',
     '/register',
+    '/forgot-password',
     '/verify-email',
-    '/forgot-password'
+    '/landing',
   ];
 
-  // Don't show the navbar on the public routes
+  // Hide navbar on public pages
+  const hideNavbarOnRoutes = publicPages;
+
+  // If current path is public page, no navbar shown
   if (hideNavbarOnRoutes.includes(location.pathname)) {
     return (
       <Routes>
-        <Route path="/admin-login" element={<AdminLogin />} />  {/* Added here */}
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/" element={<Navigate to="/landing" />} /> {/* redirect */}
-        <Route path="*" element={<Navigate to="/login" />} /> {/* catch all */}
+        <Route path="/landing" element={<Landing />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
 
   return (
     <div className="min-h-screen bg-white text-black">
-      {/* Show the appropriate navbar based on the user role */}
+      {/* Show navbar depending on user role */}
       {user?.role === 'SUPERADMIN' && <SadminNavbar />}
       {user?.role === 'ADMIN' && <AdminNavbar />}
       {user?.role === 'USER' && <UserNavbar />}
 
       <Routes>
+        {/* Public routes (optional, but keep for direct access) */}
         <Route path="/login" element={<Login />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/landing" element={<Landing />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/create-advertisement" element={<CreateAdvertisement />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<ManageUsers />} />
-        <Route path="/admin/settings" element={<SiteSettings />} />
-        <Route path="/admin/riders" element={<ManageRiders />} />
-        <Route path="/admin/ads" element={<AdminAdsControl />} />
-        <Route path="/admin/materials" element={<Materials />} />
+        {/* Protected user routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-advertisement"
+          element={
+            <ProtectedRoute>
+              <CreateAdvertisement />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Super Admin Routes */}
-        <Route path="/sadmin-dashboard" element={<SadminDashboard />} />
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <ManageUsers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <ProtectedRoute>
+              <SiteSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/riders"
+          element={
+            <ProtectedRoute>
+              <ManageRiders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/ads"
+          element={
+            <ProtectedRoute>
+              <AdminAdsControl />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/materials"
+          element={
+            <ProtectedRoute>
+              <Materials />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/landing" />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Protected SuperAdmin Route */}
+        <Route
+          path="/sadmin-dashboard"
+          element={
+            <ProtectedRoute>
+              <SadminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Default redirects */}
+        <Route path="/" element={<Navigate to="/landing" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </div>
   );
