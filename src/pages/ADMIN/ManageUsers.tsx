@@ -1,240 +1,278 @@
 import React, { useState } from 'react';
-import { TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface User {
-  id: string;
-  name: string;
+  id: number;
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  company: string;
+  address: string;
+  contact: string;
   email: string;
-  role: string;
-  houseAddress: string;
-  contactNumber: string;
-  isEmailVerified: boolean;
-}
-
-interface Ad {
-  id: string;
-  title: string;
-  submittedBy: string;
-  status: 'Pending' | 'Approved' | 'Rejected';
-  category: string;
-  description: string;
+  status: 'active' | 'inactive';
+  city: string;
 }
 
 const mockUsers: User[] = [
   {
-    id: '1',
-    name: 'Jane Doe',
-    email: 'jane@example.com',
-    role: 'USER',
-    houseAddress: '123 Elm Street',
-    contactNumber: '09123456789',
-    isEmailVerified: true,
+    id: 1,
+    lastName: 'Garcia',
+    firstName: 'Juan',
+    middleName: 'Santos',
+    company: 'TechCorp',
+    address: '123 Ayala Ave.',
+    contact: '09171234567',
+    email: 'juan.garcia@techcorp.com',
+    status: 'active',
+    city: 'Makati',
   },
   {
-    id: '2',
-    name: 'John Smith',
-    email: 'john@example.com',
-    role: 'ADMIN',
-    houseAddress: '456 Oak Avenue',
-    contactNumber: '09987654321',
-    isEmailVerified: false,
+    id: 2,
+    lastName: 'Reyes',
+    firstName: 'Maria',
+    middleName: 'Lopez',
+    company: 'AgriFarm Inc.',
+    address: '456 Quezon Blvd.',
+    contact: '09987654321',
+    email: 'maria.reyes@agrifarm.com',
+    status: 'inactive',
+    city: 'Quezon City',
+  },
+  {
+    id: 3,
+    lastName: 'Cruz',
+    firstName: 'Pedro',
+    middleName: 'Dela Cruz',
+    company: 'BuildIt',
+    address: '789 Katipunan St.',
+    contact: '09182345678',
+    email: 'pedro.cruz@buildit.com',
+    status: 'active',
+    city: 'Manila',
+  },
+  {
+    id: 4,
+    lastName: 'Dela Rosa',
+    firstName: 'Ana',
+    middleName: 'Mendoza',
+    company: 'SmartBuild',
+    address: '101 Maginhawa St.',
+    contact: '09174561234',
+    email: 'ana.rosa@smartbuild.com',
+    status: 'active',
+    city: 'Pasig',
+  },
+  {
+    id: 5,
+    lastName: 'Santos',
+    firstName: 'Carlos',
+    middleName: 'Rivera',
+    company: 'GreenFields',
+    address: '34 Davao St.',
+    contact: '09176543210',
+    email: 'carlos.santos@greenfields.com',
+    status: 'inactive',
+    city: 'Davao',
+  },
+  {
+    id: 6,
+    lastName: 'Navarro',
+    firstName: 'Liza',
+    middleName: 'Gomez',
+    company: 'BioTech PH',
+    address: '88 Baguio Hilltop Rd.',
+    contact: '09171239876',
+    email: 'liza.navarro@biotechph.com',
+    status: 'active',
+    city: 'Baguio',
+  },
+  {
+    id: 7,
+    lastName: 'Lopez',
+    firstName: 'Miguel',
+    middleName: 'Torres',
+    company: 'AutoMate',
+    address: '14 Iloilo Ave.',
+    contact: '09223456789',
+    email: 'miguel.lopez@automate.com',
+    status: 'inactive',
+    city: 'Iloilo',
+  },
+  {
+    id: 8,
+    lastName: 'Torres',
+    firstName: 'Sofia',
+    middleName: 'Reyes',
+    company: 'NextGen',
+    address: '22 Taguig Rd.',
+    contact: '09181234567',
+    email: 'sofia.torres@nextgen.com',
+    status: 'active',
+    city: 'Taguig',
+  },
+  {
+    id: 9,
+    lastName: 'Fernandez',
+    firstName: 'Marco',
+    middleName: 'Luis',
+    company: 'CloudLink',
+    address: '77 Makati Ave.',
+    contact: '09331234567',
+    email: 'marco.fernandez@cloudlink.com',
+    status: 'active',
+    city: 'Makati',
+  },
+  {
+    id: 10,
+    lastName: 'Ramirez',
+    firstName: 'Isabel',
+    middleName: 'Delos Santos',
+    company: 'HealthPlus',
+    address: '65 Quezon Ave.',
+    contact: '09451234567',
+    email: 'isabel.ramirez@healthplus.com',
+    status: 'inactive',
+    city: 'Quezon City',
   },
 ];
 
-const mockAds: Ad[] = [
-  {
-    id: 'AD1',
-    title: 'Concrete Sale Promo',
-    submittedBy: 'Jane Doe',
-    status: 'Pending',
-    category: 'Construction',
-    description: '50% off premium concrete materials.',
-  },
-  {
-    id: 'AD2',
-    title: 'Waterproofing Service',
-    submittedBy: 'Jane Doe',
-    status: 'Approved',
-    category: 'Services',
-    description: 'Reliable waterproofing for any structure.',
-  },
-];
+const cities = ['Manila', 'Quezon City', 'Cebu', 'Davao', 'Iloilo', 'Baguio', 'Makati', 'Taguig', 'Pasig', 'Parañaque'];
 
 const ManageUsers: React.FC = () => {
-  const [tab, setTab] = useState<'users' | 'ads'>('users');
-  const [users, setUsers] = useState<User[]>(mockUsers);
-  const [ads, setAds] = useState<Ad[]>(mockAds);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState('');
-  const [filterVerified, setFilterVerified] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [citySearch, setCitySearch] = useState('');
+  const [showCityModal, setShowCityModal] = useState(false);
 
-  const handleDeleteUser = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      setUsers((prev) => prev.filter((u) => u.id !== id));
-    }
-  };
-
-  const handleAdStatusChange = (id: string, status: Ad['status']) => {
-    setAds((prev) =>
-      prev.map((ad) => (ad.id === id ? { ...ad, status } : ad))
-    );
-  };
-
-  const filteredUsers = users.filter((user) => {
-    return (
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterRole ? user.role === filterRole : true) &&
-      (filterVerified ? (filterVerified === 'Verified' ? user.isEmailVerified : !user.isEmailVerified) : true)
-    );
+  const filteredUsers = mockUsers.filter((user) => {
+    const matchesSearch = user.firstName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
+    const matchesCity = !selectedCity || user.city === selectedCity;
+    return matchesSearch && matchesStatus && matchesCity;
   });
 
   return (
-    <div className="p-8 bg-gray-900 min-h-screen text-white">
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setTab('users')}
-          className={`px-4 py-2 rounded ${tab === 'users' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-        >
-          Manage Users
-        </button>
-        <button
-          onClick={() => setTab('ads')}
-          className={`px-4 py-2 rounded ${tab === 'ads' ? 'bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-        >
-          Manage Ads
-        </button>
-      </div>
-
-      {tab === 'users' ? (
-        <>
-          <h1 className="text-2xl font-bold mb-4">Manage Users</h1>
-          <div className="mb-4 flex flex-wrap gap-4">
-            <input
-              type="text"
-              placeholder="Search by email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-2 bg-gray-800 text-white border border-gray-600 rounded w-64"
-            />
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="p-2 bg-gray-800 text-white border border-gray-600 rounded"
-            >
-              <option value="">All Roles</option>
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-            <select
-              value={filterVerified}
-              onChange={(e) => setFilterVerified(e.target.value)}
-              className="p-2 bg-gray-800 text-white border border-gray-600 rounded"
-            >
-              <option value="">All Status</option>
-              <option value="Verified">Verified</option>
-              <option value="Not Verified">Not Verified</option>
-            </select>
-          </div>
-
-          <table className="w-full bg-gray-800 rounded-lg overflow-hidden shadow-md">
-            <thead className="bg-gray-700 text-white">
-              <tr>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Email</th>
-                <th className="p-3 text-left">Address</th>
-                <th className="p-3 text-left">Contact</th>
-                <th className="p-3 text-left">Role</th>
-                <th className="p-3 text-left">Verified</th>
-                <th className="p-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="border-b border-gray-600">
-                  <td className="p-3 cursor-pointer" onClick={() => setSelectedUser(user)}>{user.name}</td>
-                  <td className="p-3">{user.email}</td>
-                  <td className="p-3">{user.houseAddress}</td>
-                  <td className="p-3">{user.contactNumber}</td>
-                  <td className="p-3">{user.role}</td>
-                  <td className="p-3">{user.isEmailVerified ? '✅' : '❌'}</td>
-                  <td className="p-3 flex space-x-3">
-                    <button
-                      onClick={() => setSelectedUser(user)}
-                      className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 flex items-center"
-                    >
-                      <TrashIcon className="w-4 h-4 mr-1" /> Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <>
-          <h1 className="text-2xl font-bold mb-4">Manage Ads</h1>
-          <table className="w-full bg-gray-800 rounded-lg overflow-hidden shadow-md">
-            <thead className="bg-gray-700 text-white">
-              <tr>
-                <th className="p-3 text-left">Title</th>
-                <th className="p-3 text-left">Category</th>
-                <th className="p-3 text-left">Submitted By</th>
-                <th className="p-3 text-left">Status</th>
-                <th className="p-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ads.map((ad) => (
-                <tr key={ad.id} className="border-b border-gray-600">
-                  <td className="p-3">{ad.title}</td>
-                  <td className="p-3">{ad.category}</td>
-                  <td className="p-3">{ad.submittedBy}</td>
-                  <td className="p-3">
-                    {ad.status === 'Pending' ? '🕒' : ad.status === 'Approved' ? '✅' : '❌'} {ad.status}
-                  </td>
-                  <td className="p-3 flex gap-2">
-                    <button
-                      onClick={() => handleAdStatusChange(ad.id, 'Approved')}
-                      className="bg-green-600 px-2 py-1 rounded hover:bg-green-700"
-                    >
-                      <CheckIcon className="w-4 h-4 inline" /> Approve
-                    </button>
-                    <button
-                      onClick={() => handleAdStatusChange(ad.id, 'Rejected')}
-                      className="bg-red-600 px-2 py-1 rounded hover:bg-red-700"
-                    >
-                      <XMarkIcon className="w-4 h-4 inline" /> Reject
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
-
-      {/* User Detail Modal */}
-      {selectedUser && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-gray-800 p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">User Details</h2>
-            <p><strong>Name:</strong> {selectedUser.name}</p>
-            <p><strong>Email:</strong> {selectedUser.email}</p>
-            <p><strong>Role:</strong> {selectedUser.role}</p>
-            <p><strong>Address:</strong> {selectedUser.houseAddress}</p>
-            <p><strong>Contact:</strong> {selectedUser.contactNumber}</p>
-            <p><strong>Verified:</strong> {selectedUser.isEmailVerified ? 'Yes' : 'No'}</p>
-            <button onClick={() => setSelectedUser(null)} className="mt-4 bg-gray-600 px-3 py-1 rounded">Close</button>
-          </div>
+    <div className="pt-2 pb-10 pl-64">
+      <div className="bg-white p-6 rounded-lg shadow-md w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Users List</h2>
+          <input
+            type="text"
+            className="border rounded px-3 py-1 text-sm w-64"
+            placeholder="Search by first name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      )}
+
+        {/* Filter Chips */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {['all', 'active', 'inactive'].map(status => (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status as 'all' | 'active' | 'inactive')}
+              className={`px-4 py-1 text-sm rounded-full border ${
+                statusFilter === status ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border-blue-600'
+              }`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </button>
+          ))}
+          <button
+            onClick={() => setShowCityModal(true)}
+            className="px-4 py-1 text-sm rounded-full border border-green-600 text-green-600"
+          >
+            {selectedCity ? `City: ${selectedCity}` : 'Filter by City'}
+          </button>
+          {selectedCity && (
+            <button
+              onClick={() => setSelectedCity(null)}
+              className="text-sm underline text-gray-600"
+            >
+              Clear City Filter
+            </button>
+          )}
+        </div>
+
+        {/* City Modal */}
+        {showCityModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
+            <div className="bg-white p-4 rounded-lg w-80 shadow-lg">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-semibold">Select a City</h3>
+                <button onClick={() => setShowCityModal(false)}>&times;</button>
+              </div>
+              <input
+                type="text"
+                placeholder="Search cities..."
+                value={citySearch}
+                onChange={(e) => setCitySearch(e.target.value)}
+                className="w-full border px-2 py-1 rounded mb-3"
+              />
+              <div className="max-h-60 overflow-y-auto">
+                {cities
+                  .filter(city => city.toLowerCase().includes(citySearch.toLowerCase()))
+                  .map(city => (
+                    <div
+                      key={city}
+                      onClick={() => {
+                        setSelectedCity(city);
+                        setShowCityModal(false);
+                        setCitySearch('');
+                      }}
+                      className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                    >
+                      {city}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Table */}
+        <div className="overflow-auto border rounded-md mb-4">
+          <table className="min-w-full text-sm">
+            <thead className="bg-teal-600 text-white">
+              <tr>
+                <th className="px-3 py-2 text-left">Last Name</th>
+                <th className="px-3 py-2 text-left">First Name</th>
+                <th className="px-3 py-2 text-left">Middle Name</th>
+                <th className="px-3 py-2 text-left">Company</th>
+                <th className="px-3 py-2 text-left">Address</th>
+                <th className="px-3 py-2 text-left">City</th>
+                <th className="px-3 py-2 text-left">Contact</th>
+                <th className="px-3 py-2 text-left">Email</th>
+                <th className="px-3 py-2 text-left">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user, index) => (
+                <tr key={user.id} className={index % 2 === 0 ? 'bg-teal-50' : 'bg-white'}>
+                  <td className="px-3 py-2">{user.lastName}</td>
+                  <td className="px-3 py-2">{user.firstName}</td>
+                  <td className="px-3 py-2">{user.middleName}</td>
+                  <td className="px-3 py-2">{user.company}</td>
+                  <td className="px-3 py-2">{user.address}</td>
+                  <td className="px-3 py-2">{user.city}</td>
+                  <td className="px-3 py-2">{user.contact}</td>
+                  <td className="px-3 py-2">{user.email}</td>
+                  <td className="px-3 py-2 capitalize">{user.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-600">Found: {filteredUsers.length}</span>
+          <button className="px-4 py-2 border border-green-600 text-green-600 rounded hover:bg-green-50 text-sm">
+            Export to Excel
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
