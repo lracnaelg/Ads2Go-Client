@@ -26,13 +26,16 @@ const Login: React.FC = () => {
         return;
       }
 
-      if (user?.role?.toUpperCase() === 'ADMIN') {
-        navigate('/admin');
-      } else if (user?.role?.toUpperCase() === 'SUPERADMIN') {
-        navigate('/sadmin-dashboard');
-      } else {
-        navigate('/Dashboard');
+      // Block admins from logging in here - redirect them to admin login
+      if (user.role?.toUpperCase() === 'ADMIN' || user.role?.toUpperCase() === 'SUPERADMIN') {
+        setError('Admin users must use the dedicated admin login page.');
+        // Optionally, you could redirect them to the admin login page:
+        // navigate('/admin/login');
+        return;
       }
+
+      // For regular users, navigate to dashboard
+      navigate('/Dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     }
@@ -114,7 +117,7 @@ const Login: React.FC = () => {
         </form>
 
         <p className="text-sm mt-4 text-gray-600">
-          Don’t have an account?{' '}
+          Don't have an account?{' '}
           <button onClick={handleRegisterClick} className="text-indigo-600 hover:underline">
             Sign Up
           </button>
