@@ -3,15 +3,15 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useMemo,
   useCallback,
 } from 'react';
-import { useMutation, useApolloClient } from '@apollo/client';
+import { useMutation, useApolloClient, useLazyQuery } from '@apollo/client';
 import { LOGIN_MUTATION, REGISTER_MUTATION, LOGOUT_MUTATION } from '../services/graphql';
-import { jwtDecode } from 'jwt-decode';
+import { GET_OWN_USER_DETAILS } from '../graphql/queries/getOwnUserDetails';
+import { jwtDecode } from 'jwt-decode';  // <-- fixed import here
 
 // Types
-type UserRole = "ADMIN" | "USER" | "SUPERADMIN"; // Include SUPERADMIN
+type UserRole = "ADMIN" | "USER" | "SUPERADMIN";
 
 interface User {
   userId: string;
@@ -26,7 +26,6 @@ interface User {
   contactNumber?: string;
   profilePicture?: string;
 }
-
 
 interface AuthContextType {
   user: User | null;
@@ -56,6 +55,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
   const [logoutMutation] = useMutation(LOGOUT_MUTATION);
   const apolloClient = useApolloClient();
 
+  const [fetchUserDetails] = useLazyQuery(GET_OWN_USER_DETAILS);
+
   // Navigate to register page
   const navigateToRegister = useCallback(() => {
     navigate('/register');
@@ -65,104 +66,107 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
   const publicPages = ['/login', '/register', '/forgot-password'];
 
   // Authentication check
-  const checkAuthentication = useCallback(() => {
+  const checkAuthentication = useCallback(async () => {
     const token = localStorage.getItem('token');
     console.log('Stored Token:', token);
-  
+
     if (token) {
       try {
-        const decoded = jwtDecode<User>(token);
-        console.log('Decoded Token:', decoded);
-  
-        setUser(decoded);
-        setUserEmail(decoded.email);
-  
-        if (decoded.isEmailVerified) {
-          if (publicPages.includes(window.location.pathname) || window.location.pathname === '/verify-email') {
-            const redirectPath = decoded.role.toUpperCase() === 'ADMIN' ? '/admin' : '/home';
-            console.log(`✅ Redirecting to ${redirectPath}`);
-            navigate(redirectPath);
-          }
+        const decoded = jwtDecode<any>(token);
+        console.log('✅ Decoded Token:', decoded);
+
+        if (!decoded || !decoded.email) {
+          console.warn('⚠️ Decoded token missing required fields. Forcing logout.');
+          localStorage.removeItem('token');
+          navigate('/login');
+          return;
+        }
+
+        // Fetch fresh user data from backend
+        const { data } = await fetchUserDetails();
+
+        if (!data || !data.getOwnUserDetails) {
+          console.warn('⚠️ No user data returned from backend.');
+          localStorage.removeItem('token');
+          navigate('/login');
+          return;
+        }
+
+        const freshUser = data.getOwnUserDetails;
+
+        setUser(freshUser);
+        setUserEmail(freshUser.email);
+
+        if (!freshUser.isEmailVerified) {
+          console.log('❌ Redirecting to /verify-email');
+          navigate('/verify-email');
         } else {
-          if (!publicPages.includes(window.location.pathname) && window.location.pathname !== '/verify-email') {
-            console.log('❌ Redirecting to /verify-email');
-            navigate('/verify-email');
+          const redirectPath = freshUser.role?.toUpperCase() === 'ADMIN' ? '/admin' : '/home';
+          console.log(`✅ Redirecting to ${redirectPath}`);
+          if (publicPages.includes(window.location.pathname) || window.location.pathname === '/verify-email') {
+            navigate(redirectPath);
           }
         }
       } catch (error) {
-        console.error('Token decoding failed:', error);
+        console.error('Token decoding or user fetch failed:', error);
         localStorage.removeItem('token');
         navigate('/login');
       }
     }
-  }, [navigate]);
-  
-  
+  }, [fetchUserDetails, navigate]);
 
   // Run check on first load
   useEffect(() => {
     checkAuthentication();
   }, [checkAuthentication]);
 
-  // Simulated static login function
-const login = async (email: string, password: string): Promise<User | null> => {
-  const mockUsers: { [key: string]: User } = {
-    'admin@example.com': {
-      userId: '1',
-      email: 'admin@example.com',
-      role: 'ADMIN',
-      isEmailVerified: true,
-      name: 'Admin User',
-    },
-    'superadmin@example.com': {
-      userId: '2',
-      email: 'superadmin@example.com',
-      role: 'SUPERADMIN' as UserRole,
-      isEmailVerified: true,
-      name: 'Super Admin',
-    },
-    'user@example.com': {
-      userId: '3',
-      email: 'user@example.com',
-      role: 'USER',
-      isEmailVerified: true,
-      name: 'Regular User',
-    },
+  // Login function
+  const login = async (email: string, password: string): Promise<User | null> => {
+    try {
+      const deviceInfo = {
+        deviceId: 'web-client',
+        deviceType: 'web',
+        deviceName: navigator.userAgent,
+      };
+
+      const { data } = await loginMutation({
+        variables: { email, password, deviceInfo },
+      });
+
+      const token = data?.login?.token;
+      const user = data?.login?.user;
+
+      if (token && user) {
+        localStorage.setItem('token', token);
+        setUser(user);
+        setUserEmail(user.email);
+
+        if (!user.isEmailVerified) {
+          navigate('/verify-email');
+          return user;
+        }
+
+        switch (user.role.toUpperCase()) {
+          case 'ADMIN':
+            navigate('/admin');
+            break;
+          case 'SUPERADMIN':
+            navigate('/sadmin-dashboard');
+            break;
+          default:
+            navigate('/home');
+        }
+
+        return user;
+      } else {
+        throw new Error('Invalid login response');
+      }
+    } catch (error: any) {
+      console.error('Login error:', error.message || error);
+      alert(error.message || 'Login failed');
+      return null;
+    }
   };
-
-  const user = mockUsers[email.toLowerCase()];
-  const validPassword = password === '123'; // simple check
-
-  if (user && validPassword) {
-    setUser(user);
-    setUserEmail(user.email);
-
-    if (!user.isEmailVerified) {
-      navigate('/verify-email');
-      return user;
-    }
-
-    // Role-based navigation
-    switch (user.role) {
-      case 'ADMIN':
-        navigate('/admin');
-        break;
-      case 'SUPERADMIN':
-        navigate('/sadmin-dashboard');
-        break;
-      default:
-        navigate('/home');
-    }
-
-    return user;
-  }
-
-  alert('Invalid email or password');
-  return null;
-};
-
-  
-  
 
   // Register function
   const register = async (userData: any): Promise<boolean> => {
@@ -215,22 +219,20 @@ const login = async (email: string, password: string): Promise<User | null> => {
     }
   };
 
-  const contextValue = useMemo(
-    () => ({
-      user,
-      userEmail,
-      setUser,
-      setUserEmail,
-      login,
-      register,
-      logout,
-      isAuthenticated: !!user,
-      navigate,
-      debugToken,
-      navigateToRegister,
-    }),
-    [user, userEmail, navigate]
-  );
+  // Simple contextValue without useMemo (as you requested)
+  const contextValue = {
+    user,
+    userEmail,
+    setUser,
+    setUserEmail,
+    login,
+    register,
+    logout,
+    isAuthenticated: !!user,
+    navigate,
+    debugToken,
+    navigateToRegister,
+  };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };

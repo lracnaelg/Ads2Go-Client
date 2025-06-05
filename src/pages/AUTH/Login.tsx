@@ -1,15 +1,45 @@
 import React, { useState, useCallback } from 'react';
+import { useMutation } from '@apollo/client';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { LOGIN_MUTATION } from '../../graphql/mutations/Login';
 
 const Login: React.FC = () => {
-  const { navigateToRegister, login } = useAuth();
+  const { navigateToRegister } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);  
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted(data) {
+      // Store the token
+      localStorage.setItem('token', data.login.token);
+      
+      // Check user role and handle admin users
+      const user = data.login.user;
+      if (user.role?.toUpperCase() === 'ADMIN' || user.role?.toUpperCase() === 'SUPERADMIN') {
+        setError('Admin users must use the dedicated admin login page.');
+        // Optionally, you could redirect them to the admin login page:
+        // navigate('/admin/login');
+        return;
+      }
+
+      // Check if email is verified - if not, redirect to verify email
+      if (!user.isEmailVerified) {
+        navigate('/verify-email');
+        return;
+      }
+
+      // For regular users with verified email, navigate to dashboard
+      navigate('/Dashboard');
+    },
+    onError(error) {
+      setError(error.message);
+    },
+  });
 
   const handleRegisterClick = useCallback(() => {
     navigateToRegister();
@@ -19,26 +49,14 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    try {
-      const user = await login(email, password);
-      if (!user) {
-        setError('Login failed. Please check your credentials.');
-        return;
-      }
+    // Prepare deviceInfo (example: browser info)
+    const deviceInfo = {
+      deviceId: 'web-client',
+      deviceType: 'web',
+      deviceName: navigator.userAgent,
+    };
 
-      // Block admins from logging in here - redirect them to admin login
-      if (user.role?.toUpperCase() === 'ADMIN' || user.role?.toUpperCase() === 'SUPERADMIN') {
-        setError('Admin users must use the dedicated admin login page.');
-        // Optionally, you could redirect them to the admin login page:
-        // navigate('/admin/login');
-        return;
-      }
-
-      // For regular users, navigate to dashboard
-      navigate('/Dashboard');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
-    }
+    login({ variables: { email, password, deviceInfo } });
   };
 
   return (
@@ -110,9 +128,17 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md transition"
+            disabled={loading}
+            className="w-full bg-teal-500 hover:bg-teal-600 disabled:bg-teal-300 text-white py-2 rounded-md transition"
           >
-            Login
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                Logging in...
+              </div>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
 
