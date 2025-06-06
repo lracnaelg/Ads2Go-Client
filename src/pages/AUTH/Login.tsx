@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { LOGIN_MUTATION } from '../../graphql/mutations/Login';
 
 const Login: React.FC = () => {
-  const { navigateToRegister } = useAuth();
+  const { navigateToRegister, setUser } = useAuth(); // <-- added setUser
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);  
@@ -15,28 +15,34 @@ const Login: React.FC = () => {
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted(data) {
+      console.log('Login successful:', data);
+      
       // Store the token
       localStorage.setItem('token', data.login.token);
+      
+      // Update user in context immediately
+      setUser(data.login.user);
       
       // Check user role and handle admin users
       const user = data.login.user;
       if (user.role?.toUpperCase() === 'ADMIN' || user.role?.toUpperCase() === 'SUPERADMIN') {
         setError('Admin users must use the dedicated admin login page.');
-        // Optionally, you could redirect them to the admin login page:
-        // navigate('/admin/login');
         return;
       }
 
       // Check if email is verified - if not, redirect to verify email
       if (!user.isEmailVerified) {
+        console.log('Email not verified, redirecting to verify-email');
         navigate('/verify-email');
         return;
       }
 
       // For regular users with verified email, navigate to dashboard
-      navigate('/Dashboard');
+      console.log('Navigating to dashboard...');
+      navigate('/dashboard'); // lowercase path here
     },
     onError(error) {
+      console.error('Login error:', error);
       setError(error.message);
     },
   });
@@ -49,7 +55,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    // Prepare deviceInfo (example: browser info)
     const deviceInfo = {
       deviceId: 'web-client',
       deviceType: 'web',

@@ -4,11 +4,12 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from 'react';
 import { useMutation, useApolloClient, useLazyQuery } from '@apollo/client';
 import { LOGIN_MUTATION, REGISTER_MUTATION, LOGOUT_MUTATION } from '../services/graphql';
 import { GET_OWN_USER_DETAILS } from '../graphql/queries/getOwnUserDetails';
-import { jwtDecode } from 'jwt-decode';  // <-- fixed import here
+import { jwtDecode } from 'jwt-decode';
 
 // Types
 type UserRole = "ADMIN" | "USER" | "SUPERADMIN";
@@ -48,24 +49,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
   children,
   navigate,
 }) => {
+  const hasRedirectedRef = useRef(false); // ✅ Moved inside component
   const [user, setUser] = useState<User | null>(null);
   const [userEmail, setUserEmail] = useState<string>('');
   const [loginMutation] = useMutation(LOGIN_MUTATION);
   const [registerMutation] = useMutation(REGISTER_MUTATION);
   const [logoutMutation] = useMutation(LOGOUT_MUTATION);
   const apolloClient = useApolloClient();
-
   const [fetchUserDetails] = useLazyQuery(GET_OWN_USER_DETAILS);
 
-  // Navigate to register page
   const navigateToRegister = useCallback(() => {
     navigate('/register');
   }, [navigate]);
 
-  // Public pages that unauthenticated users can access
   const publicPages = ['/login', '/register', '/forgot-password'];
 
-  // Authentication check
   const checkAuthentication = useCallback(async () => {
     const token = localStorage.getItem('token');
     console.log('Stored Token:', token);
@@ -82,7 +80,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
           return;
         }
 
-        // Fetch fresh user data from backend
         const { data } = await fetchUserDetails();
 
         if (!data || !data.getOwnUserDetails) {
@@ -97,13 +94,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
         setUser(freshUser);
         setUserEmail(freshUser.email);
 
+        if (hasRedirectedRef.current) return;
+
         if (!freshUser.isEmailVerified) {
           console.log('❌ Redirecting to /verify-email');
+          hasRedirectedRef.current = true;
           navigate('/verify-email');
         } else {
           const redirectPath = freshUser.role?.toUpperCase() === 'ADMIN' ? '/admin' : '/home';
-          console.log(`✅ Redirecting to ${redirectPath}`);
           if (publicPages.includes(window.location.pathname) || window.location.pathname === '/verify-email') {
+            console.log(`✅ Redirecting to ${redirectPath}`);
+            hasRedirectedRef.current = true;
             navigate(redirectPath);
           }
         }
@@ -115,37 +116,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
     }
   }, [fetchUserDetails, navigate]);
 
-  // Run check on first load
   useEffect(() => {
     checkAuthentication();
   }, [checkAuthentication]);
 
-  // Login function
-  const login = async (email: string, password: string): Promise<User | null> => {
-    try {
-      const deviceInfo = {
-        deviceId: 'web-client',
-        deviceType: 'web',
-        deviceName: navigator.userAgent,
-      };
+ const login = async (email: string, password: string): Promise<User | null> => {
+  try {
+    const deviceInfo = {
+      deviceId: 'web-client',
+      deviceType: 'web',
+      deviceName: navigator.userAgent,
+    };
 
-      const { data } = await loginMutation({
-        variables: { email, password, deviceInfo },
-      });
+    const { data } = await loginMutation({
+      variables: { email, password, deviceInfo },
+    });
 
-      const token = data?.login?.token;
-      const user = data?.login?.user;
+    const token = data?.login?.token;
+    const user = data?.login?.user;
 
-      if (token && user) {
-        localStorage.setItem('token', token);
-        setUser(user);
-        setUserEmail(user.email);
+    if (token && user) {
+      localStorage.setItem('token', token);
+      setUser(user);
+      setUserEmail(user.email);
 
-        if (!user.isEmailVerified) {
-          navigate('/verify-email');
-          return user;
-        }
+      console.log('✅ Logged in user:', user);
 
+      if (!user.isEmailVerified) {
+        // Immediate redirect is safe here
+        navigate('/verify-email');
+        return user;
+      }
+
+      // 🔧 Use setTimeout to let React finish rendering
+      setTimeout(() => {
         switch (user.role.toUpperCase()) {
           case 'ADMIN':
             navigate('/admin');
@@ -156,19 +160,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
           default:
             navigate('/home');
         }
+      }, 0);
 
-        return user;
-      } else {
-        throw new Error('Invalid login response');
-      }
-    } catch (error: any) {
-      console.error('Login error:', error.message || error);
-      alert(error.message || 'Login failed');
-      return null;
+      return user;
+    } else {
+      throw new Error('Invalid login response');
     }
-  };
+  } catch (error: any) {
+    console.error('Login error:', error.message || error);
+    alert(error.message || 'Login failed');
+    return null;
+  }
+};
 
-  // Register function
   const register = async (userData: any): Promise<boolean> => {
     try {
       const { data } = await registerMutation({ variables: { input: userData } });
@@ -195,7 +199,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
     }
   };
 
-  // Logout function
   const logout = async (): Promise<void> => {
     try {
       await logoutMutation();
@@ -209,7 +212,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
     }
   };
 
-  // Debug token function
   const debugToken = (token: string): User | null => {
     try {
       return jwtDecode<User>(token);
@@ -219,7 +221,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; navigate: (path
     }
   };
 
-  // Simple contextValue without useMemo (as you requested)
   const contextValue = {
     user,
     userEmail,
