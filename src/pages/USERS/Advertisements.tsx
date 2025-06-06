@@ -420,7 +420,7 @@ const Advertisements: React.FC = () => {
         ))}
       </div>
 
-      <style>
+      <style> 
         {`
           @keyframes slideIn {
             from {
