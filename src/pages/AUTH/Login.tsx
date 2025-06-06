@@ -41,7 +41,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-white">
       {/* Left Side - Login Form */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center px-10">
+      <div className="w-full md:w-1/3 flex flex-col justify-center px-10 bg-gradient-to-br from-blue-50 to-gray-100 px-4">
         <div className="mb-10">
           <h1 className="text-2xl font-bold text-gray-900">
             Artificial Intelligence Driving Results For The Travel Industry
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
               <input type="checkbox" className="mr-2" />
               Remember Me
             </label>
-            <Link to="/forgot-password" className="text-indigo-600 hover:underline">
+            <Link to="/forgot-pass" className="text-indigo-600 hover:underline">
               Forgot Password?
             </Link>
           </div>
@@ -122,7 +122,7 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right Side - Image and Navbar */}
-      <div className="hidden md:flex w-1/2 flex-col relative bg-[#0e2a47]">
+      <div className="hidden md:flex md:flex-grow flex-col relative bg-[#0e2a47]">
         <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center text-white">
           <div className="text-xl font-bold">Ads2Go</div>
           <nav className="space-x-6">

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard,
-  Home,
+  Megaphone,
   Settings,
   LogOut,
   CreditCard,
@@ -29,7 +29,7 @@ const SideNavbar: React.FC = () => {
 
   const navLinks = [
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/dashboard' },
-    { label: 'Home', icon: <Home size={20} />, path: '/home' },
+    { label: 'Advertisements', icon: <Megaphone size={20} />, path: '/advertisements' },
     { label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
     { label: 'Payment', icon: <CreditCard size={20} />, path: '/payment' },
     { label: 'Accounts', icon: <Users size={20} />, path: '/accounts' },
