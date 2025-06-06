@@ -18,6 +18,8 @@ import Landing from './pages/USERS/Landing'; // Ensure this is the correct impor
 import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
+import Advertisements from './pages/USERS/Advertisements';
+
 
 // Admin pages
 import AdminLogin from './pages/AUTH/AdminLogin';
@@ -107,6 +109,14 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <CreateAdvertisement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/advertisements"
+          element={
+            <ProtectedRoute>
+              <Advertisements />
             </ProtectedRoute>
           }
         />
