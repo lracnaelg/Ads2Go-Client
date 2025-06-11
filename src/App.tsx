@@ -16,7 +16,7 @@ import Home from './pages/USERS/Home';
 import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement'; 
-
+import History from './pages/USERS/History';
 
 // Admin pages
 import AdminDashboard from './pages/ADMIN/AdminDashboard';
@@ -65,6 +65,9 @@ const AppContent: React.FC = () => {
         <Route path="/settings" element={<Settings />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/create-advertisement" element={<CreateAdvertisement />} />
+        <Route path="/history" element={<History />} />
+
+        {/* User Routes */}
 
 
 

@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   firstName: string;
@@ -13,6 +14,8 @@ interface FormData {
 
 const Settings: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     middleName: "",
@@ -44,7 +47,6 @@ const Settings: React.FC = () => {
 
   const toggleEdit = () => {
     if (isEditing) {
-      // Save logic here (e.g., send to backend)
       console.log("Saving profile data:", formData);
     }
     setIsEditing((prev) => !prev);
@@ -52,6 +54,10 @@ const Settings: React.FC = () => {
 
   const handleChangePassword = () => {
     alert("Change password functionality triggered");
+  };
+
+  const goToHistory = () => {
+    navigate("/History");
   };
 
   return (
@@ -69,15 +75,25 @@ const Settings: React.FC = () => {
               <h2 className="text-xl font-semibold">
                 {formData.firstName || "User Name"}
               </h2>
-              <p className="text-gray-500">{formData.email || "user@email.com"}</p>
+              <p className="text-gray-500">
+                {formData.email || "user@email.com"}
+              </p>
             </div>
           </div>
-          <button
-            onClick={toggleEdit}
-            className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-          >
-            {isEditing ? "Save" : "Edit"}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={goToHistory}
+              className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            >
+              History
+            </button>
+            <button
+              onClick={toggleEdit}
+              className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+            >
+              {isEditing ? "Save" : "Edit"}
+            </button>
+          </div>
         </div>
 
         {/* Form Grid */}
@@ -106,7 +122,9 @@ const Settings: React.FC = () => {
 
           {isEditing && (
             <div>
-              <label className="block text-sm font-medium mb-1">Profile Picture</label>
+              <label className="block text-sm font-medium mb-1">
+                Profile Picture
+              </label>
               <input
                 type="file"
                 accept="image/*"
