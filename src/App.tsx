@@ -19,6 +19,7 @@ import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
 import Advertisements from './pages/USERS/Advertisements';
+import Help from './pages/USERS/Help';
 
 
 // Admin pages
@@ -29,6 +30,7 @@ import SiteSettings from './pages/ADMIN/SiteSettings';
 import ManageRiders from './pages/ADMIN/ManageRiders';
 import AdminAdsControl from './pages/ADMIN/AdminAdsControl';
 import Materials from './pages/ADMIN/Materials';
+import Reports from './pages/ADMIN/Reports';
 
 // Super Admin pages
 import SadminDashboard from './pages/SUPERADMIN/SadminDashboard';
@@ -120,6 +122,14 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/help"
+          element={
+            <ProtectedRoute>
+              <Help />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Protected Admin Routes */}
         <Route
@@ -167,6 +177,15 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <Materials />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute>
+              <Reports />
             </ProtectedRoute>
           }
         />
