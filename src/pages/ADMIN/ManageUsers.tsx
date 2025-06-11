@@ -11,6 +11,8 @@ interface User {
   email: string;
   status: 'active' | 'inactive';
   city: string;
+  adsCount: number;
+  ridersCount: number;
 }
 
 const mockUsers: User[] = [
@@ -25,6 +27,8 @@ const mockUsers: User[] = [
     email: 'juan.garcia@techcorp.com',
     status: 'active',
     city: 'Makati',
+    adsCount: 5,
+    ridersCount: 12,
   },
   {
     id: 2,
@@ -37,6 +41,8 @@ const mockUsers: User[] = [
     email: 'maria.reyes@agrifarm.com',
     status: 'inactive',
     city: 'Quezon City',
+    adsCount: 3,
+    ridersCount: 7,
   },
   {
     id: 3,
@@ -49,6 +55,8 @@ const mockUsers: User[] = [
     email: 'pedro.cruz@buildit.com',
     status: 'active',
     city: 'Manila',
+    adsCount: 8,
+    ridersCount: 15,
   },
   {
     id: 4,
@@ -61,6 +69,8 @@ const mockUsers: User[] = [
     email: 'ana.rosa@smartbuild.com',
     status: 'active',
     city: 'Pasig',
+    adsCount: 2,
+    ridersCount: 3,
   },
   {
     id: 5,
@@ -73,6 +83,8 @@ const mockUsers: User[] = [
     email: 'carlos.santos@greenfields.com',
     status: 'inactive',
     city: 'Davao',
+    adsCount: 0,
+    ridersCount: 0,
   },
   {
     id: 6,
@@ -85,6 +97,8 @@ const mockUsers: User[] = [
     email: 'liza.navarro@biotechph.com',
     status: 'active',
     city: 'Baguio',
+    adsCount: 4,
+    ridersCount: 9,
   },
   {
     id: 7,
@@ -97,6 +111,8 @@ const mockUsers: User[] = [
     email: 'miguel.lopez@automate.com',
     status: 'inactive',
     city: 'Iloilo',
+    adsCount: 1,
+    ridersCount: 2,
   },
   {
     id: 8,
@@ -109,6 +125,8 @@ const mockUsers: User[] = [
     email: 'sofia.torres@nextgen.com',
     status: 'active',
     city: 'Taguig',
+    adsCount: 6,
+    ridersCount: 11,
   },
   {
     id: 9,
@@ -121,6 +139,8 @@ const mockUsers: User[] = [
     email: 'marco.fernandez@cloudlink.com',
     status: 'active',
     city: 'Makati',
+    adsCount: 4,
+    ridersCount: 10,
   },
   {
     id: 10,
@@ -133,6 +153,8 @@ const mockUsers: User[] = [
     email: 'isabel.ramirez@healthplus.com',
     status: 'inactive',
     city: 'Quezon City',
+    adsCount: 2,
+    ridersCount: 4,
   },
 ];
 
@@ -166,7 +188,6 @@ const ManageUsers: React.FC = () => {
           />
         </div>
 
-        {/* Filter Chips */}
         <div className="flex flex-wrap gap-2 mb-4">
           {['all', 'active', 'inactive'].map(status => (
             <button
@@ -195,7 +216,6 @@ const ManageUsers: React.FC = () => {
           )}
         </div>
 
-        {/* City Modal */}
         {showCityModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-20 z-50">
             <div className="bg-white p-4 rounded-lg w-80 shadow-lg">
@@ -231,7 +251,6 @@ const ManageUsers: React.FC = () => {
           </div>
         )}
 
-        {/* Table */}
         <div className="overflow-auto border rounded-md mb-4">
           <table className="min-w-full text-sm">
             <thead className="bg-teal-600 text-white">
@@ -245,6 +264,8 @@ const ManageUsers: React.FC = () => {
                 <th className="px-3 py-2 text-left">Contact</th>
                 <th className="px-3 py-2 text-left">Email</th>
                 <th className="px-3 py-2 text-left">Status</th>
+                <th className="px-3 py-2 text-left"># of Ads</th>
+                <th className="px-3 py-2 text-left"># of Riders</th>
               </tr>
             </thead>
             <tbody>
@@ -259,13 +280,14 @@ const ManageUsers: React.FC = () => {
                   <td className="px-3 py-2">{user.contact}</td>
                   <td className="px-3 py-2">{user.email}</td>
                   <td className="px-3 py-2 capitalize">{user.status}</td>
+                  <td className="px-3 py-2">{user.adsCount}</td>
+                  <td className="px-3 py-2">{user.ridersCount}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {/* Footer */}
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Found: {filteredUsers.length}</span>
           <button className="px-4 py-2 border border-green-600 text-green-600 rounded hover:bg-green-50 text-sm">
