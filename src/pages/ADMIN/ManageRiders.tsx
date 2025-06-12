@@ -18,6 +18,9 @@ interface Rider {
   materialsSupported: string;
   materialsID: string;
   status: 'Active' | 'Applicant';
+  distanceTraveled: number;
+  assignedAds: string;
+  areaBase: string;
 }
 
 const mockRiders: Rider[] = [
@@ -38,6 +41,9 @@ const mockRiders: Rider[] = [
     materialsSupported: 'LCD Screen, Stickers',
     materialsID: 'M-001',
     status: 'Active',
+    distanceTraveled: 1200,
+    assignedAds: 'Company A',
+    areaBase: 'Quezon City',
   },
   {
     id: 'R2',
@@ -56,6 +62,9 @@ const mockRiders: Rider[] = [
     materialsSupported: 'Posters, LCD Screen',
     materialsID: 'M-002',
     status: 'Applicant',
+    distanceTraveled: 500,
+    assignedAds: 'Company B',
+    areaBase: 'Makati City',
   },
   {
     id: 'R3',
@@ -74,6 +83,9 @@ const mockRiders: Rider[] = [
     materialsSupported: 'LCD Screen',
     materialsID: 'M-003',
     status: 'Active',
+    distanceTraveled: 800,
+    assignedAds: 'Company C',
+    areaBase: 'Taguig City',
   },
 ];
 
@@ -156,7 +168,6 @@ const ManageRider: React.FC = () => {
     <div className="p-8 bg-gray-900 min-h-screen text-white">
       <h1 className="text-2xl font-bold mb-4">Manage Riders</h1>
 
-      {/* Navbar for Tabs */}
       <div className="mb-6 flex space-x-4">
         <button
           onClick={() => setActiveTab('active')}
@@ -172,7 +183,6 @@ const ManageRider: React.FC = () => {
         </button>
       </div>
 
-      {/* Render Table Based on Active Tab */}
       {activeTab === 'active' && renderRiderTable('Active Riders', activeRiders)}
       {activeTab === 'applicants' && renderRiderTable('Rider Applicants', applicants, true)}
 
@@ -188,6 +198,9 @@ const ManageRider: React.FC = () => {
             <p><strong>Vehicle:</strong> {selectedRider.vehicleType} - {selectedRider.vehicleModel}</p>
             <p><strong>Materials Supported:</strong> {selectedRider.materialsSupported}</p>
             <p><strong>Materials ID:</strong> {selectedRider.materialsID}</p>
+            <p><strong>Distance Traveled:</strong> {selectedRider.distanceTraveled} km</p>
+            <p><strong>Assigned Ads:</strong> {selectedRider.assignedAds}</p>
+            <p><strong>Area Base:</strong> {selectedRider.areaBase}</p>
             <p><strong>License Pic:</strong> {selectedRider.licensePicture}</p>
             <p><strong>ORCR Pic:</strong> {selectedRider.orcrPicture}</p>
 
