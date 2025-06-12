@@ -21,7 +21,6 @@ type Ad = {
   material: 'LCD Screen' | 'Posters' | 'Vinyl Sticker';
   plan: 'Monthly' | 'Weekly';
   format: 'Image' | 'Video';
-  mediaDisplayed?: boolean;
   imagePath?: string;
 };
 
@@ -33,11 +32,7 @@ const Advertisements: React.FC = () => {
   const [startDate, setStartDate] = useState('2020-07-31');
   const [endDate, setEndDate] = useState('2020-08-03');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [confirmMessage, setConfirmMessage] = useState('');
-  const [onConfirmCallback, setOnConfirmCallback] = useState<(() => void) | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const itemsPerPage = 6;
 
   // Sample ad data with new fields
@@ -80,49 +75,14 @@ const Advertisements: React.FC = () => {
     showConfirmModal(message, callback);
   };
 
-  // Handle opening the modal with ad details
-  const handleViewDetails = (ad: Ad) => {
-    setSelectedAd(ad);
-    setIsModalOpen(true);
-  };
-
-  // Handle closing the modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedAd(null);
+  // Toggle expandable row
+  const toggleExpand = (id: number) => {
+    setExpandedId(prev => (prev === id ? null : id));
   };
 
   // Handle opening the confirmation modal
   const showConfirmModal = (message: string, callback: () => void) => {
-    setConfirmMessage(message);
-    setOnConfirmCallback(() => callback);
-    setIsConfirmModalOpen(true);
-  };
-
-  // Handle closing the confirmation modal
-  const handleCloseConfirmModal = () => {
-    setIsConfirmModalOpen(false);
-    setConfirmMessage('');
-    setOnConfirmCallback(null);
-  };
-
-  // Handle confirming the action in the confirmation modal
-  const handleConfirm = () => {
-    if (onConfirmCallback) {
-      onConfirmCallback();
-    }
-    handleCloseConfirmModal();
-  };
-
-  // Handle image/video display confirmation
-  const handleShowMedia = () => {
-    if (selectedAd) {
-      const message = `Do you want to display the ${selectedAd.format.toLowerCase()} for "${selectedAd.title}"?`;
-      const callback = () => {
-        setSelectedAd((prev) => (prev ? { ...prev, mediaDisplayed: true } : null));
-      };
-      showConfirmModal(message, callback);
-    }
+    // Implementation removed as modal is no longer used
   };
 
   // Filter ads based on active tab
@@ -148,7 +108,7 @@ const Advertisements: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 pl-64 pb-6 pr-1 bg-gray-100">
+    <div className="flex-1 pl-64 pb-6 pr-1 bg-white-100">
       {/* Header */}
       <div className="bg-white p-6 rounded-lg shadow ">
         <div className="flex justify-between items-center">
@@ -207,166 +167,62 @@ const Advertisements: React.FC = () => {
               <th className="pb-2">Date <span className="text-xs">↑</span></th>
               <th className="pb-2">Price <span className="text-xs">↑</span></th>
               <th className="pb-2">Status</th>
-              <th className="pb-2">Action</th>
             </tr>
           </thead>
           <tbody>
             {currentAds.map((ad) => (
-              <tr
-                key={ad.id}
-                className={`border-t ${ad.status === 'Dispatch' ? 'bg-green-50' : ''}`}
-              >
-                <td className="py-2">#{ad.id}</td>
-                <td className="py-2">
-                  <div className="flex items-center">
-                    {ad.title}
-                  </div>
-                </td>
-                <td className="py-2">{ad.riders}</td>
-                <td className="py-2">{ad.date}</td>
-                <td className="py-2">${ad.price.toFixed(2)}</td>
-                <td className="py-2">
-                  <span className={`inline-block w-2 h-2 rounded-full mr-2 ${ad.status === 'Pending' ? 'bg-red-500' : ad.status === 'Dispatch' ? 'bg-green-500' : 'bg-gray-500'}`}></span>
-                  {ad.status}
-                </td>
-                <td className="py-2">
-                  <button
-                    onClick={() => handleViewDetails(ad)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01" />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
+              <React.Fragment key={ad.id}>
+                <tr
+                  className={`border-t ${ad.status === 'Dispatch' ? 'bg-green-50' : ''} cursor-pointer hover:bg-teal-100`}
+                  onClick={() => toggleExpand(ad.id)}
+                >
+                  <td className="py-2">#{ad.id}</td>
+                  <td className="py-2">{ad.title}</td>
+                  <td className="py-2">{ad.riders}</td>
+                  <td className="py-2">{ad.date}</td>
+                  <td className="py-2">${ad.price.toFixed(2)}</td>
+                  <td className="py-2">
+                    <span className={`inline-block w-2 h-2 rounded-full mr-2 ${ad.status === 'Pending' ? 'bg-red-500' : ad.status === 'Dispatch' ? 'bg-green-500' : 'bg-gray-500'}`}></span>
+                    {ad.status}
+                  </td>
+                </tr>
+                {expandedId === ad.id && (
+                  <tr className="bg-gray-100">
+                    <td colSpan={6} className="p-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+                        <div><strong>Format:</strong> {ad.format}</div>
+                        <div><strong>Date Ended:</strong> {(() => {
+                          const startDate = new Date(ad.date);
+                          startDate.setMonth(startDate.getMonth() + (ad.plan === 'Monthly' ? 1 : 0.25));
+                          return startDate.toLocaleDateString();
+                        })()}</div>
+                        <div><strong>Material:</strong> {ad.material}</div>
+                        <div><strong>Vehicle Type:</strong> {ad.vehicleType}</div>
+                        <div><strong>Plan:</strong> {ad.plan}</div>
+                        <div>
+                          <strong>Media:</strong><br />
+                          {ad.format === 'Video' ? (
+                            <video controls className="w-40 h-40 object-cover rounded-lg">
+                              <source src="https://via.placeholder.com/150.mp4" type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          ) : ad.format === 'Image' && ad.imagePath ? (
+                            <img src={ad.imagePath} alt={`${ad.title} image`} className="w-40 h-40 object-cover rounded-lg" />
+                          ) : (
+                            <div className="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                              No Image
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Modal for Ad Details */}
-      {isModalOpen && selectedAd && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg max-w-2xl w-full mx-4">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Advertisement Details</h2>
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Image/Media Section */}
-              <div className="w-full md:w-48 flex-shrink-0">
-                {selectedAd.format === 'Image' && selectedAd.mediaDisplayed && selectedAd.imagePath ? (
-                  <img
-                    src={selectedAd.imagePath}
-                    alt={`${selectedAd.title} image`}
-                    className="w-48 h-48 object-cover rounded-lg"
-                  />
-                ) : selectedAd.format === 'Video' && selectedAd.mediaDisplayed ? (
-                  <video controls className="w-48 h-48 object-cover rounded-lg">
-                    <source src="https://via.placeholder.com/150.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <div className="w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
-                    No Image
-                  </div>
-                )}
-              </div>
-              {/* Details Section */}
-              <div className="flex-1 grid grid-cols-1 gap-2 text-gray-700">
-                <div className="flex">
-                  <span className="font-medium mr-2">ID:</span>
-                  <span>#{selectedAd.id}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Title:</span>
-                  <span>{selectedAd.title}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Price:</span>
-                  <span>${selectedAd.price.toFixed(2)}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Format:</span>
-                  <span>{selectedAd.format}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">No. of Riders:</span>
-                  <span>{selectedAd.riders}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Date Started:</span>
-                  <span>{selectedAd.date}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Date Ended:</span>
-                  <span>
-                    {(() => {
-                      const startDate = new Date(selectedAd.date);
-                      startDate.setMonth(startDate.getMonth() + (selectedAd.plan === 'Monthly' ? 1 : 0.25));
-                      return startDate.toLocaleDateString();
-                    })()}
-                  </span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Material:</span>
-                  <span>{selectedAd.material}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Vehicle Type:</span>
-                  <span>{selectedAd.vehicleType}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium mr-2">Plan:</span>
-                  <span>{selectedAd.plan}</span>
-                </div>
-                <div className="flex items-center">
-                  <span className={`inline-block w-2 h-2 rounded-full mr-2 ${selectedAd.status === 'Pending' ? 'bg-red-500' : selectedAd.status === 'Dispatch' ? 'bg-green-500' : 'bg-gray-500'}`}></span>
-                  <span>{selectedAd.status}</span>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 flex justify-end space-x-4">
-              {!selectedAd.mediaDisplayed && (
-                <button
-                  onClick={handleShowMedia}
-                  className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
-                >
-                  Show {selectedAd.format}
-                </button>
-              )}
-              <button
-                onClick={handleCloseModal}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Confirmation Modal */}
-      {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-80">
-            <h2 className="text-lg font-semibold mb-4 text-gray-800">Confirm Action</h2>
-            <p className="text-gray-700 mb-4">{confirmMessage}</p>
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={handleCloseConfirmModal}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
-              >
-                No
-              </button>
-              <button
-                onClick={handleConfirm}
-                className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Pagination */}
       <div className="p-4 rounded-lg mt-6 flex justify-between items-center">

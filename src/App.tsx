@@ -1,12 +1,12 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext'; // Import your useAuth hook
+import { useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Import Navbars
 import UserNavbar from './components/UserNavbar';
 import AdminNavbar from './components/AdminNavbar';
-import SadminNavbar from './components/SadminNavbar'; // Add SadminNavbar
+import SadminNavbar from './components/SadminNavbar'; 
 
 // Regular user pages
 import Login from './pages/AUTH/Login';
@@ -14,7 +14,7 @@ import Register from './pages/USERS/Register';
 import ForgotPass from './pages/USERS/ForgotPass';
 import Dashboard from './pages/USERS/Dashboard';
 import VerifyEmail from './pages/USERS/VerifyEmail';
-import Landing from './pages/USERS/Landing'; // Ensure this is the correct import path
+import Landing from './pages/USERS/Landing'; 
 import Settings from './pages/USERS/Settings';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
@@ -29,6 +29,7 @@ import SiteSettings from './pages/ADMIN/SiteSettings';
 import ManageRiders from './pages/ADMIN/ManageRiders';
 import AdminAdsControl from './pages/ADMIN/AdminAdsControl';
 import Materials from './pages/ADMIN/Materials';
+import ManageForms from './pages/ADMIN/ManageForms';
 
 // Super Admin pages
 import SadminDashboard from './pages/SUPERADMIN/SadminDashboard';
@@ -167,6 +168,14 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <Materials />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/forms"
+          element={
+            <ProtectedRoute>
+              <ManageForms />
             </ProtectedRoute>
           }
         />
