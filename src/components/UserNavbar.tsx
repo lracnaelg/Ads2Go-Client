@@ -29,18 +29,18 @@ const SideNavbar: React.FC = () => {
 
   const navLinks = [
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/dashboard' },
-    { label: 'Advertisements', icon: <Megaphone size={20} />, path: '/Advertisements' },
+    { label: 'Advertisements', icon: <Megaphone size={20} />, path: '/advertisements' },
+    { label: 'Payment History', icon: <CreditCard size={20} />, path: '/history' },
     { label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
-    { label: 'Payment', icon: <CreditCard size={20} />, path: '/payment' },
     { label: 'Help', icon: <HelpCircle size={20} />, path: '/help' },
   ];
 
   return (
-    <div className="h-screen w-64 bg-[#0F172A] text-white flex flex-col justify-between shadow-xl fixed">
+    <div className="h-screen w-60 bg-[#78B3CE] text-black flex flex-col justify-between shadow-xl fixed">
       <div className="p-6">
         {/* Logo */}
         <div className="flex items-center space-x-3 mb-10">
-          <img src="/image/white-logo.png" alt="Logo" className="w-8 h-8" />
+          <img src="/image/black-logo.png" alt="Logo" className="w-8 h-8" />
           <span className="text-2xl font-bold">Ads2Go</span>
         </div>
 
@@ -50,8 +50,8 @@ const SideNavbar: React.FC = () => {
             <li key={link.label}>
               <Link
                 to={link.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-[#1E293B] transition ${
-                  location.pathname === link.path ? 'bg-[#1E293B]' : ''
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-[#3674B5] hover:text-white transition ${
+                  location.pathname === link.path ? 'bg-[#C9E6F0]' : ''
                 }`}
               >
                 {link.icon}
@@ -66,13 +66,13 @@ const SideNavbar: React.FC = () => {
       <div className="p-6 border-t border-gray-700 flex items-center justify-between">
         <div
           className="w-10 h-10 rounded-full bg-[#FF9D3D] flex items-center justify-center cursor-pointer hover:bg-[#F6C794]"
-          onClick={() => navigate('/settings')}
+          onClick={() => navigate('/account')}
         >
           <span className="text-white font-semibold">{getInitials(user?.name)}</span>
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-2 text-sm text-red-400 hover:text-red-500 transition"
+          className="flex items-center space-x-2 text-sm text-[#FF2929] hover:text-red-500 transition"
         >
           <LogOut size={18} />
           <span>Logout</span>

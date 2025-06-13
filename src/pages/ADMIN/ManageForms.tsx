@@ -160,7 +160,7 @@ const ManageForms: React.FC = () => {
                     selectedFormType === type ? 'bg-teal-500 text-white' : 'text-black border-teal-500'
                   }`}
                 >
-                  {type === 'ads' ? 'User Ads Forms' : 'Rider Applications'}
+                  {type === 'ads' ? 'Advertisement Forms' : 'Rider Applications'}
                 </button>
               ))}
             </div>

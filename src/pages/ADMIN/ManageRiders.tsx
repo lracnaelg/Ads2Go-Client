@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
-interface Rider {
+interface Riders {
   id: string;
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
   password: string;
   contactNumber: string;
   email: string;
-  selfie: string;
   licenseNumber: string;
   licensePicture: string;
   orcrPicture: string;
@@ -17,14 +17,55 @@ interface Rider {
   vehicleModel: string;
   materialsSupported: string;
   materialsID: string;
-  status: string;
+  status: 'Active' | 'Applicant';
+  distanceTraveled: number;
+  assignedAds: string;
+  areaBase: string;
 }
 
-const allVehicleTypes = ['Car', 'Ebike', 'Motorcycle', 'Bus', 'Jeepney', 'Tricycle', 'Truck', 'Van'];
-const allMaterials = ['LCD', 'BANNER', 'HEADDRESS', 'Sticker'];
-const allStatuses = ['Active', 'Pending', 'Suspended', 'Inactive'];
-
-const riders: Rider[] = [
+const mockRiders: Riders[] = [
+  {
+    id: 'R1',
+    firstName: 'Juan',
+    middleName: 'Santos',
+    lastName: 'Dela Cruz',
+    password: '••••••••',
+    contactNumber: '09171234567',
+    email: 'juan.delacruz@example.com',
+    licenseNumber: 'DLN-123456789',
+    licensePicture: 'license1.jpg',
+    orcrPicture: 'orcr1.jpg',
+    plateNumber: 'ABC-1234',
+    vehicleType: 'Car',
+    vehicleModel: 'Toyota Vios',
+    materialsSupported: 'LCD Screen, Stickers',
+    materialsID: 'M-001',
+    status: 'Active',
+    distanceTraveled: 1200,
+    assignedAds: 'Company A',
+    areaBase: 'Quezon City',
+  },
+  {
+    id: 'R2',
+    firstName: 'Maria',
+    middleName: '',
+    lastName: 'Reyes',
+    password: '••••••••',
+    contactNumber: '09981234567',
+    email: 'maria.reyes@example.com',
+    licenseNumber: 'DLN-987654321',
+    licensePicture: 'license2.jpg',
+    orcrPicture: 'orcr2.jpg',
+    plateNumber: 'XYZ-5678',
+    vehicleType: 'Motorcycle',
+    vehicleModel: 'Honda TMX 125',
+    materialsSupported: 'Posters, LCD Screen',
+    materialsID: 'M-002',
+    status: 'Applicant',
+    distanceTraveled: 500,
+    assignedAds: 'Company B',
+    areaBase: 'Makati City',
+  },
   {
     id: 'R3',
     firstName: 'Carlos',
@@ -33,7 +74,6 @@ const riders: Rider[] = [
     password: '••••••••',
     contactNumber: '09081234567',
     email: 'carlos.g@example.com',
-    selfie: 'selfie.jpg',
     licenseNumber: 'DLN-1122334455',
     licensePicture: 'license3.jpg',
     orcrPicture: 'orcr3.jpg',
@@ -43,197 +83,138 @@ const riders: Rider[] = [
     materialsSupported: 'LCD Screen',
     materialsID: 'M-003',
     status: 'Active',
-  },
-  {
-    id: 'R4',
-    firstName: 'Maria',
-    middleName: 'D.',
-    lastName: 'Lopez',
-    password: '••••••••',
-    contactNumber: '09171234567',
-    email: 'maria.lopez@example.com',
-    selfie: 'selfie2.jpg',
-    licenseNumber: 'DLN-5566778899',
-    licensePicture: 'license4.jpg',
-    orcrPicture: 'orcr4.jpg',
-    plateNumber: 'XYZ-1234',
-    vehicleType: 'Motorcycle',
-    vehicleModel: 'Yamaha Mio',
-    materialsSupported: 'Sticker',
-    materialsID: 'M-008',
-    status: 'Inactive',
-  },
-  {
-    id: 'R5',
-    firstName: 'Juan',
-    middleName: 'C.',
-    lastName: 'Reyes',
-    password: '••••••••',
-    contactNumber: '09281234567',
-    email: 'juan.reyes@example.com',
-    selfie: 'selfie3.jpg',
-    licenseNumber: 'DLN-9988776655',
-    licensePicture: 'license5.jpg',
-    orcrPicture: 'orcr5.jpg',
-    plateNumber: 'ABC-5678',
-    vehicleType: 'Tricycle',
-    vehicleModel: 'Suzuki Trike',
-    materialsSupported: 'Banner',
-    materialsID: 'M-010',
-    status: 'Active',
+    distanceTraveled: 800,
+    assignedAds: 'Company C',
+    areaBase: 'Taguig City',
   },
 ];
-const ViewRiders: React.FC = () => {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const [vehicleType, setVehicleType] = useState<string>('All');
-  const [materialUsed, setMaterialUsed] = useState<string>('All');
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>(['Active', 'Pending']);
+const ManageRiders: React.FC = () => {
+  const [riders, setRiders] = useState<Riders[]>(mockRiders);
+  const [selectedRider, setSelectedRider] = useState<Riders | null>(null);
+  const [activeTab, setActiveTab] = useState<'active' | 'applicants'>('active');
 
-  const toggleExpand = (id: string) => {
-    setExpandedId(prev => (prev === id ? null : id));
+  const handleDelete = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this rider?')) {
+      setRiders((prev) => prev.filter((r) => r.id !== id));
+    }
   };
 
-  const toggleStatus = (status: string) => {
-    setSelectedStatuses(prev =>
-      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+  const handleApprove = (id: string) => {
+    setRiders((prev) =>
+      prev.map((r) =>
+        r.id === id ? { ...r, status: 'Active' } : r
+      )
     );
   };
 
-  const filteredRiders = riders.filter(r =>
-    (vehicleType === 'All' || r.vehicleType === vehicleType) &&
-    (materialUsed === 'All' || r.materialsSupported.toUpperCase().includes(materialUsed.toUpperCase())) &&
-    selectedStatuses.includes(r.status)
+  const activeRiders = riders.filter((r) => r.status === 'Active');
+  const applicants = riders.filter((r) => r.status === 'Applicant');
+
+  const renderRiderTable = (title: string, data: Riders[], showApproveButton = false) => (
+    <div className="mb-10">
+      <h2 className="text-xl font-semibold mb-3">{title}</h2>
+      <table className="w-full bg-white rounded-lg overflow-hidden shadow-md">
+        <thead className="bg-teal-600 text-white">
+          <tr>
+            <th className="p-3 text-left">Name</th>
+            <th className="p-3 text-left">Email</th>
+            <th className="p-3 text-left">Vehicle</th>
+            <th className="p-3 text-left">Plate #</th>
+            <th className="p-3 text-left">Contact</th>
+            <th className="p-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((rider) => (
+            <tr key={rider.id} className="border-b border-gray-600">
+              <td className="p-3 cursor-pointer" onClick={() => setSelectedRider(rider)}>
+                {rider.firstName} {rider.lastName}
+              </td>
+              <td className="p-3">{rider.email}</td>
+              <td className="p-3">{rider.vehicleModel}</td>
+              <td className="p-3">{rider.plateNumber}</td>
+              <td className="p-3">{rider.contactNumber}</td>
+              <td className="p-3 flex space-x-2">
+                {showApproveButton && (
+                  <button
+                    onClick={() => handleApprove(rider.id)}
+                    className="bg-green-500 px-3 py-1 rounded hover:bg-green-600"
+                  >
+                    Approve
+                  </button>
+                )}
+                <button
+                  onClick={() => setSelectedRider(rider)}
+                  className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  View
+                </button>
+                <button
+                  onClick={() => handleDelete(rider.id)}
+                  className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 flex items-center"
+                >
+                  <TrashIcon className="w-4 h-4 mr-1" /> Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 
   return (
-    <div className="pt-2 pb-10 pl-64">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full">
-        <h2 className="text-xl font-bold mb-4">Riders List</h2>
+    <div className="p-8 pl-64 bg-white min-h-screen text-black">
+      <h1 className="text-2xl font-bold mb-4">Manage Riders</h1>
 
-        {/* Filters */}
-        <div className="mb-6 space-y-3">
-          {/* Vehicle Type */}
-          <div>
-            <span className="font-semibold mr-4">Vehicle Type</span>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {['All', ...allVehicleTypes].map(type => (
-                <button
-                  key={type}
-                  onClick={() => setVehicleType(type)}
-                  className={`px-3 py-1 rounded-full border ${
-                    vehicleType === type ? 'bg-teal-500 text-white' : 'text-black border-teal-500'
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Material Used */}
-          <div>
-            <span className="font-semibold mr-4">Material Used</span>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {['All', ...allMaterials].map(mat => (
-                <button
-                  key={mat}
-                  onClick={() => setMaterialUsed(mat)}
-                  className={`px-3 py-1 rounded-full border ${
-                    materialUsed === mat ? 'bg-teal-500 text-white' : 'text-black border-teal-500'
-                  }`}
-                >
-                  {mat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Status */}
-          <div className="flex gap-4 items-center mt-2">
-            <span className="font-semibold">Status</span>
-            {allStatuses.map(status => (
-              <label key={status} className="inline-flex items-center space-x-1">
-                <input
-                  type="checkbox"
-                  checked={selectedStatuses.includes(status)}
-                  onChange={() => toggleStatus(status)}
-                  className="accent-blue-500"
-                />
-                <span>{status}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="overflow-auto border rounded-md mb-4">
-          <table className="min-w-full text-sm">
-            <thead className="bg-teal-600 text-white">
-              <tr>
-                <th className="px-3 py-2 text-left">ID</th>
-                <th className="px-3 py-2 text-left">Name</th>
-                <th className="px-3 py-2 text-left">Status</th>
-                <th className="px-3 py-2 text-left">Contact</th>
-                <th className="px-3 py-2 text-left">Email</th>
-                <th className="px-3 py-2 text-left">Vehicle</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredRiders.map((rider, index) => (
-                <React.Fragment key={rider.id}>
-                  <tr
-                    className={`${
-                      index % 2 === 0 ? 'bg-teal-50' : 'bg-white'
-                    } cursor-pointer hover:bg-teal-100`}
-                    onClick={() => toggleExpand(rider.id)}
-                  >
-                    <td className="px-3 py-2">{rider.id}</td>
-                    <td className="px-3 py-2">{`${rider.firstName} ${rider.middleName} ${rider.lastName}`}</td>
-                    <td className="px-3 py-2">{rider.status}</td>
-                    <td className="px-3 py-2">{rider.contactNumber}</td>
-                    <td className="px-3 py-2">{rider.email}</td>
-                    <td className="px-3 py-2">{`${rider.vehicleType} - ${rider.vehicleModel}`}</td>
-                  </tr>
-                  {expandedId === rider.id && (
-                    <tr className="bg-gray-100">
-                      <td colSpan={6} className="p-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                          <div><strong>Plate Number:</strong> {rider.plateNumber}</div>
-                          <div><strong>Password:</strong> {rider.password}</div>
-                          <div><strong>Materials:</strong> {rider.materialsSupported} ({rider.materialsID})</div>
-                          <div><strong>License Number:</strong> {rider.licenseNumber}</div>
-                          <div>
-                            <strong>Selfie:</strong><br />
-                            <img src={rider.selfie} alt="Selfie" className="h-20 w-20 rounded-full object-cover border" />
-                          </div>
-                          <div>
-                            <strong>License Picture:</strong><br />
-                            <img src={rider.licensePicture} alt="License" className="h-20 rounded border" />
-                          </div>
-                          <div>
-                            <strong>OR/CR Picture:</strong><br />
-                            <img src={rider.orcrPicture} alt="OR/CR" className="h-20 rounded border" />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
-              {filteredRiders.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="text-center text-gray-500 py-4">No riders match the selected filters.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="text-sm text-gray-600">Found: {filteredRiders.length} rider(s)</div>
+      <div className="mb-6 flex space-x-4">
+        <button
+          onClick={() => setActiveTab('active')}
+          className={`px-4 py-2 rounded-lg text-white ${activeTab === 'active' ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-600`}
+        >
+          Active Riders
+        </button>
+        <button
+          onClick={() => setActiveTab('applicants')}
+          className={`px-4 py-2 rounded-lg text-white ${activeTab === 'applicants' ? 'bg-blue-600' : 'bg-gray-700'} hover:bg-blue-600`}
+        >
+          Rider Applicants
+        </button>
       </div>
+
+      {activeTab === 'active' && renderRiderTable('Active Riders', activeRiders)}
+      {activeTab === 'applicants' && renderRiderTable('Rider Applicants', applicants, true)}
+
+      {selectedRider && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg w-[500px] space-y-2">
+            <h2 className="text-xl font-bold mb-4">Rider Details</h2>
+            <p><strong>Name:</strong> {selectedRider.firstName} {selectedRider.middleName} {selectedRider.lastName}</p>
+            <p><strong>Email:</strong> {selectedRider.email}</p>
+            <p><strong>Contact:</strong> {selectedRider.contactNumber}</p>
+            <p><strong>License #:</strong> {selectedRider.licenseNumber}</p>
+            <p><strong>Plate #:</strong> {selectedRider.plateNumber}</p>
+            <p><strong>Vehicle:</strong> {selectedRider.vehicleType} - {selectedRider.vehicleModel}</p>
+            <p><strong>Materials Supported:</strong> {selectedRider.materialsSupported}</p>
+            <p><strong>Materials ID:</strong> {selectedRider.materialsID}</p>
+            <p><strong>Distance Traveled:</strong> {selectedRider.distanceTraveled} km</p>
+            <p><strong>Assigned Ads:</strong> {selectedRider.assignedAds}</p>
+            <p><strong>Area Base:</strong> {selectedRider.areaBase}</p>
+            <p><strong>License Pic:</strong> {selectedRider.licensePicture}</p>
+            <p><strong>ORCR Pic:</strong> {selectedRider.orcrPicture}</p>
+
+            <button
+              onClick={() => setSelectedRider(null)}
+              className="mt-4 bg-gray-600 px-3 py-1 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ViewRiders;
+export default ManageRiders;

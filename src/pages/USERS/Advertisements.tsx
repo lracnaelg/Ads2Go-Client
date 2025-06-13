@@ -108,7 +108,7 @@ const Advertisements: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 pl-64 pb-6 pr-1 bg-white-100">
+    <div className="flex-1 pl-60 pb-6 pr-1 bg-white-100">
       {/* Header */}
       <div className="bg-white p-6 rounded-lg shadow ">
         <div className="flex justify-between items-center">

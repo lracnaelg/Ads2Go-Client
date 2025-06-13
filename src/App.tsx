@@ -15,10 +15,13 @@ import ForgotPass from './pages/USERS/ForgotPass';
 import Dashboard from './pages/USERS/Dashboard';
 import VerifyEmail from './pages/USERS/VerifyEmail';
 import Landing from './pages/USERS/Landing'; 
-import Settings from './pages/USERS/Settings';
+import Account from './pages/USERS/Account';
 import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
 import Advertisements from './pages/USERS/Advertisements';
+import Help from './pages/USERS/Help';
+import History from './pages/USERS/History';
+import Settings from './pages/USERS/Settings';
 
 
 // Admin pages
@@ -30,6 +33,7 @@ import ManageRiders from './pages/ADMIN/ManageRiders';
 import AdminAdsControl from './pages/ADMIN/AdminAdsControl';
 import Materials from './pages/ADMIN/Materials';
 import ManageForms from './pages/ADMIN/ManageForms';
+import Reports from './pages/ADMIN/Reports';
 
 // Super Admin pages
 import SadminDashboard from './pages/SUPERADMIN/SadminDashboard';
@@ -90,10 +94,10 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-          path="/settings"
+          path="/account"
           element={
             <ProtectedRoute>
-              <Settings />
+              <Account />
             </ProtectedRoute>
           }
         />
@@ -121,6 +125,31 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/help"
+          element={
+            <ProtectedRoute>
+              <Help />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+        path="/history" 
+        element={
+        <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+        }
+        />
+        <Route
+        path="/settings" 
+        element={
+        <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+        }
+        />
+        
 
         {/* Protected Admin Routes */}
         <Route
@@ -179,6 +208,15 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute>
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
+
 
         {/* Protected SuperAdmin Route */}
         <Route

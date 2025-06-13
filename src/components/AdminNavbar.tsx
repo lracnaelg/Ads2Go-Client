@@ -61,7 +61,6 @@ const AdminSidebar: React.FC = () => {
         >
           Logout
         </button>
-        <div className="mt-2 text-xs">CAMIOCA<br />Version: 1.0.0.11</div>
       </div>
     </div>
   );
