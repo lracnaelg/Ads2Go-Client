@@ -8,15 +8,17 @@ interface FormData {
   companyName: string;
   companyAddress: string;
   contactNumber: string;
-  email: string;
   profilePicture: string;
+  email: string;
+  cityState: string;
 }
 
-const Settings: React.FC = () => {
+const Account: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState<FormData>({
+  // Store the initial form data to revert on cancel
+  const initialFormData = {
     firstName: "",
     middleName: "",
     lastName: "",
@@ -25,7 +27,10 @@ const Settings: React.FC = () => {
     contactNumber: "",
     email: "",
     profilePicture: "",
-  });
+    cityState: "",
+  };
+
+  const [formData, setFormData] = useState<FormData>(initialFormData);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,100 +57,189 @@ const Settings: React.FC = () => {
     setIsEditing((prev) => !prev);
   };
 
-  const handleChangePassword = () => {
-    alert("Change password functionality triggered");
-  };
-
-  const goToHistory = () => {
-    navigate("/History");
+  const handleCancel = () => {
+    setFormData(initialFormData); // Revert to initial state
+    setIsEditing(false); // Exit edit mode
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 p-8 flex justify-center">
-      <main className="w-full max-w-5xl">
+    <div className="min-h-screen bg-white text-gray-700 p-8 flex pl-60 justify-center">
+      <main className="w-full max-w-4xl">
         {/* Header and Profile Section */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-start justify-between mb-6">
           <div className="flex items-center space-x-4">
             <img
               src={formData.profilePicture || "https://via.placeholder.com/100"}
               alt="Profile"
-              className="w-20 h-20 rounded-full object-cover"
+              className="w-16 h-16 rounded-full object-cover"
             />
             <div>
-              <h2 className="text-xl font-semibold">
-                {formData.firstName || "User Name"}
-              </h2>
-              <p className="text-gray-500">
-                {formData.email || "user@email.com"}
-              </p>
+              <h2 className="text-lg font-semibold">{formData.firstName || "User Name"}</h2>
+              <p className="text-gray-500 text-sm">{formData.email || "user@email.com"}</p>
+              <p className="text-gray-500 text-sm">{formData.cityState || "City"}</p>
             </div>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={goToHistory}
-              className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            >
-              History
-            </button>
-            <button
-              onClick={toggleEdit}
-              className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-            >
-              {isEditing ? "Save" : "Edit"}
-            </button>
+          <div className="flex flex-col items-end space-y-2">
+            {!isEditing ? (
+              <button
+                onClick={toggleEdit}
+                className="bg-[#F3A26D] text-white px-3 py-1 rounded hover:bg-[#E08B52] text-sm"
+              >
+                Edit
+              </button>
+            ) : (
+              <div className="space-x-2">
+                <button
+                  onClick={handleCancel}
+                  className="text-gray-500 hover:text-gray-700 text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={toggleEdit}
+                  className="bg-[#F3A26D] text-white px-3 py-1 rounded hover:bg-[#E08B52] text-sm"
+                >
+                  Save
+                </button>
+              </div>
+            )}
+            {isEditing && (
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full text-sm"
+                />
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Form Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            ["firstName", "First Name"],
-            ["middleName", "Middle Name"],
-            ["lastName", "Last Name"],
-            ["companyName", "Company Name"],
-            ["companyAddress", "Company Address"],
-            ["contactNumber", "Contact Number"],
-            ["email", "Email Address"],
-          ].map(([key, label]) => (
-            <div key={key}>
-              <label className="block text-sm font-medium mb-1">{label}</label>
-              <input
-                name={key}
-                value={formData[key as keyof FormData]}
-                onChange={handleInputChange}
-                placeholder={`Your ${label}`}
-                disabled={!isEditing}
-                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
-              />
-            </div>
-          ))}
-
-          {isEditing && (
+        {/* Personal Information Section */}
+        <div className="border p-4 rounded-md mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Personal Information</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Profile Picture
-              </label>
+              <label className="block text-xs font-medium mb-1">First Name</label>
               <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full text-sm"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                placeholder="Your First Name"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
               />
             </div>
-          )}
+            <div>
+              <label className="block text-xs font-medium mb-1">Last Name</label>
+              <input
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                placeholder="Your Last Name"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">Phone</label>
+              <input
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleInputChange}
+                placeholder="Your Contact Number"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <button
-            onClick={handleChangePassword}
-            className="bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-700 transition"
-          >
-            Change Password
-          </button>
+        {/* Company Information Section */}
+        <div className="border p-4 rounded-md mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Company Information</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium mb-1">Company Name</label>
+              <input
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleInputChange}
+                placeholder="Your Company Name"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">Company Email</label>
+              <input
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Your Company Email"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-xs font-medium mb-1">Company Address</label>
+              <input
+                name="companyAddress"
+                value={formData.companyAddress}
+                onChange={handleInputChange}
+                placeholder="Your Company Address"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Address Section */}
+        <div className="border p-4 rounded-md mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Address</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium mb-1">City/State</label>
+              <input
+                name="cityState"
+                value={formData.cityState}
+                onChange={handleInputChange}
+                placeholder="Your City / State"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">Postal Code</label>
+              <input
+                name="companyAddress"
+                value="ERT 2354"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 $}`}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">TAX ID</label>
+              <input
+                name="companyAddress"
+                value="AS4546756"
+                disabled={!isEditing}
+                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50`}
+              />
+            </div>
+          </div>
         </div>
       </main>
     </div>
   );
 };
 
-export default Settings;
+export default Account;

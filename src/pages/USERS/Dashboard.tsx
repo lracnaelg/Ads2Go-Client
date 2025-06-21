@@ -11,7 +11,7 @@ import {
   Cell,
 } from 'recharts';
 import { CircleUser } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom'; 
 
 const Dashboard = () => {
   const [selectedOption, setSelectedOption] = useState('Riders'); // Default to 'Riders'
@@ -63,7 +63,7 @@ const Dashboard = () => {
       {/* Metrics Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {/* Total Advertisements */}
-        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300">
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-500 text-md">Total Advertisements</span>
           </div>
@@ -72,37 +72,43 @@ const Dashboard = () => {
             <span className="text-green-600">↑ +20.1%</span>
             <span className="text-black"> +2,123 today</span>
           </p>
-          <Link
-            to="/advertisements"
-            className="text-white text-sm mt-24 bg-[#3674B5] rounded px-4 py-2 flex items-center"
-          >
-            View Report <span className="ml-32">→</span>
-          </Link>
+          <div className="mt-20"> {/* Changed mt-24 to mt-auto */}
+    <div className="pt-4 border-t border-gray-200 mb-2"></div> {/* Added separate border div */}
+    <Link
+      to="/advertisements"
+      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA] rounded px-4 py-2 flex items-center w-full justify-between"
+    >
+      View Report <span>→</span>
+    </Link>
+  </div>
         </div>
 
         {/* Total Riders */}
-        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-500 text-md ">Total Riders</span>
-          </div>
-          <p className="text-5xl font-bold text-gray-800 pt-2">1,062</p>
-          <p className="text-sm pt-2">
-            <span className="text-red-600">↓ -4%</span>
-            <span className="text-black"> -426 today</span>
-          </p>
-          <Link
-            to="/advertisements"
-            className="text-white text-sm mt-24 bg-[#F3A26D]  rounded px-4 py-2 flex items-center"
-          >
-            View Report <span className="ml-32">→</span>
-          </Link>
-        </div>
+        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300">
+  <div className="flex justify-between items-center mb-2">
+    <span className="text-gray-500 text-md">Total Riders</span>
+  </div>
+  <p className="text-5xl font-bold text-gray-800 pt-2">1,062</p>
+  <p className="text-sm pt-2">
+    <span className="text-red-600">↓ -4%</span>
+    <span className="text-black"> -426 today</span>
+  </p>
+  <div className="mt-20 "> {/* Changed mt-24 to mt-auto */}
+    <div className="pt-4 border-t border-gray-200 mb-2"></div> {/* Added separate border div */}
+    <Link
+      to="/advertisements"
+      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA]  rounded px-4 py-2 flex items-center w-full justify-between"
+    >
+      View Report <span>→</span>
+    </Link>
+  </div>
+</div>
 
         {/* Impressions (Placeholder for Chart) */}
-        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow col-span-2">
+        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300 col-span-2">
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-500 text-sm">Impressions</span>
-            <select className="text-sm text-gray-600 bg-transparent border-none focus:outline-none">
+            <select className="text-sm text-[#3674B5] bg-transparent border-none focus:outline-none">
               <option>Month</option>
             </select>
           </div>
@@ -123,7 +129,7 @@ const Dashboard = () => {
       {/* Recent Activity and QR Impressions Section */}
       <div className="flex flex-row space-x-6">
         {/* Recent Activity */}
-        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow w-7/12">
+        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300 w-7/12">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800 pt-3">Recent Activity</h2>
             <select
@@ -167,7 +173,7 @@ const Dashboard = () => {
                       className={`mr-16 flex justify-center w-24 text-xs px-2 py-1 rounded ${
                         rider.status === 'New'
                           ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
+                          : 'bg-green-200 text-green-800'
                       }`}
                     >
                       {rider.status}
@@ -198,10 +204,10 @@ const Dashboard = () => {
         </div>
 
         {/* QR Impressions */}
-        <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow w-1/3">
+        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300 w-1/3">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-semibold text-gray-800">QR Impressions</h2>
-            <select className="text-sm text-gray-600 bg-transparent border-none focus:outline-none">
+            <select className="text-sm text-[#3674B5] bg-transparent border-none focus:outline-none">
               <option>All time</option>
             </select>
           </div>

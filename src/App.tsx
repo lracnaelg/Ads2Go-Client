@@ -20,7 +20,7 @@ import Payment from './pages/USERS/Payment';
 import CreateAdvertisement from './pages/USERS/CreateAdvertisement';
 import Advertisements from './pages/USERS/Advertisements';
 import Help from './pages/USERS/Help';
-import History from './pages/USERS/History';
+import History from './pages/USERS/PaymentHistory';
 import Settings from './pages/USERS/Settings';
 
 
@@ -32,7 +32,6 @@ import SiteSettings from './pages/ADMIN/SiteSettings';
 import ManageRiders from './pages/ADMIN/ManageRiders';
 import AdminAdsControl from './pages/ADMIN/AdminAdsControl';
 import Materials from './pages/ADMIN/Materials';
-import ManageForms from './pages/ADMIN/ManageForms';
 import Reports from './pages/ADMIN/Reports';
 
 // Super Admin pages
@@ -200,14 +199,7 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/admin/forms"
-          element={
-            <ProtectedRoute>
-              <ManageForms />
-            </ProtectedRoute>
-          }
-        />
+        
         <Route
           path="/admin/reports"
           element={

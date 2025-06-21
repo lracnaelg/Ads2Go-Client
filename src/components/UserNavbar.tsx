@@ -41,7 +41,7 @@ const SideNavbar: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center space-x-3 mb-10">
           <img src="/image/black-logo.png" alt="Logo" className="w-8 h-8" />
-          <span className="text-2xl font-bold">Ads2Go</span>
+          <span className="text-2xl text-black font-bold">Ads2Go</span>
         </div>
 
         {/* Navigation */}

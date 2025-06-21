@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface User {
   id: number;
@@ -13,6 +13,23 @@ interface User {
   city: string;
   adsCount: number;
   ridersCount: number;
+}
+
+interface AdForm {
+  id: string;
+  type: 'ads';
+  title: string;
+  description: string;
+  vehicleType: string;
+  material: string;
+  plan: string;
+  format: string;
+  mediaUrl: string;
+  companyName: string;
+  companyEmail: string;
+  dateStarted: string;
+  dateEnded: string;
+  status: string;
 }
 
 const mockUsers: User[] = [
@@ -166,6 +183,50 @@ const ManageUsers: React.FC = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [citySearch, setCitySearch] = useState('');
   const [showCityModal, setShowCityModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('User List');
+  const [expandedId, setExpandedId] = useState<string | number | null>(null); // Updated to handle both string and number
+  const [selectedItems, setSelectedItems] = useState<Set<string | number>>(new Set());
+
+  // Mock data for ads
+  const [mockData, setMockData] = useState<AdForm[] | null>(null);
+
+  useEffect(() => {
+    const mockAdForms: AdForm[] = [
+      {
+        id: "1",
+        type: "ads",
+        title: "Summer Sale Ad",
+        description: "Promoting summer discounts on scooters",
+        vehicleType: "Scooter",
+        material: "Vinyl",
+        plan: "Premium",
+        format: "Video",
+        mediaUrl: "https://example.com/media/summer-sale.mp4",
+        companyName: "Summer Co.",
+        companyEmail: "sales@summerco.com",
+        dateStarted: "2025-06-01",
+        dateEnded: "2025-06-30",
+        status: "pending",
+      },
+      {
+        id: "2",
+        type: "ads",
+        title: "New Bike Launch",
+        description: "Introducing our latest bike model",
+        vehicleType: "Motorcycle",
+        material: "Metal",
+        plan: "Basic",
+        format: "Image",
+        mediaUrl: "https://example.com/media/bike-launch.jpg",
+        companyName: "Bike Innovations",
+        companyEmail: "info@bikeinnovations.com",
+        dateStarted: "2025-07-01",
+        dateEnded: "2025-07-15",
+        status: "pending",
+      },
+    ];
+    setMockData(mockAdForms);
+  }, []);
 
   const filteredUsers = mockUsers.filter((user) => {
     const matchesSearch = user.firstName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -174,11 +235,65 @@ const ManageUsers: React.FC = () => {
     return matchesSearch && matchesStatus && matchesCity;
   });
 
+  const forms = mockData || [];
+
+  const handleApprove = () => {
+    alert('Form approved successfully');
+    setExpandedId(null);
+    setSelectedItems(new Set());
+  };
+
+  const handleReject = () => {
+    alert('Form rejected successfully');
+    setExpandedId(null);
+    setSelectedItems(new Set());
+  };
+
+  const toggleExpand = (id: string | number) => {
+    setExpandedId(prev => (prev === id ? null : id));
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const allIds: (string | number)[] = activeTab === 'User List' ? filteredUsers.map(user => user.id) : forms.map(form => form.id);
+      setSelectedItems(new Set(allIds));
+    } else {
+      setSelectedItems(new Set());
+    }
+  };
+
+  const handleItemSelect = (id: string | number) => {
+    const newSelectedItems = new Set(selectedItems);
+    if (newSelectedItems.has(id)) {
+      newSelectedItems.delete(id);
+    } else {
+      newSelectedItems.add(id);
+    }
+    setSelectedItems(newSelectedItems);
+  };
+
   return (
     <div className="pt-2 pb-10 pl-64">
       <div className="bg-white p-6 rounded-lg shadow-md w-full">
+        {/* Header with Dropdown Title and Add New Button */}
+        <div className="flex justify-between items-center mb-6">
+          <select
+            className="border rounded px-3 py-1 text-2xl font-bold text-gray-800 focus:outline-none"
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+          >
+            <option value="User List">User List</option>
+            <option value="Manage Ads">Manage Ads</option>
+          </select>
+          <button 
+            className="px-4 py-2 bg-[#3674B5] text-white rounded-md hover:bg-[#578FCA] hover:scale-105 transition-all duration-300"
+          >
+            Add New User
+          </button>
+        </div>
+
+        {/* Search Bar and Filters */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Users List</h2>
           <input
             type="text"
             className="border rounded px-3 py-1 text-sm w-64"
@@ -186,34 +301,29 @@ const ManageUsers: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
-
-        <div className="flex flex-wrap gap-2 mb-4">
-          {['all', 'active', 'inactive'].map(status => (
-            <button
-              key={status}
-              onClick={() => setStatusFilter(status as 'all' | 'active' | 'inactive')}
-              className={`px-4 py-1 text-sm rounded-full border ${
-                statusFilter === status ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border-blue-600'
-              }`}
+          <div className="flex space-x-2">
+            <select
+              className="border rounded px-3 py-1 text-sm"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
             >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </button>
-          ))}
-          <button
-            onClick={() => setShowCityModal(true)}
-            className="px-4 py-1 text-sm rounded-full border border-green-600 text-green-600"
-          >
-            {selectedCity ? `City: ${selectedCity}` : 'Filter by City'}
-          </button>
-          {selectedCity && (
-            <button
-              onClick={() => setSelectedCity(null)}
-              className="text-sm underline text-gray-600"
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <select
+              className="border rounded px-3 py-1 text-sm"
+              value={selectedCity || ''}
+              onChange={(e) => setSelectedCity(e.target.value || null)}
             >
-              Clear City Filter
-            </button>
-          )}
+              <option value="">Filter by City</option>
+              {cities.map(city => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {showCityModal && (
@@ -221,7 +331,7 @@ const ManageUsers: React.FC = () => {
             <div className="bg-white p-4 rounded-lg w-80 shadow-lg">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold">Select a City</h3>
-                <button onClick={() => setShowCityModal(false)}>&times;</button>
+                <button onClick={() => setShowCityModal(false)}>×</button>
               </div>
               <input
                 type="text"
@@ -252,47 +362,224 @@ const ManageUsers: React.FC = () => {
         )}
 
         <div className="overflow-auto border rounded-md mb-4">
-          <table className="min-w-full text-sm">
-            <thead className="bg-teal-600 text-white">
-              <tr>
-                <th className="px-3 py-2 text-left">Last Name</th>
-                <th className="px-3 py-2 text-left">First Name</th>
-                <th className="px-3 py-2 text-left">Middle Name</th>
-                <th className="px-3 py-2 text-left">Company</th>
-                <th className="px-3 py-2 text-left">Address</th>
-                <th className="px-3 py-2 text-left">City</th>
-                <th className="px-3 py-2 text-left">Contact</th>
-                <th className="px-3 py-2 text-left">Email</th>
-                <th className="px-3 py-2 text-left">Status</th>
-                <th className="px-3 py-2 text-left">No. of Ads</th>
-                <th className="px-3 py-2 text-left">No. of Riders</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user, index) => (
-                <tr key={user.id} className={index % 2 === 0 ? 'bg-teal-50' : 'bg-white'}>
-                  <td className="px-3 py-2">{user.lastName}</td>
-                  <td className="px-3 py-2">{user.firstName}</td>
-                  <td className="px-3 py-2">{user.middleName}</td>
-                  <td className="px-3 py-2">{user.company}</td>
-                  <td className="px-3 py-2">{user.address}</td>
-                  <td className="px-3 py-2">{user.city}</td>
-                  <td className="px-3 py-2">{user.contact}</td>
-                  <td className="px-3 py-2">{user.email}</td>
-                  <td className="px-3 py-2 capitalize">{user.status}</td>
-                  <td className="px-3 py-2">{user.adsCount}</td>
-                  <td className="px-3 py-2">{user.ridersCount}</td>
+          {activeTab === 'User List' ? (
+            <table className="min-w-full text-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700 w-32">
+                    <div className="flex justify-center">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={filteredUsers.length > 0 && filteredUsers.every(user => selectedItems.has(user.id))}
+                          onChange={handleSelectAll}
+                          className="mr-1"
+                        />
+                        Select All
+                      </label>
+                    </div>
+                  </th>
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700">First Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Last Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Email</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Last Access</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user, index) => (
+                  <React.Fragment key={user.id}>
+                    <tr
+                      className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} cursor-pointer hover:bg-gray-100`}
+                      onClick={() => toggleExpand(user.id)}
+                    >
+                      <td className="px-2 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        <div className="flex justify-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.has(user.id)}
+                            onChange={() => handleItemSelect(user.id)}
+                            className="mr-1"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-2 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        <img
+                          src={`https://via.placeholder.com/40?text=${user.firstName[0]}`}
+                          alt={user.firstName}
+                          className="w-8 h-8 rounded-full mr-2 inline-block"
+                        />
+                        {user.firstName}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {user.lastName}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {user.email}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-medium ${
+                            user.status === 'active' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
+                          }`}
+                        >
+                          {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {user.status === 'active' ? 'Active Now' : 'Muted for 24 hours'}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        <button className="text-blue-600 text-xs">...</button>
+                      </td>
+                    </tr>
+                    {expandedId === user.id && (
+                      <tr className="bg-gray-50">
+                        <td colSpan={7} className="p-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                            <div><strong>Middle Name:</strong> {user.middleName}</div>
+                            <div><strong>Company:</strong> {user.company}</div>
+                            <div><strong>Address:</strong> {user.address}</div>
+                            <div><strong>Contact:</strong> {user.contact}</div>
+                            <div><strong>City:</strong> {user.city}</div>
+                            <div><strong>Ads Count:</strong> {user.adsCount}</div>
+                            <div><strong>Riders Count:</strong> {user.ridersCount}</div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <table className="min-w-full text-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700 w-32">
+                    <div className="flex justify-center">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={forms.length > 0 && forms.every(form => selectedItems.has(form.id))}
+                          onChange={handleSelectAll}
+                          className="mr-1"
+                        />
+                        Select All
+                      </label>
+                    </div>
+                  </th>
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700">Title</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Company Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Company Email</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date Started</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date Ended</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {forms.map((form, index) => (
+                  <React.Fragment key={form.id}>
+                    <tr
+                      className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} cursor-pointer hover:bg-gray-100`}
+                      onClick={() => toggleExpand(form.id)}
+                    >
+                      <td className="px-2 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        <div className="flex justify-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.has(form.id)}
+                            onChange={() => handleItemSelect(form.id)}
+                            className="mr-1"
+                          />
+                        </div>
+                      </td>
+                      <td className="px-2 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {form.title}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {form.companyName}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {form.companyEmail}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {form.dateStarted}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        {form.dateEnded}
+                      </td>
+                      <td className="px-4 py-3"> {/* Changed to py-3 for spacing like in the image */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApprove();
+                          }}
+                          className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleReject();
+                          }}
+                          className="bg-red-500 text-white px-2 py-1 rounded"
+                        >
+                          Reject
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedId === form.id && (
+                      <tr className="bg-gray-50">
+                        <td colSpan={7} className="p-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                            <div><strong>Description:</strong> {form.description}</div>
+                            <div><strong>Vehicle Type:</strong> {form.vehicleType}</div>
+                            <div><strong>Material:</strong> {form.material}</div>
+                            <div><strong>Plan:</strong> {form.plan}</div>
+                            <div><strong>Format:</strong> {form.format}</div>
+                            <div>
+                              <strong>Media:</strong><br />
+                              {form.format === 'Video' ? (
+                                <video controls className="w-40 h-40 object-cover rounded">
+                                  <source src={form.mediaUrl} type="video/mp4" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              ) : form.format === 'Image' ? (
+                                <img src={form.mediaUrl} alt="Ad Media" className="w-40 h-40 object-cover rounded" />
+                              ) : null}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+                {forms.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="text-center text-gray-500 py-3">No forms available.</td> {/* Changed to py-3 for consistency */}
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Found: {filteredUsers.length}</span>
-          <button className="px-4 py-2 border border-green-600 text-green-600 rounded hover:bg-green-50 text-sm">
-            Export to Excel
-          </button>
+          <span className="text-sm text-gray-600">Found: {activeTab === 'User List' ? filteredUsers.length : forms.length} {activeTab === 'User List' ? 'user(s)' : 'form(s)'}</span>
+          <div className="flex space-x-2">
+            <button className="px-4 py-2 border border-green-600 text-green-600 rounded hover:bg-green-50 text-sm">
+              Export to Excel
+            </button>
+            <div className="flex items-center space-x-2">
+              <button className="px-2 py-1 border rounded text-sm"></button>
+              <span className="px-2 py-1">1 2 3</span>
+              <button className="px-2 py-1 border rounded text-sm"></button>
+              <span className="text-sm text-gray-600">19 20</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

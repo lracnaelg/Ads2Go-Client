@@ -41,10 +41,15 @@ const Materials: React.FC = () => {
   });
 
   return (
-    <div className="pt-2 pb-10 pl-64"> {/* Added left padding to prevent overlap */}
+    <div className="pt-2 pb-10 pl-64">
       <div className="bg-white p-6 rounded-lg shadow-md w-full">
+        {/* Header with Static Title */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">Materials List</h2>
+        </div>
+
+        {/* Search Bar and Filters */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Materials List’s</h2>
           <input
             type="text"
             className="border rounded px-3 py-1 text-sm w-64"
@@ -52,34 +57,34 @@ const Materials: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
-
-        {/* Filter Chips */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {['All', 'LCD', 'BANNER', 'STICKER', 'HEADDRESS'].map(type => (
-            <button
-              key={type}
-              onClick={() => setSelectedType(type as typeof selectedType)}
-              className={`px-4 py-1 text-sm rounded-full border ${
-                selectedType === type ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 border-blue-600'
-              }`}
+          <div className="flex space-x-2">
+            <select
+              className="border rounded px-3 py-1 text-sm text-gray-800 focus:outline-none"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value as 'All' | 'LCD' | 'BANNER' | 'STICKER' | 'HEADDRESS')}
             >
-              {type}
-            </button>
-          ))}
+              <option value="All">All Materials</option>
+              <option value="LCD">LCD</option>
+              <option value="BANNER">BANNER</option>
+              <option value="STICKER">STICKER</option>
+              <option value="HEADDRESS">HEADDRESS</option>
+            </select>
+          </div>
         </div>
 
         {/* Status Checkboxes */}
-        <div className="flex gap-6 items-center mb-4">
-          <label className="flex items-center gap-1 text-sm">
-            <input type="checkbox" checked={showUsed} onChange={() => setShowUsed(!showUsed)} />
-            Used
-          </label>
-          <label className="flex items-center gap-1 text-sm">
-            <input type="checkbox" checked={showAvailable} onChange={() => setShowAvailable(!showAvailable)} />
-            Available
-          </label>
-          <div className="ml-auto text-sm">
+        <div className="flex items-center mb-4">
+          <div className="flex space-x-4">
+            <label className="flex items-center gap-1 text-sm">
+              <input type="checkbox" checked={showUsed} onChange={() => setShowUsed(!showUsed)} />
+              Used
+            </label>
+            <label className="flex items-center gap-1 text-sm">
+              <input type="checkbox" checked={showAvailable} onChange={() => setShowAvailable(!showAvailable)} />
+              Available
+            </label>
+          </div>
+          <div className="ml-auto text-sm text-gray-600">
             <span className="mr-4">Used <strong>{mockData.filter(d => d.status === 'Used').length}</strong></span>
             <span>Available <strong>{mockData.filter(d => d.status === 'Available').length}</strong></span>
           </div>
@@ -88,27 +93,35 @@ const Materials: React.FC = () => {
         {/* Table */}
         <div className="overflow-auto border rounded-md mb-4">
           <table className="min-w-full text-sm">
-            <thead className="bg-teal-600 text-white">
+            <thead className="bg-gray-100">
               <tr>
-                <th className="px-3 py-2 text-left">ID</th>
-                <th className="px-3 py-2 text-left">Material name</th>
-                <th className="px-3 py-2 text-left">Short name</th>
-                <th className="px-3 py-2 text-left">Status</th>
-                <th className="px-3 py-2 text-left">Start date</th>
-                <th className="px-3 py-2 text-left">End date</th>
-                <th className="px-3 py-2 text-left">Used By</th>
+                <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700">ID</th>
+                <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700">Material Name</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Short Name</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Start Date</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">End Date</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Used By</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((material, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-teal-50' : 'bg-white'}>
-                  <td className="px-3 py-2">{material.id}</td>
-                  <td className="px-3 py-2">{material.name}</td>
-                  <td className="px-3 py-2">{material.shortName}</td>
-                  <td className="px-3 py-2">{material.status}</td>
-                  <td className="px-3 py-2">{material.startDate}</td>
-                  <td className="px-3 py-2">{material.endDate}</td>
-                  <td className="px-3 py-2">{material.usedBy}</td>
+                <tr key={material.id} className="bg-white hover:bg-gray-100">
+                  <td className="px-2 py-3">{material.id}</td>
+                  <td className="px-2 py-3">{material.name}</td>
+                  <td className="px-4 py-3">{material.shortName}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        material.status === 'Used' ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'
+                      }`}
+                    >
+                      {material.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">{material.startDate}</td>
+                  <td className="px-4 py-3">{material.endDate}</td>
+                  <td className="px-4 py-3">{material.usedBy}</td>
                 </tr>
               ))}
             </tbody>
@@ -125,7 +138,7 @@ const Materials: React.FC = () => {
 
         {/* Pagination */}
         <div className="flex justify-center items-center mt-6 gap-2 text-sm flex-wrap">
-          <button className="text-gray-400 cursor-not-allowed">← Previous</button>
+          <button className="px-2 py-1 border rounded text-gray-400 cursor-not-allowed">← Previous</button>
           <button className="px-2 py-1 bg-blue-600 text-white rounded">1</button>
           <button className="px-2 py-1">2</button>
           <button className="px-2 py-1">3</button>
@@ -133,8 +146,8 @@ const Materials: React.FC = () => {
           <button className="px-2 py-1">5</button>
           <span>...</span>
           <button className="px-2 py-1">31</button>
-          <button className="text-blue-600">Next →</button>
-          <button className="text-blue-600">Show all</button>
+          <button className="px-2 py-1 border rounded text-blue-600">Next →</button>
+          <button className="px-2 py-1 text-blue-600">Show all</button>
         </div>
       </div>
     </div>

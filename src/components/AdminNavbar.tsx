@@ -17,7 +17,6 @@ const AdminSidebar: React.FC = () => {
     { label: 'View Users', path: '/admin/users' },
     { label: 'View Riders', path: '/admin/riders' },
     { label: 'Materials', path: '/admin/materials' },
-    { label: 'Manage Forms', path: '/admin/forms' },
     { label: 'Reports', path: '/admin/reports' },
     { label: 'AdsPanel', path: '/admin/ads' },
     { label: 'Settings', path: '/admin/settings' },

@@ -67,7 +67,7 @@ const icons = {
 };
 
 const Help: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<Section>('help');
+  const [activeSection, setActiveSection] = useState<Section>('about');
   const [fade, setFade] = useState(true);
 
   useEffect(() => {
@@ -79,11 +79,11 @@ const Help: React.FC = () => {
   const navItem = (label: string, section: Section) => (
     <li
       key={section}
-      className={`flex items-center px-4 py-2 rounded-lg cursor-pointer transition duration-200 select-none
+      className={`flex items-center px-4 py-2 rounded-lg cursor-pointer hover:scale-105 transition-all duration-300 select-none
         ${
           activeSection === section
-            ? 'bg-[#2EC4B6] text-white font-semibold shadow-md'
-            : 'text-[#0A192F] hover:bg-[#3ddfd2] hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#2EC4B6]'
+            ? 'bg-[#F3A26D] text-black font-semibold shadow-md'
+            : 'text-[#0A192F] hover:bg-[#F3A26D] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2EC4B6]'
         }`}
       onClick={() => setActiveSection(section)}
       tabIndex={0}
@@ -99,19 +99,36 @@ const Help: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans flex">
+    <div className="min-h-screen pl-60 pt-5 bg-[#FAFAFA] font-sans flex">
       {/* Main content area with left margin for sidebar width (w-64 = 256px) */}
-      <div className="flex-1 ml-64 flex flex-col">
-      
+      <div className="flex-1 flex flex-col">
         <main
-          className={`max-w-4xl mx-auto p-6 space-y-8 transition-opacity duration-300 ${
+          className={`mx-auto p-6 space-y-8 transition-opacity duration-300 ${
             fade ? 'opacity-100' : 'opacity-0'
           }`}
           aria-live="polite"
         >
+          {/* Header Container Centered */}
+          <div className="flex justify-center">
+            <div className="text-center mb-6">
+              <h1 className="text-4xl font-bold text-black mb-2">Hello, how can we help?</h1>
+              <div className="flex justify-center items-center space-x-2">
+                <input
+                  type="text"
+                  placeholder="Ask a question..."
+                  className="border border-gray-300 rounded-lg p-2 w-64 focus:outline-none"
+                />
+                <button className="bg-[#3674B5] text-white rounded-lg px-4 py-2 hover:bg-[#578FCA] hover:scale-105 transition-all duration-300">
+                  Search
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-2">or choose a category to quickly find the help you need</p>
+            </div>
+          </div>
+
           {/* Navigation Tabs */}
           <nav aria-label="Help sections" className="mb-6">
-            <ul className="flex space-x-4 border-b border-gray-300 pb-2 max-w-4xl mx-auto">
+            <ul className="flex justify-center space-x-4 border-b border-gray-300 pb-2">
               {navItem('About Us', 'about')}
               {navItem('Privacy Policy', 'privacy')}
               {navItem('Terms and Conditions', 'terms')}
@@ -121,22 +138,60 @@ const Help: React.FC = () => {
 
           {/* About Us */}
           {activeSection === 'about' && (
-            <section className="bg-white shadow-lg rounded-2xl p-6">
-              <h1 className="text-3xl font-bold mb-4 text-[#0A192F]">About Us</h1>
-              <p className="mb-4 text-[#2E2E2E] leading-relaxed">
-                AdsToGo is an innovative mobile advertising platform that transforms vehicles into moving digital billboards.
-                Our mission is to connect brands with audiences in fresh, interactive ways while creating income opportunities for drivers.
-              </p>
-              <p className="text-[#2E2E2E] leading-relaxed">
-                By integrating LCD screens and QR code interactivity, we create a dynamic advertising ecosystem tailored for the Philippines' growing vehicle market.
-              </p>
-            </section>
-          )}
+  <section className="border border-gray rounded-2xl p-6">
+    <h1 className="text-3xl font-bold mb-4 text-[#3674B5]">About Us</h1>
+    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+      <div className="flex-1">
+        <p className="mb-4 text-[#2E2E2E] leading-relaxed">
+          AdsToGo is an innovative mobile advertising platform that transforms vehicles into moving digital billboards.
+          Our mission is to connect brands with audiences in fresh, interactive ways while creating income opportunities for drivers.
+        </p>
+        <p className="text-[#2E2E2E] leading-relaxed">
+          By integrating LCD screens and QR code interactivity, we create a dynamic advertising ecosystem tailored for the Philippines' growing vehicle market.
+        </p>
+      </div>
+      <div className="flex-1 shadow-lg rounded-2xl p-6">
+        <form className="space-y-4">
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              Your Email Address
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none hover:scale-105 transition-all duration-300"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="topic">
+              Can't find what you are looking for? Tell us below:
+            </label>
+            <textarea
+              id="topic"
+              placeholder="Enter your concern"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none resize-y hover:scale-105 transition-all duration-300"
+              style={{ minHeight: '32px', maxHeight: '200px' }}
+            />
+          </div>
+          <div className="flex justify-end">
+  <button
+    type="submit"
+    className="w-44 bg-[#3674B5] text-white p-2 rounded-lg hover:bg-[#578FCA] hover:scale-105 transition-all duration-300"
+  >
+    Send your request
+  </button>
+</div>
+        </form>
+      </div>
+    </div>
+  </section>
+)}
 
           {/* Privacy Policy */}
           {activeSection === 'privacy' && (
-            <section className="bg-white shadow-lg rounded-2xl p-6">
-              <h1 className="text-3xl font-bold mb-4 text-[#0A192F]">Privacy Policy</h1>
+            <section className="border border-gray rounded-2xl p-6">
+              <h1 className="text-3xl font-bold mb-4 text-[#3674B5]">Privacy Policy</h1>
               <p className="mb-4 text-[#2E2E2E] leading-relaxed">
                 We respect your privacy. AdsToGo collects only essential data required to track ad performance and driver earnings.
                 Consumer interactions through QR codes are anonymized and used solely to improve advertising effectiveness.
@@ -149,8 +204,8 @@ const Help: React.FC = () => {
 
           {/* Terms and Conditions */}
           {activeSection === 'terms' && (
-            <section className="bg-white shadow-lg rounded-2xl p-6">
-              <h1 className="text-3xl font-bold mb-4 text-[#0A192F]">Terms and Conditions</h1>
+            <section className="border border-gray rounded-2xl p-6">
+              <h1 className="text-3xl font-bold mb-4 text-[#3674B5]">Terms and Conditions</h1>
               <p className="mb-4 text-[#2E2E2E] leading-relaxed">
                 By using AdsToGo services, you agree to comply with all applicable laws and regulations.
                 Advertisers must provide appropriate content and respect copyright laws.
@@ -164,11 +219,11 @@ const Help: React.FC = () => {
 
           {/* Help & Support */}
           {activeSection === 'help' && (
-            <section className="bg-white shadow-lg rounded-2xl p-6">
-              <h1 className="text-3xl font-bold mb-4 text-[#0A192F]">Help & Support</h1>
+            <section className="border border-gray rounded-2xl p-6">
+              <h1 className="text-3xl font-bold mb-4 text-[#3674B5]">Help & Support</h1>
 
               <section className="mb-6">
-                <h2 className="text-2xl font-semibold mb-2 text-[#2EC4B6]">What is AdsToGo?</h2>
+                <h2 className="text-2xl font-semibold mb-2 text-black">What is AdsToGo?</h2>
                 <p className="text-[#2E2E2E] leading-relaxed">
                   AdsToGo is a mobile digital advertising platform that transforms everyday vehicles into moving ad spaces.
                   Through the use of LCD screens mounted on cars, we broadcast digital ads throughout urban and rural areas—
@@ -177,7 +232,7 @@ const Help: React.FC = () => {
               </section>
 
               <section className="mb-6">
-                <h2 className="text-2xl font-semibold mb-2 text-[#2EC4B6]">How Does It Work?</h2>
+                <h2 className="text-2xl font-semibold mb-2 text-black">How Does It Work?</h2>
                 <ul className="list-disc list-inside space-y-1 text-[#2E2E2E] leading-relaxed">
                   <li>Advertisers upload and manage their digital ad content through the dashboard.</li>
                   <li>Vehicles equipped with LCD screens display the ads as they travel.</li>
@@ -188,7 +243,7 @@ const Help: React.FC = () => {
               </section>
 
               <section className="mb-6">
-                <h2 className="text-2xl font-semibold mb-2 text-[#2EC4B6]">Benefits</h2>
+                <h2 className="text-2xl font-semibold mb-2 text-black">Benefits</h2>
                 <ul className="list-disc list-inside space-y-1 text-[#2E2E2E] leading-relaxed">
                   <li><strong>For Advertisers:</strong> Broader reach, measurable results, and consumer engagement via QR codes.</li>
                   <li><strong>For Drivers:</strong> Passive income through fair, distance-based revenue sharing.</li>
@@ -197,7 +252,7 @@ const Help: React.FC = () => {
               </section>
 
               <section>
-                <h2 className="text-2xl font-semibold mb-2 text-[#2EC4B6]">Need More Help?</h2>
+                <h2 className="text-2xl font-semibold mb-2 text-black">Need More Help?</h2>
                 <p className="text-[#2E2E2E] leading-relaxed">
                   For technical issues, ad guidelines, or driver onboarding support, please contact our team at{' '}
                   <a href="mailto:support@adstogo.ph" className="text-[#0A192F] underline font-semibold hover:text-[#2EC4B6]">
@@ -214,4 +269,3 @@ const Help: React.FC = () => {
 };
 
 export default Help;
-
