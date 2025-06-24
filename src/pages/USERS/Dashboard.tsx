@@ -10,11 +10,14 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { CircleUser } from 'lucide-react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext'; // ✅ Import useAuth to access logged-in user
 
 const Dashboard = () => {
-  const [selectedOption, setSelectedOption] = useState('Riders'); // Default to 'Riders'
+  const { user } = useAuth(); // ✅ Get user from auth context
+  const [selectedOption, setSelectedOption] = useState('Riders');
+
+  const firstName = user?.firstName || 'User'; // ✅ Extract first name
 
   const barData = [
     { day: 'JAN', profit: 5000, loss: 2000 },
@@ -31,9 +34,8 @@ const Dashboard = () => {
     { name: 'Evening', value: 20 },
   ];
 
-  const colors = ['#3674B5', '#F3A26D', '#C9E6F0']; // New color scheme: Red, Teal, Light Blue
+  const colors = ['#3674B5', '#F3A26D', '#C9E6F0'];
 
-  // Sample data for Riders and Advertisements
   const riderData = [
     { name: 'Joseph Arimathea', email: 'josepharimathea@gmail.com', status: 'New', id: 'Customer ID #74598320', time: '5 min ago' },
     { name: 'Clark Kent', email: 'clarkkent@gmail.com', status: 'Departed', id: 'Customer ID #15648399', time: '10 min ago' },
@@ -48,15 +50,17 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-white p-8 ml-60">
-      {/* Header Section */}
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-800">Welcome back, User!</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">
+            Welcome back, {firstName}!
+          </h1>
           <p className="text-gray-500 text-sm">Here's your analytic detail</p>
         </div>
       </div>
 
-      {/* Metrics Section */}
+      {/* Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {/* Total Advertisements */}
         <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300">
@@ -68,39 +72,39 @@ const Dashboard = () => {
             <span className="text-green-600">↑ +20.1%</span>
             <span className="text-black"> +2,123 today</span>
           </p>
-          <div className="mt-20"> {/* Changed mt-24 to mt-auto */}
-    <div className="pt-4 border-t border-gray-200 mb-2"></div> {/* Added separate border div */}
-    <Link
-      to="/advertisements"
-      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA] rounded-lg px-4 py-2 flex items-center w-full justify-between"
-    >
-      View Report <span>→</span>
-    </Link>
-  </div>
+          <div className="mt-20">
+            <div className="pt-4 border-t border-gray-200 mb-2"></div>
+            <Link
+              to="/advertisements"
+              className="text-white text-sm bg-[#3674B5] hover:bg-[#578FCA] rounded-lg px-4 py-2 flex items-center w-full justify-between"
+            >
+              View Report <span>→</span>
+            </Link>
+          </div>
         </div>
 
         {/* Total Riders */}
         <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300">
-  <div className="flex justify-between items-center mb-2">
-    <span className="text-gray-500 text-md">Total Riders</span>
-  </div>
-  <p className="text-5xl font-bold text-gray-800 pt-2">1,062</p>
-  <p className="text-sm pt-2">
-    <span className="text-red-600">↓ -4%</span>
-    <span className="text-black"> -426 today</span>
-  </p>
-  <div className="mt-20 "> {/* Changed mt-24 to mt-auto */}
-    <div className="pt-4 border-t border-gray-200 mb-2"></div> {/* Added separate border div */}
-    <Link
-      to="/advertisements"
-      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA] rounded-lg px-4 py-2 flex items-center w-full justify-between"
-    >
-      View Report <span>→</span>
-    </Link>
-  </div>
-</div>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-gray-500 text-md">Total Riders</span>
+          </div>
+          <p className="text-5xl font-bold text-gray-800 pt-2">1,062</p>
+          <p className="text-sm pt-2">
+            <span className="text-red-600">↓ -4%</span>
+            <span className="text-black"> -426 today</span>
+          </p>
+          <div className="mt-20">
+            <div className="pt-4 border-t border-gray-200 mb-2"></div>
+            <Link
+              to="/riders"
+              className="text-white text-sm bg-[#3674B5] hover:bg-[#578FCA] rounded-lg px-4 py-2 flex items-center w-full justify-between"
+            >
+              View Report <span>→</span>
+            </Link>
+          </div>
+        </div>
 
-        {/* Impressions (Placeholder for Chart) */}
+        {/* Impressions */}
         <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300 col-span-2">
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-500 text-sm">Impressions</span>
@@ -122,7 +126,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Recent Activity and QR Impressions Section */}
+      {/* Activity & QR Impressions */}
       <div className="flex flex-row space-x-6">
         {/* Recent Activity */}
         <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300 w-7/10">
@@ -137,6 +141,7 @@ const Dashboard = () => {
               <option value="Advertisements">Advertisements</option>
             </select>
           </div>
+
           {/* Header Row */}
           <div className="grid grid-cols-[2fr_1fr_1.5fr_1fr] text-sm text-gray-500 font-medium mb-2 mt-6">
             {selectedOption === 'Riders' ? (
@@ -155,6 +160,7 @@ const Dashboard = () => {
               </>
             )}
           </div>
+
           <ul className="space-y-3">
             {selectedOption === 'Riders'
               ? riderData.map((rider, index) => (
@@ -215,7 +221,6 @@ const Dashboard = () => {
                 cy="50%"
                 innerRadius={60}
                 outerRadius={90}
-                // Removed default fill to rely on Cell colors
                 dataKey="value"
               >
                 {pieData.map((entry, index) => (

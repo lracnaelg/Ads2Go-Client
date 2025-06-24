@@ -41,15 +41,18 @@ const SiteSettings: React.FC = () => {
   });
   // State for Account Settings form
   const [accountForm, setAccountForm] = useState({
-    name: user?.name || 'formique Charpentier',
-    title: 'CEO',
-    practice: 'Finance',
-    branch: 'Quezon City',
-    email: 'ceo@yes.com',
-    phoneNumber: '',
-    loginId: 'id/ceo',
-    statusHistory: 'Activated 13/05/2009',
-  });
+  name: user
+    ? `${user.firstName} ${user.middleName ? user.middleName + ' ' : ''}${user.lastName}`.trim()
+    : 'formique Charpentier',
+  title: 'CEO',
+  practice: 'Finance',
+  branch: 'Quezon City',
+  email: 'ceo@yes.com',
+  phoneNumber: '',
+  loginId: 'id/ceo',
+  statusHistory: 'Activated 13/05/2009',
+});
+
 
   const initialAccountFormRef = useRef(accountForm);
 
@@ -467,7 +470,7 @@ const SiteSettings: React.FC = () => {
             >
               {!profileImage && (
                 <span className="text-white text-4xl font-bold">
-                  {getInitials(user?.name)}
+{getInitials(`${user?.firstName ?? ''} ${user?.middleName ?? ''} ${user?.lastName ?? ''}`.trim())}
                 </span>
               )}
             </div>

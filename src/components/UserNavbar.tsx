@@ -7,7 +7,6 @@ import {
   Settings,
   LogOut,
   CreditCard,
-  Users,
   HelpCircle
 } from 'lucide-react';
 
@@ -21,10 +20,9 @@ const SideNavbar: React.FC = () => {
     navigate('/login');
   };
 
-  const getInitials = (name?: string) => {
-    if (!name) return '?';
-    const names = name.split(' ');
-    return names.map(n => n[0]).join('').toUpperCase();
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return '?';
+    return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
   };
 
   const navLinks = [
@@ -69,14 +67,22 @@ const SideNavbar: React.FC = () => {
           onClick={() => navigate('/account')}
         >
           <div className="w-10 h-10 rounded-full bg-[#FF9D3D] flex items-center justify-center relative">
-            <span className="text-white font-semibold">{getInitials(user?.name)}</span>
-            {/* Green online dot, similar to image_76f8a9.png */}
+            <span className="text-white font-semibold">
+              {user ? getInitials(user.firstName, user.lastName) : '...'}
+            </span>
             <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
           </div>
           <div>
-            <p className="font-semibold text-gray-800">{user?.name || "Guest User"}</p>
-            {/* Changed from user?.location to user?.address */}
-            <p className="text-sm text-gray-500">{user?.address || "Unknown Address"}</p>
+            {user ? (
+              <p className="font-semibold text-gray-800">
+                {`${user.firstName} ${user.lastName}`}
+              </p>
+            ) : (
+              <>
+                <p className="font-semibold text-gray-800">Loading...</p>
+                <p className="text-sm text-gray-500">Please wait</p>
+              </>
+            )}
           </div>
         </div>
 

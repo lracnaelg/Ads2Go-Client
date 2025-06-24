@@ -1,27 +1,26 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Pencil
-} from 'lucide-react';
+import { Pencil } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface FormData {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
   companyName: string;
   companyAddress: string;
   contactNumber: string;
-  profilePicture: string;
+  profilePicture?: string;
   email: string;
-  cityState: string;
+  cityState?: string;
 }
 
 const Account: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  // Store the initial form data to revert on cancel
-  const initialFormData = {
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     middleName: "",
     lastName: "",
@@ -31,9 +30,24 @@ const Account: React.FC = () => {
     email: "",
     profilePicture: "",
     cityState: "",
-  };
+  });
 
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  // Populate form with user data
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        middleName: user.middleName || "",
+        lastName: user.lastName || "",
+        companyName: user.companyName || "",
+        companyAddress: user.companyAddress || "",
+        contactNumber: user.contactNumber || "",
+        email: user.email || "",
+        profilePicture: user.profilePicture || "",
+        cityState: user.houseAddress || "", // ✅ Fix: was user.address before
+      });
+    }
+  }, [user]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,19 +70,32 @@ const Account: React.FC = () => {
   const toggleEdit = () => {
     if (isEditing) {
       console.log("Saving profile data:", formData);
+      // You can send formData to backend here
     }
     setIsEditing((prev) => !prev);
   };
 
   const handleCancel = () => {
-    setFormData(initialFormData); // Revert to initial state
-    setIsEditing(false); // Exit edit mode
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        middleName: user.middleName || "",
+        lastName: user.lastName || "",
+        companyName: user.companyName || "",
+        companyAddress: user.companyAddress || "",
+        contactNumber: user.contactNumber || "",
+        email: user.email || "",
+        profilePicture: user.profilePicture || "",
+        cityState: user.houseAddress || "",
+      });
+    }
+    setIsEditing(false);
   };
 
   return (
     <div className="min-h-screen bg-white text-gray-700 p-8 flex pl-60 justify-center">
       <main className="w-full max-w-4xl">
-        {/* Header and Profile Section */}
+        {/* Profile Header */}
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center space-x-4">
             <img
@@ -77,22 +104,22 @@ const Account: React.FC = () => {
               className="w-16 h-16 rounded-full object-cover"
             />
             <div>
-              <h2 className="text-lg font-semibold">{formData.firstName || "User Name"}</h2>
-              <p className="text-gray-500 text-sm">{formData.email || "user@email.com"}</p>
-              <p className="text-gray-500 text-sm">{formData.cityState || "City"}</p>
+              <h2 className="text-lg font-semibold">
+                {formData.firstName || "User Name"}
+              </h2>
+              <p className="text-gray-500 text-sm">{formData.email}</p>
+              <p className="text-gray-500 text-sm">{formData.cityState}</p>
             </div>
           </div>
           <div className="flex flex-col items-end space-y-2">
             {!isEditing ? (
               <button
-  onClick={toggleEdit}
-  className="flex items-center justify-center gap-2 bg-[#F3A26D] w-20 text-white px-3 py-1 rounded hover:bg-[#E08B52] text-sm"
->
-  <Pencil size={16} />
-  Edit
-</button>
-                  
-
+                onClick={toggleEdit}
+                className="flex items-center justify-center gap-2 bg-[#F3A26D] w-20 text-white px-3 py-1 rounded hover:bg-[#E08B52] text-sm"
+              >
+                <Pencil size={16} />
+                Edit
+              </button>
             ) : (
               <div className="space-x-2">
                 <button
@@ -122,11 +149,9 @@ const Account: React.FC = () => {
           </div>
         </div>
 
-        {/* Personal Information Section */}
+        {/* Personal Info Section */}
         <div className="border p-4 rounded-md mt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Personal Information</h3>
-          </div>
+          <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium mb-1">First Name</label>
@@ -134,9 +159,18 @@ const Account: React.FC = () => {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
-                placeholder="Your First Name"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">Middle Name</label>
+              <input
+                name="middleName"
+                value={formData.middleName}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
             <div>
@@ -145,9 +179,8 @@ const Account: React.FC = () => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
-                placeholder="Your Last Name"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
             <div>
@@ -156,19 +189,16 @@ const Account: React.FC = () => {
                 name="contactNumber"
                 value={formData.contactNumber}
                 onChange={handleInputChange}
-                placeholder="Your Contact Number"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
           </div>
         </div>
 
-        {/* Company Information Section */}
+        {/* Company Info Section */}
         <div className="border p-4 rounded-md mt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Company Information</h3>
-          </div>
+          <h3 className="text-lg font-semibold mb-4">Company Information</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium mb-1">Company Name</label>
@@ -176,9 +206,8 @@ const Account: React.FC = () => {
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleInputChange}
-                placeholder="Your Company Name"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
             <div>
@@ -187,9 +216,8 @@ const Account: React.FC = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="Your Company Email"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
             <div className="col-span-2">
@@ -198,9 +226,8 @@ const Account: React.FC = () => {
                 name="companyAddress"
                 value={formData.companyAddress}
                 onChange={handleInputChange}
-                placeholder="Your Company Address"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
           </div>
@@ -208,9 +235,7 @@ const Account: React.FC = () => {
 
         {/* Address Section */}
         <div className="border p-4 rounded-md mt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Address</h3>
-          </div>
+          <h3 className="text-lg font-semibold mb-4">Address</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium mb-1">City/State</label>
@@ -218,27 +243,24 @@ const Account: React.FC = () => {
                 name="cityState"
                 value={formData.cityState}
                 onChange={handleInputChange}
-                placeholder="Your City / State"
                 disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 ${isEditing ? 'border-[#F3A26D] focus:outline-none focus:ring-[#F3A26D]' : ''}`}
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
             <div>
               <label className="block text-xs font-medium mb-1">Postal Code</label>
               <input
-                name="companyAddress"
                 value="ERT 2354"
-                disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50 $}`}
+                disabled
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
             <div>
               <label className="block text-xs font-medium mb-1">TAX ID</label>
               <input
-                name="companyAddress"
                 value="AS4546756"
-                disabled={!isEditing}
-                className={`w-full border rounded px-3 py-2 text-sm bg-gray-50`}
+                disabled
+                className="w-full border rounded px-3 py-2 text-sm bg-gray-50"
               />
             </div>
           </div>

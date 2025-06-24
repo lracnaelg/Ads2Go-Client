@@ -5,10 +5,18 @@ export const GET_OWN_USER_DETAILS = gql`
     getOwnUserDetails {
       id
       firstName
+      middleName
       lastName
       email
       role
       isEmailVerified
+      contactNumber
+      companyName
+      companyAddress
+      houseAddress
+      profilePicture
+      createdAt
+      updatedAt
     }
   }
 `;

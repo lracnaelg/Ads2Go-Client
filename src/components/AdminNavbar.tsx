@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext'; // Import useAuth to access user data
+import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard,
-  Users, // For View Users
-  Bike, // For View Riders (assuming bicycle is a good representation)
-  Package, // For Materials (representing a package)
-  FileText, // For Reports (representing a document/report)
-  Megaphone, // For AdsPanel
+  Users,
+  Bike,
+  Package,
+  FileText,
+  Megaphone,
   LogOut,
-} from 'lucide-react'; // Import Lucide icons
+} from 'lucide-react';
 
 const AdminSidebar: React.FC = () => {
-  const { logout, user } = useAuth(); // Destructure user from useAuth
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,25 +21,23 @@ const AdminSidebar: React.FC = () => {
     navigate('/login');
   };
 
-  // Helper function to get initials for profile picture fallback
-  const getInitials = (name?: string) => {
-    if (!name) return '?';
-    const names = name.split(' ');
-    return names.map(n => n[0]).join('').toUpperCase();
+  // Generate initials using firstName and lastName
+  const getInitials = (firstName?: string, lastName?: string) => {
+    if (!firstName && !lastName) return '?';
+    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''}`;
+    return initials.toUpperCase();
   };
 
   const menuItems = [
     { label: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
     { label: 'View Users', path: '/admin/users', icon: <Users size={20} /> },
-    { label: 'View Riders', path: '/admin/riders', icon: <Bike size={20} /> }, // Using Bike for riders
-    { label: 'Materials', path: '/admin/materials', icon: <Package size={20} /> }, // Using Package for materials
-    { label: 'Reports', path: '/admin/reports', icon: <FileText size={20} /> }, // Using FileText for reports
+    { label: 'View Riders', path: '/admin/riders', icon: <Bike size={20} /> },
+    { label: 'Materials', path: '/admin/materials', icon: <Package size={20} /> },
+    { label: 'Reports', path: '/admin/reports', icon: <FileText size={20} /> },
     { label: 'AdsPanel', path: '/admin/ads', icon: <Megaphone size={20} /> },
   ];
 
   return (
-    // Adjusting padding for top, left, bottom, and adding rounded corners
-    // The top, left, bottom properties create the offset and define the sidebar's bounds.
     <div className="w-60 bg-[#C9E6F0] fixed top-5 left-3 bottom-5 shadow-lg flex flex-col justify-between rounded-3xl p-6">
       <div>
         <div className="flex items-center space-x-3 mb-10">
@@ -66,7 +64,7 @@ const AdminSidebar: React.FC = () => {
 
       {/* Footer combining Profile and Logout */}
       <div className="pt-4 border-t border-gray-400 text-sm text-gray-500 flex flex-col">
-        {/* Profile Section (moved to bottom) */}
+        {/* Profile Section */}
         <div className="flex items-center gap-3 pb-4 mb-4 cursor-pointer" onClick={() => navigate('/admin/settings')}>
           {user?.profilePicture ? (
             <img
@@ -76,10 +74,12 @@ const AdminSidebar: React.FC = () => {
             />
           ) : (
             <div className="rounded-full w-10 h-10 bg-gray-500 flex items-center justify-center text-white font-semibold">
-              {getInitials(user?.name)}
+              {getInitials(user?.firstName, user?.lastName)}
             </div>
           )}
-          <div className="font-semibold text-gray-800">{user?.name || "Admin User"}</div> {/* Display user's name or a default */}
+          <div className="font-semibold text-gray-800">
+            {user ? `${user.firstName} ${user.lastName}` : 'Admin User'}
+          </div>
         </div>
 
         {/* Logout Button */}
