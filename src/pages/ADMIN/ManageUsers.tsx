@@ -273,12 +273,12 @@ const ManageUsers: React.FC = () => {
   };
 
   return (
-    <div className="pt-2 pb-10 pl-64">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full">
+    <div className="pt-10 pb-10 pl-72 p-8 bg-[#f9f9fc] ">
+      <div className="bg-[#f9f9fc] w-full">
         {/* Header with Dropdown Title and Add New Button */}
         <div className="flex justify-between items-center mb-6">
           <select
-            className="border rounded px-3 py-1 text-2xl font-bold text-gray-800 focus:outline-none"
+            className="px-3 py-1 text-2xl bg-[#f9f9fc] font-bold text-gray-800 focus:outline-none"
             value={activeTab}
             onChange={(e) => setActiveTab(e.target.value)}
           >
@@ -361,12 +361,12 @@ const ManageUsers: React.FC = () => {
           </div>
         )}
 
-        <div className="overflow-auto border rounded-md mb-4">
+        <div className="overflow-auto rounded-md mb-4">
           {activeTab === 'User List' ? (
             <table className="min-w-full text-sm">
-              <thead className="bg-gray-100">
+              <thead className="bg-[#3674B5]">
                 <tr>
-                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700 w-32">
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-white w-32">
                     <div className="flex justify-center">
                       <label className="flex items-center cursor-pointer">
                         <input
@@ -379,19 +379,19 @@ const ManageUsers: React.FC = () => {
                       </label>
                     </div>
                   </th>
-                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700">First Name</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Last Name</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Email</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Last Access</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-white">First Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Last Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Email</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Status</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Last Access</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((user, index) => (
+                {filteredUsers.map((user) => (
                   <React.Fragment key={user.id}>
                     <tr
-                      className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} cursor-pointer hover:bg-gray-100`}
+                      className="bg-white border-t border-gray-300 cursor-pointer hover:bg-gray-100"
                       onClick={() => toggleExpand(user.id)}
                     >
                       <td className="px-2 py-3"> {/* Changed to py-3 for spacing like in the image */}
@@ -455,9 +455,9 @@ const ManageUsers: React.FC = () => {
             </table>
           ) : (
             <table className="min-w-full text-sm">
-              <thead className="bg-gray-100">
+              <thead className="bg-[#3674B5]">
                 <tr>
-                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700 w-32">
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-white w-32">
                     <div className="flex justify-center">
                       <label className="flex items-center cursor-pointer">
                         <input
@@ -470,12 +470,12 @@ const ManageUsers: React.FC = () => {
                       </label>
                     </div>
                   </th>
-                  <th className="px-2 py-2 text-left text-sm font-semibold text-gray-700">Title</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Company Name</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Company Email</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date Started</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Date Ended</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
+                  <th className="px-2 py-2 text-left text-sm font-semibold text-white">Title</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Company Name</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Company Email</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Date Started</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Date Ended</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-white">Action</th>
                 </tr>
               </thead>
               <tbody>

@@ -84,10 +84,10 @@ const Settings: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className={`w-14 h-7 rounded-full flex items-center px-1 ${notificationForm.enableDesktopNotifications ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
+                  className={`w-14 h-7 rounded-full flex items-center px-1 hover:scale-105 transition-transform duration-300 ${notificationForm.enableDesktopNotifications ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
                   onClick={() => handleToggleChange('enableDesktopNotifications')}
                 >
-                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.enableDesktopNotifications ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-200`}></span>
+                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.enableDesktopNotifications ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-300`}></span>
                 </button>
               </div>
             </div>
@@ -100,10 +100,10 @@ const Settings: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className={`w-14 h-7 rounded-full flex items-center px-1 ${notificationForm.enableNotificationBadge ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
+                  className={`w-14 h-7 rounded-full flex items-center px-1 hover:scale-105 transition-transform duration-300 ${notificationForm.enableNotificationBadge ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
                   onClick={() => handleToggleChange('enableNotificationBadge')}
                 >
-                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.enableNotificationBadge ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-200`}></span>
+                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.enableNotificationBadge ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-300`}></span>
                 </button>
               </div>
             </div>
@@ -114,7 +114,7 @@ const Settings: React.FC = () => {
                 name="pushNotificationTimeout"
                 value={notificationForm.pushNotificationTimeout}
                 onChange={handleInputChange}
-                className="mt-2 block w-32 border-gray-300 rounded-md"
+                className="mt-2 block w-32 border-gray-300 rounded-md focus:outline-none"
               >
                 <option value="5">5 Minutes</option>
                 <option value="10">10 Minutes</option>
@@ -133,10 +133,10 @@ const Settings: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className={`w-14 h-7 rounded-full flex items-center px-1 ${notificationForm.communicationEmails ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
+                  className={`w-14 h-7 rounded-full flex items-center px-1 hover:scale-105 transition-transform duration-300 ${notificationForm.communicationEmails ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
                   onClick={() => handleToggleChange('communicationEmails')}
                 >
-                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.communicationEmails ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-200`}></span>
+                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.communicationEmails ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-300`}></span>
                 </button>
               </div>
             </div>
@@ -149,10 +149,10 @@ const Settings: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className={`w-14 h-7 rounded-full flex items-center px-1 ${notificationForm.announcementsEmails ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
+                  className={`w-14 h-7 rounded-full flex items-center px-1 hover:scale-105 transition-transform duration-300 ${notificationForm.announcementsEmails ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
                   onClick={() => handleToggleChange('announcementsEmails')}
                 >
-                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.announcementsEmails ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-200`}></span>
+                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.announcementsEmails ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-300`}></span>
                 </button>
               </div>
             </div>
@@ -167,10 +167,10 @@ const Settings: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className={`w-14 h-7 rounded-full flex items-center px-1 ${notificationForm.disableNotificationSounds ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
+                  className={`w-14 h-7 rounded-full flex items-center px-1 hover:scale-105 transition-transform duration-300 ${notificationForm.disableNotificationSounds ? 'bg-[#F3A26D]' : 'bg-gray-300'}`}
                   onClick={() => handleToggleChange('disableNotificationSounds')}
                 >
-                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.disableNotificationSounds ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-200`}></span>
+                  <span className={`w-5 h-5 bg-white rounded-full transform ${notificationForm.disableNotificationSounds ? 'translate-x-7' : 'translate-x-0'} transition-transform duration-300`}></span>
                 </button>
               </div>
             </div>

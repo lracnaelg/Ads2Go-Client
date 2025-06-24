@@ -47,23 +47,19 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 ml-60">
+    <div className="min-h-screen bg-white p-8 ml-60">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-800">Hello, User!</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">Welcome back, User!</h1>
           <p className="text-gray-500 text-sm">Here's your analytic detail</p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <CircleUser className="text-gray-600" />
-          <span className="text-gray-600">Comapny Name</span>
         </div>
       </div>
 
       {/* Metrics Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {/* Total Advertisements */}
-        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300">
+        <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300">
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-500 text-md">Total Advertisements</span>
           </div>
@@ -76,7 +72,7 @@ const Dashboard = () => {
     <div className="pt-4 border-t border-gray-200 mb-2"></div> {/* Added separate border div */}
     <Link
       to="/advertisements"
-      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA] rounded px-4 py-2 flex items-center w-full justify-between"
+      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA] rounded-lg px-4 py-2 flex items-center w-full justify-between"
     >
       View Report <span>→</span>
     </Link>
@@ -84,7 +80,7 @@ const Dashboard = () => {
         </div>
 
         {/* Total Riders */}
-        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300">
+        <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300">
   <div className="flex justify-between items-center mb-2">
     <span className="text-gray-500 text-md">Total Riders</span>
   </div>
@@ -97,7 +93,7 @@ const Dashboard = () => {
     <div className="pt-4 border-t border-gray-200 mb-2"></div> {/* Added separate border div */}
     <Link
       to="/advertisements"
-      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA]  rounded px-4 py-2 flex items-center w-full justify-between"
+      className="text-white text-sm bg-[#3674B5] hover:text-white hover:bg-[#578FCA] rounded-lg px-4 py-2 flex items-center w-full justify-between"
     >
       View Report <span>→</span>
     </Link>
@@ -105,7 +101,7 @@ const Dashboard = () => {
 </div>
 
         {/* Impressions (Placeholder for Chart) */}
-        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300 col-span-2">
+        <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300 col-span-2">
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-500 text-sm">Impressions</span>
             <select className="text-sm text-[#3674B5] bg-transparent border-none focus:outline-none">
@@ -119,7 +115,7 @@ const Dashboard = () => {
               <XAxis dataKey="day" stroke="#9CA3AF" />
               <YAxis stroke="#9CA3AF" />
               <Tooltip />
-              <Bar dataKey="profit" fill="#F3A26D" name="Profit" />
+              <Bar dataKey="profit" fill="#3674B5" name="Profit" />
               <Bar dataKey="loss" fill="#C9E6F0" name="Loss" />
             </BarChart>
           </ResponsiveContainer>
@@ -129,11 +125,11 @@ const Dashboard = () => {
       {/* Recent Activity and QR Impressions Section */}
       <div className="flex flex-row space-x-6">
         {/* Recent Activity */}
-        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300 w-7/12">
+        <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300 w-7/10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800 pt-3">Recent Activity</h2>
             <select
-              className="text-sm text-[#3674B5] focus:outline-none pr-1 mt-6"
+              className="text-sm text-[#3674B5] font-bold bg-gray-100 focus:outline-none pr-1 mt-6"
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -204,10 +200,10 @@ const Dashboard = () => {
         </div>
 
         {/* QR Impressions */}
-        <div className="bg-white p-4 rounded-lg shadow hover:scale-105 transition-all duration-300 w-1/3">
+        <div className="bg-gray-100 p-4 rounded-xl shadow hover:scale-105 transition-all duration-300 w-1/2">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-lg font-semibold text-gray-800">QR Impressions</h2>
-            <select className="text-sm text-[#3674B5] bg-transparent border-none focus:outline-none">
+            <select className="text-sm font-bold text-[#3674B5] bg-transparent border-none focus:outline-none">
               <option>All time</option>
             </select>
           </div>

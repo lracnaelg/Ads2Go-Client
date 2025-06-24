@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CreditCard, User, Calendar, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom'; 
 
 const Payment: React.FC = () => {
   const [paymentType, setPaymentType] = useState<string>('');
@@ -48,7 +49,7 @@ const Payment: React.FC = () => {
               type="text"
               value={personalInfo[field as keyof typeof personalInfo]}
               onChange={(e) => handleInput(e, field)}
-              className="w-full border border-teal-700 rounded-lg px-3 py-2"
+              className="w-full border border-[#3674B5] rounded-lg px-3 py-2"
             />
           </div>
         ))}
@@ -63,7 +64,7 @@ const Payment: React.FC = () => {
               key={method}
               onClick={() => setPaymentType(method)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition 
-                ${paymentType === method ? 'bg-teal-500 text-white border-teal-500' : 'bg-white border-teal-700 hover:bg-teal-400 hover:text-black'}`}
+                ${paymentType === method ? 'bg-[#3674B5] text-white border-[#3674B5]' : 'bg-white border-[#3674B5] hover:bg-[#3674B5] hover:text-white'}`}
             >
               <img src={`/icons/${method}.png`} alt={method} className="h-6 w-6" />
               <span className="capitalize">{method}</span>
@@ -83,7 +84,7 @@ const Payment: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Cardholder Name"
-                  className="pl-10 w-full border border-teal-700 rounded-lg px-3 py-2"
+                  className="pl-10 w-full border border-[#3674B5] rounded-lg px-3 py-2"
                   value={cardDetails.holder}
                   onChange={(e) => setCardDetails({ ...cardDetails, holder: e.target.value })}
                 />
@@ -93,7 +94,7 @@ const Payment: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Card Number"
-                  className="pl-10 w-full border border-teal-700 rounded-lg px-3 py-2"
+                  className="pl-10 w-full border border-[#3674B5] rounded-lg px-3 py-2"
                   value={cardDetails.number}
                   onChange={handleCardNumberChange}
                 />
@@ -107,7 +108,7 @@ const Payment: React.FC = () => {
                   <input
                     type="text"
                     placeholder="MM/YY"
-                    className="pl-10 w-full border border-teal-700 rounded-lg px-3 py-2"
+                    className="pl-10 w-full border border-[#3674B5] rounded-lg px-3 py-2"
                     value={cardDetails.expiry}
                     onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })}
                   />
@@ -117,7 +118,7 @@ const Payment: React.FC = () => {
                   <input
                     type="text"
                     placeholder="CVC"
-                    className="pl-10 w-full border border-teal-700 rounded-lg px-3 py-2"
+                    className="pl-10 w-full border border-[#3674B5] rounded-lg px-3 py-2"
                     value={cardDetails.cvv}
                     onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
                   />
@@ -130,30 +131,30 @@ const Payment: React.FC = () => {
         {paymentType === 'gcash' && (
           <>
             <h2 className="font-semibold text-gray-700 mb-3">GCash Details</h2>
-            <input type="text" placeholder="GCash Number" className="w-full border border-teal-700 px-3 py-2 mb-3 rounded-lg" />
-            <input type="text" placeholder="Account Holder Name" className="w-full border border-teal-700 px-3 py-2 rounded-lg" />
+            <input type="text" placeholder="GCash Number" className="w-full border border-[#3674B5] px-3 py-2 mb-3 rounded-lg" />
+            <input type="text" placeholder="Account Holder Name" className="w-full border border-[#3674B5] px-3 py-2 rounded-lg" />
           </>
         )}
 
         {paymentType === 'paypal' && (
           <>
             <h2 className="font-semibold text-gray-700 mb-3">PayPal Email</h2>
-            <input type="email" placeholder="example@paypal.com" className="w-full border border-teal-700 px-3 py-2 rounded-lg" />
+            <input type="email" placeholder="example@paypal.com" className="w-full border border-[#3674B5] px-3 py-2 rounded-lg" />
           </>
         )}
 
         {paymentType === 'gpay' && (
           <>
             <h2 className="font-semibold text-gray-700 mb-3">Google Pay</h2>
-            <input type="email" placeholder="GPay Email or Phone" className="w-full border border-teal-700 px-3 py-2 rounded-lg" />
+            <input type="email" placeholder="GPay Email or Phone" className="w-full border border-[#3674B5] px-3 py-2 rounded-lg" />
           </>
         )}
 
         {paymentType === 'maya' && (
           <>
             <h2 className="font-semibold text-gray-700 mb-3">Maya Details</h2>
-            <input type="text" placeholder="Maya Account Number" className="w-full border border-teal-700 px-3 py-2 rounded-lg mb-3" />
-            <input type="text" placeholder="Account Holder Name" className="w-full border border-teal-700 px-3 py-2 rounded-lg" />
+            <input type="text" placeholder="Maya Account Number" className="w-full border border-[#3674B5] px-3 py-2 rounded-lg mb-3" />
+            <input type="text" placeholder="Account Holder Name" className="w-full border border-[#3674B5] px-3 py-2 rounded-lg" />
           </>
         )}
 
@@ -169,8 +170,10 @@ const Payment: React.FC = () => {
 
       {/* Navigation */}
       <div className="flex justify-between pt-4">
+        <Link to="/advertisements">
         <button className="px-5 py-2 rounded-lg hover:bg-gray-100">Back</button>
-        <button className="px-6 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow">
+        </Link>
+        <button className="px-6 py-2 rounded-lg bg-[#3674B5] hover:bg-[#578FCA] text-white font-semibold shadow hover:scale-105 transition-all duration-300">
           Continue
         </button>
       </div>

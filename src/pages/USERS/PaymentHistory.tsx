@@ -170,9 +170,9 @@ const History: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 pl-60 pb-6 bg-gray-50">
+    <div className="flex-1 pl-60 pb-6 bg-white">
       {/* Header with Search and Company Name */}
-      <div className="bg-gray-50 p-6 shadow flex justify-between items-center">
+      <div className="bg-white p-6 shadow flex justify-between items-center">
         <div className="relative w-96">
           <input
             type="text"
@@ -183,25 +183,18 @@ const History: React.FC = () => {
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
         </div>
-        <div className="flex items-center space-x-2">
-          <CircleUser className="text-gray-600" />
-          <span className="text-gray-600">Company Name</span>
-        </div>
       </div>
-      <div className="bg-gray-50 p-1">
-        <hr className="border-t border-gray-400 my-4" />
-      </div>
-      <div className="bg-gray-50 p-6 pt-2 shadow flex justify-between items-center">
+      <div className="bg-white p-6 pt-2 shadow flex justify-between items-center">
         <h1 className="text-3xl font-semibold">Payment</h1>
       </div>
 
       {/* Filters */}
-      <div className="bg-gray-50 p-1 pl-5 flex justify-between items-center">
+      <div className="bg-white p-1 pl-5 flex justify-between items-center">
         <div className="space-x-4">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as Status | "All")}
-            className="bg-gray-50 border border-gray-300 rounded-md p-2"
+            className="bg-white border border-gray-300 rounded-md p-2"
           >
             <option value="All">All Status</option>
             <option value="Paid">Paid</option>
@@ -211,7 +204,7 @@ const History: React.FC = () => {
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
-            className="bg-gray-50 border border-gray-300 rounded-md p-2"
+            className="bg-white border border-gray-300 rounded-md p-2"
           >
             <option value="All Plans">All Plans</option>
             <option value="Monthly">Monthly</option>
@@ -221,19 +214,19 @@ const History: React.FC = () => {
       </div>
 
       {/* Payment Cards */}
-      <div className="bg-gray-50 p-6 grid grid-cols-3 gap-6">
+      <div className="bg-white p-6 grid grid-cols-3 gap-6">
         {currentPayments.length > 0 ? (
           currentPayments.map((item) => (
             <div
               key={item.id}
-              className={`rounded-lg shadow-lg p-3 overflow-hidden cursor-pointer relative border border-gray-200 hover:scale-105 transition-all duration-300 ${expandedCardId === item.id ? 'h-auto' : 'h-32'}`}
+              className={`rounded-lg shadow-lg p-3 bg-gray-100 overflow-hidden cursor-pointer relative hover:scale-105 transition-all duration-300 ${expandedCardId === item.id ? 'h-auto' : 'h-32'}`}
               onClick={() => handleCardClick(item.id)}
             >
               {expandedCardId === item.id ? (
                 <div className="flex flex-col space-y-2">
                   {/* Image and Basic Info */}
                   <div className="flex items-center">
-                    <div className="w-28 bg-gray-300 flex-shrink-0 flex items-center justify-center p-2  rounded-lg">
+                    <div className="w-28 bg-white flex-shrink-0 flex items-center justify-center p-2 rounded-lg">
                       <img
                         src={item.imageUrl}
                         alt={`${item.productName} image`}
@@ -241,13 +234,13 @@ const History: React.FC = () => {
                       />
                     </div>
                     <div className="ml-4 flex-grow">
-                      <h3 className="text-lg font-semibold text-[#3674B5]">{item.productName}</h3>
+                      <h3 className="text-lg font-semibold text-black">{item.productName}</h3>
                       <p className="text-sm text-gray-600">{item.plan} Plan</p>
-                      <p className="text-sm font-bold text-[#DF9755] mt-1">P {parseFloat(item.amount.replace('$', '')).toFixed(0)}.000</p>
+                      <p className="text-sm font-bold text-[#3674B5] mt-1">P {parseFloat(item.amount.replace('$', '')).toFixed(0)}.000</p>
                     </div>
                   </div>
                  {/* Additional Details */}
-                 <div className="text-sm text-gray-700 mt-2 grid grid-cols-2 gap-2">
+                 <div className="text-sm text-gray-700 mt-2 pl-2 grid grid-cols-2 gap-2">
                   <p><strong>Amount:</strong> {parseFloat(item.amount.replace('$', '')).toFixed(0)}</p>
                   <p><strong>Mode of Payment:</strong> Gcash</p>
                   <p><strong>Bank Number:</strong> {item.bankNumber}</p>
@@ -263,7 +256,7 @@ const History: React.FC = () => {
               ) : (
                 <div className="flex items-center h-full">
                   {/* Image */}
-                  <div className="rounded-lg w-28 bg-gray-300 flex-shrink-0 flex items-center justify-center p-2">
+                  <div className="rounded-lg w-28 bg-white flex-shrink-0 flex items-center justify-center p-2">
                     <img
                       src={item.imageUrl}
                       alt={`${item.productName} image`}
@@ -273,11 +266,11 @@ const History: React.FC = () => {
                   {/* Basic Info */}
                   <div className="ml-4 flex-grow flex flex-col justify-between h-full">
                     <div>
-                      <h3 className="text-lg font-semibold text-[#3674B5]">{item.productName}</h3>
+                      <h3 className="text-lg font-semibold text-black">{item.productName}</h3>
                       <p className="text-sm text-gray-600">{item.plan} Plan</p>
                     </div>
                     <div className="flex justify-between items-end">
-                      <p className="text-sm font-bold text-[#DF9755] mt-4">P {parseFloat(item.amount.replace('$', '')).toFixed(0)}.000</p>
+                      <p className="text-sm font-bold text-[#3674B5] mt-4">P {parseFloat(item.amount.replace('$', '')).toFixed(0)}.000</p>
                       <span className={`w-16 text-center mt-4 inline-block px-2 py-1 text-xs font-semibold rounded ${getStatusStyle(item.status)}`}>
                         {item.status}
                       </span>

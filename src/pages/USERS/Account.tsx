@@ -1,5 +1,8 @@
 import React, { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Pencil
+} from 'lucide-react';
 
 interface FormData {
   firstName: string;
@@ -82,11 +85,14 @@ const Account: React.FC = () => {
           <div className="flex flex-col items-end space-y-2">
             {!isEditing ? (
               <button
-                onClick={toggleEdit}
-                className="bg-[#F3A26D] text-white px-3 py-1 rounded hover:bg-[#E08B52] text-sm"
-              >
-                Edit
-              </button>
+  onClick={toggleEdit}
+  className="flex items-center justify-center gap-2 bg-[#F3A26D] w-20 text-white px-3 py-1 rounded hover:bg-[#E08B52] text-sm"
+>
+  <Pencil size={16} />
+  Edit
+</button>
+                  
+
             ) : (
               <div className="space-x-2">
                 <button

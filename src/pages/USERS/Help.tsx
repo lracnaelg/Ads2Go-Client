@@ -82,8 +82,8 @@ const Help: React.FC = () => {
       className={`flex items-center px-4 py-2 rounded-lg cursor-pointer hover:scale-105 transition-all duration-300 select-none
         ${
           activeSection === section
-            ? 'bg-[#F3A26D] text-black font-semibold shadow-md'
-            : 'text-[#0A192F] hover:bg-[#F3A26D] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2EC4B6]'
+            ? 'bg-[#3674B5] text-white font-semibold shadow-md'
+            : 'text-[#0A192F] hover:bg-[#3674B5] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2EC4B6]'
         }`}
       onClick={() => setActiveSection(section)}
       tabIndex={0}
@@ -99,7 +99,7 @@ const Help: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen pl-60 pt-5 bg-[#FAFAFA] font-sans flex">
+    <div className="min-h-screen pl-60 pt-5 bg-white font-sans flex">
       {/* Main content area with left margin for sidebar width (w-64 = 256px) */}
       <div className="flex-1 flex flex-col">
         <main
@@ -118,7 +118,7 @@ const Help: React.FC = () => {
                   placeholder="Ask a question..."
                   className="border border-gray-300 rounded-lg p-2 w-64 focus:outline-none"
                 />
-                <button className="bg-[#3674B5] text-white rounded-lg px-4 py-2 hover:bg-[#578FCA] hover:scale-105 transition-all duration-300">
+                <button className="bg-[#F3A26D] text-black rounded-lg px-4 py-2 hover:bg-[#578FCA] hover:scale-105 transition-all duration-300">
                   Search
                 </button>
               </div>
@@ -177,7 +177,7 @@ const Help: React.FC = () => {
           <div className="flex justify-end">
   <button
     type="submit"
-    className="w-44 bg-[#3674B5] text-white p-2 rounded-lg hover:bg-[#578FCA] hover:scale-105 transition-all duration-300"
+    className="w-44 bg-[#F3A26D] text-black p-2 rounded-lg hover:bg-[#578FCA] hover:scale-105 transition-all duration-300"
   >
     Send your request
   </button>

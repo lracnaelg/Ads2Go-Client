@@ -79,11 +79,11 @@ const Advertisements: React.FC = () => {
   // Sample ad data
   const [ads, setAds] = useState<Ad[]>([
     { id: 2632, title: 'Drive Clean Promo', riders: 5, desc: 'Promoting a sleek car wash service in Manila', date: '31 Jul 2020', price: 64.00, status: 'Pending', vehicleType: 'Car', material: 'LCD Screen', plan: 'Monthly', format: 'Image', imagePath: '/image/blue-logo.png' },
-    { id: 2633, title: 'Urban Threads Campaign', riders: 67, desc: 'Launching a streetwear campaign across Cebu', date: '01 Aug 2020', price: 35.00, status: 'Dispatch', vehicleType: 'Motor', material: 'Posters', plan: 'Weekly', format: 'Video', imagePath: '/image/first.mp4' },
+    { id: 2633, title: 'Urban Threads Campaign', riders: 67, desc: 'Launching a streetwear campaign across Cebu', date: '01 Aug 2020', price: 35.00, status: 'Dispatch', vehicleType: 'Motor', material: 'Posters', plan: 'Weekly', format: 'Video', imagePath: '/image/duck.gif' },
     { id: 2634, title: 'Fresh Harvest Tour', riders: 10, desc: 'Highlighting local farm produce in Quezon City', date: '02 Aug 2020', price: 74.00, status: 'Completed', vehicleType: 'Jeep', material: 'Vinyl Sticker', plan: 'Monthly', format: 'Image', imagePath: '/image/black-logo.png' },
-    { id: 2635, title: 'Beach Bliss Offers', riders: 3, desc: 'Summer promo for beachfront resort in Batangas', date: '02 Aug 2020', price: 82.00, status: 'Pending', vehicleType: 'Bus', material: 'LCD Screen', plan: 'Weekly', format: 'Video' },
+    { id: 2635, title: 'Beach Bliss Offers', riders: 3, desc: 'Summer promo for beachfront resort in Batangas', date: '02 Aug 2020', price: 82.00, status: 'Pending', vehicleType: 'Bus', material: 'LCD Screen', plan: 'Weekly', format: 'Video', imagePath: '/image/cat.avif' },
     { id: 2636, title: 'eRide Makati Launch', riders: 8, desc: 'Promoting electric vehicle rentals in Makati', date: '03 Aug 2020', price: 38.00, status: 'Dispatch', vehicleType: 'Car', material: 'Posters', plan: 'Monthly', format: 'Image', imagePath: '/image/large.jpg' },
-    { id: 2637, title: 'GlowUp Skincare Push', riders: 15, desc: 'Introducing a new skincare brand to college students', date: '03 Aug 2020', price: 67.00, status: 'Completed', vehicleType: 'Motor', material: 'Vinyl Sticker', plan: 'Weekly', format: 'Video' },
+    { id: 2637, title: 'GlowUp Skincare Push', riders: 15, desc: 'Introducing a new skincare brand to college students', date: '03 Aug 2020', price: 67.00, status: 'Completed', vehicleType: 'Motor', material: 'Vinyl Sticker', plan: 'Weekly', format: 'Video',  imagePath: '/image/neko.webp'},
     { id: 2638, title: 'TechArmor Mobile Blast', riders: 15, desc: 'Promoting mobile accessories in high-traffic areas', date: '03 Aug 2020', price: 67.00, status: 'Pending', vehicleType: 'Motor', material: 'Vinyl Sticker', plan: 'Weekly', format: 'Video' },
     { id: 2639, title: 'Campus Reads Promo', riders: 15, desc: 'Back-to-school campaign for local bookstore chain', date: '03 Aug 2020', price: 67.00, status: 'Completed', vehicleType: 'Motor', material: 'Vinyl Sticker', plan: 'Weekly', format: 'Video' },
     { id: 2640, title: 'StartUp Spark PH', riders: 15, desc: 'Advert for tech startup launching in Metro Manila', date: '03 Aug 2020', price: 67.00, status: 'Dispatch', vehicleType: 'Motor', material: 'Vinyl Sticker', plan: 'Weekly', format: 'Video' },
@@ -226,9 +226,9 @@ const Advertisements: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 pl-60 pb-6 bg-gray-50">
+    <div className="flex-1 pl-60 pb-6 bg-white">
       {/* Header with Search and Company Name */}
-      <div className="bg-gray-50 p-6 shadow flex justify-between items-center">
+      <div className="bg-white p-6 shadow flex justify-between items-center">
         <div className="relative w-96">
           <input
             type="text"
@@ -239,22 +239,17 @@ const Advertisements: React.FC = () => {
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
         </div>
-        <div className="flex items-center space-x-2">
-          <CircleUser className="text-gray-600" />
-          <span className="text-gray-600">Company Name</span>
-        </div>
       </div>
-      <div className="bg-gray-50 p-1">
-        <hr className="border-t border-gray-400 my-4" />
+      <div className="bg-gray-50">
       </div>
       {/* Advertisements, Ads Found, and Add New Ads */}
-      <div className="bg-gray-50 p-6 pt-2 shadow flex justify-between items-center">
+      <div className="bg-white p-6 flex justify-between items-center">
         <h1 className="text-3xl font-semibold">Advertisements</h1>
         <div className="flex space-x-3">
-          <span className="pt-2 text-gray-500">{filteredAds.length} Ads found</span>
+          <span className="pt-1 text-gray-500">{filteredAds.length} Ads found</span>
           <button 
             onClick={() => setShowCreateAdPopup(true)}
-            className="px-4 py-2 bg-[#3674B5] text-white rounded-md hover:bg-[#578FCA] hover:scale-105 transition-all duration-300"
+            className="px-4 py-2 bg-[#FADA7A] text-black text-sm font-semibold w-32 rounded-md hover:bg-[#F5F0CD] hover:scale-105 transition-all duration-300"
           >
             Add New Ads
           </button>
@@ -262,12 +257,12 @@ const Advertisements: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-gray-50 p-1 pl-5 flex justify-between items-center">
+      <div className="bg-white p-1 pl-5 flex justify-between items-center">
         <div className="space-x-4">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-gray-50 border border-gray-300 rounded-md p-2"
+            className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none"
           >
             <option value="All Status">All Status</option>
             <option value="Pending">Pending</option>
@@ -277,7 +272,7 @@ const Advertisements: React.FC = () => {
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
-            className="bg-gray-50 border border-gray-300 rounded-md p-2"
+            className="bg-white border border-gray-300 rounded-md p-2 focus:outline-none"
           >
             <option value="All Plans">All Plans</option>
             <option value="Monthly">Monthly</option>
@@ -287,46 +282,59 @@ const Advertisements: React.FC = () => {
       </div>
 
       {/* Ad Cards */}
-      <div className="bg-gray-50 p-6 grid grid-cols-4 gap-6">
+      <div className="bg-white p-6 grid grid-cols-4 gap-6">
         {currentAds.length > 0 ? (
           currentAds.map((ad) => (
             <div
               key={ad.id}
-              className="rounded-lg shadow-lg overflow-hidden cursor-pointer relative flex flex-col h-full hover:scale-105 transition-all duration-300"
+              className="rounded-xl shadow-lg overflow-hidden cursor-pointer relative flex flex-col h-full hover:scale-105 transition-all duration-300"
             >
-              <div className="w-full h-48 flex-shrink-0">
-                {ad.format === 'Video' && ad.imagePath ? (
-                  <video
-                    src={ad.imagePath}
-                    className="w-full h-full object-cover"
-                    controls
-                    onClick={() => handleAdClick(ad)}
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                ) : ad.imagePath ? (
-                  <img 
-                    src={ad.imagePath} 
-                    alt={`${ad.title} image`} 
-                    className="w-full h-full object-cover"
-                    onClick={() => handleAdClick(ad)}
-                  />
-                ) : (
-                  <div 
-                    className="w-full h-full bg-gray-500 flex items-center justify-center text-white"
-                    onClick={() => handleAdClick(ad)}
-                  >
-                    No Image
-                  </div>
-                )}
-              </div>
+              <div className="w-full h-48 flex-shrink-0 relative">
+  {ad.format === 'Video' && ad.imagePath ? (
+    <>
+      <video
+        src={ad.imagePath}
+        className="w-full h-full object-cover"
+        controls
+        onClick={(e) => {
+          e.stopPropagation();
+          if (ad.imagePath) setFullscreenMedia(ad.imagePath);
+        }}
+      >
+        Your browser does not support the video tag.
+      </video>
+      <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+        Click to view fullscreen
+      </div>
+    </>
+  ) : ad.imagePath ? (
+    <>
+      <img 
+        src={ad.imagePath} 
+        alt={`${ad.title} image`} 
+        className="w-full h-full object-cover"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (ad.imagePath) setFullscreenMedia(ad.imagePath);
+        }}
+      />
+      <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+        Click to view fullscreen
+      </div>
+    </>
+  ) : (
+    <div className="w-full h-full bg-gray-500 flex items-center justify-center text-white">
+      No Image
+    </div>
+  )}
+</div>
               
-              <div className="p-4 bg-white flex-grow flex flex-col">
+              <div className="p-4 bg-gray-100 flex-grow flex flex-col">
                 <div 
                   className="flex-grow cursor-pointer"
                   onClick={() => handleAdClick(ad)}
                 >
-                  <h3 className="text-2xl font-semibold text-[#3674B5]">{ad.title}</h3>
+                  <h3 className="text-2xl font-semibold text-black">{ad.title}</h3>
                   <p className="text-md text-gray-600">{ad.plan} Plan</p>
                   <p className="text-sm text-gray-500 mt-2">{ad.date}</p>
                 </div>
@@ -337,7 +345,7 @@ const Advertisements: React.FC = () => {
                       e.stopPropagation();
                       handleAdClick(ad);
                     }}
-                    className="text-black text-sm bg-[#F3A26D] font-semibold rounded px-4 py-2 flex items-center justify-between w-full hover:bg-[#DF9755] hover:text-white transition-colors"
+                    className="text-white text-sm bg-[#3674B5] font-semibold rounded-lg px-4 py-2 flex items-center justify-between w-full hover:bg-[#578FCA] hover:text-white transition-colors"
                   >
                     View Details <span>→</span>
                   </button>
@@ -411,13 +419,13 @@ const Advertisements: React.FC = () => {
       {/* Fullscreen Media Viewer */}
       {fullscreenMedia && (
         <div 
-          className="fixed inset-0 bg-white h-full bg-opacity-50 z-[60] pr-80 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-white h-full bg-opacity-50 z-[60] pr-1 flex items-center justify-center p-4"
           onClick={() => setFullscreenMedia(null)}
         >
           {selectedAd?.format === 'Video' ? (
             <video 
               src={fullscreenMedia}
-              className="max-w-80 max-h-full object-contain"
+              className="max-w-full max-h-full object-contain"
               controls
               autoPlay
               onClick={(e) => e.stopPropagation()}
@@ -425,7 +433,7 @@ const Advertisements: React.FC = () => {
           ) : (
             <img 
               src={fullscreenMedia} 
-              className="max-w-80 max-h-full mb-10 object-contain"
+              className="max-w-80 max-h-full  object-contain"
               onClick={(e) => e.stopPropagation()}
             />
           )}
@@ -435,55 +443,33 @@ const Advertisements: React.FC = () => {
       {/* Ad Details Popup */}
       {selectedAd && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
-            <div className="flex p-4">
+          <div className="bg-white rounded-lg shadow-xl w-auto max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="flex p-2">
               {/* Media Section */}
               <div className="w-1/2 pr-4">
-                {selectedAd.format === 'Video' && selectedAd.imagePath ? (
-                  <div className="relative">
-                    <video
-                      src={selectedAd.imagePath}
-                      className="w-full h-64 object-cover rounded-lg cursor-pointer"
-                      controls
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (selectedAd.imagePath) {
-                          setFullscreenMedia(selectedAd.imagePath);
-                        }
-                      }}
-                    >
-                      Your browser does not support the video tag.
-                    </video>
-                    <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      Click to view fullscreen
-                    </div>
-                  </div>
-                ) : selectedAd.format === 'Image' && selectedAd.imagePath ? (
-                  <div className="relative">
-                    <img 
-                      src={selectedAd.imagePath} 
-                      alt={`${selectedAd.title} image`} 
-                      className="w-full h-64 object-cover rounded-lg cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (selectedAd.imagePath) {
-                          setFullscreenMedia(selectedAd.imagePath);
-                        }
-                      }}
-                    />
-                    <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      Click to view fullscreen
-                    </div>
-                  </div>
-                ) : (
-                  <div className="w-full h-64 bg-gray-300 flex items-center justify-center text-gray-500 rounded-lg">
-                    No Media
-                  </div>
-                )}
-              </div>
+  {selectedAd.format === 'Video' && selectedAd.imagePath ? (
+    <video
+      src={selectedAd.imagePath}
+      className="w-auto h-40 ml-2 mt-6 object-cover rounded-lg"
+      controls
+    >
+      Your browser does not support the video tag.
+    </video>
+  ) : selectedAd.format === 'Image' && selectedAd.imagePath ? (
+    <img 
+      src={selectedAd.imagePath} 
+      alt={`${selectedAd.title} image`} 
+      className="w-auto pl-5 h-52 mt-6 object-cover rounded-lg"
+    />
+  ) : (
+    <div className="w-full h-64 bg-gray-300 flex items-center justify-center text-gray-500 rounded-lg">
+      No Media
+    </div>
+  )}
+</div>
               
               {/* Info Section */}
-              <div className="w-1/2 p-4 flex flex-col justify-between">
+              <div className="w-1/2 p-2 flex flex-col justify-between">
                 <div>
                   <h2 className="text-3xl font-semibold mb-2">{selectedAd.title}</h2>
                   <p className="text-md text-gray-600 mb-1">{selectedAd.plan} Plan</p>
@@ -495,7 +481,7 @@ const Advertisements: React.FC = () => {
             
             {/* Details Section */}
             <div className="p-4 bg-white">
-              <div className="text-sm text-gray-700 pl-8 grid grid-cols-2 gap-2">
+              <div className="text-sm text-gray-700 pl-3 grid grid-cols-2 gap-2">
                 {/* Left Column: Materials and Date Ended */}
                     <p className="text-sm text-black"><strong>Materials:</strong> {selectedAd.material}</p>
                     <p className="text-sm text-black"><strong>Date Ended:</strong> {selectedAd.date}</p>
@@ -522,7 +508,7 @@ const Advertisements: React.FC = () => {
 
       {/* Create Ad Popup - Right Side Version */}
       {showCreateAdPopup && (
-        <div className="fixed inset-0 z-50 flex justify-end">
+        <div className="fixed inset-0 z-50 flex justify-end pr-2">
           {/* Overlay with click-to-close functionality */}
           <div 
             className="fixed inset-0 bg-black bg-opacity-30"
@@ -530,19 +516,19 @@ const Advertisements: React.FC = () => {
           ></div>
           
           {/* Form container sliding in from right */}
-          <div className="relative w-full max-w-xl h-[650px] mt-28 rounded-lg bg-white shadow-lg transform transition-transform duration-300 ease-in-out">
+          <div className="relative w-full max-w-xl h-[730px] pb-6 rounded-lg bg-white mt-2 shadow-lg transform transition-transform duration-300 ease-in-out">
             <div className="p-6 h-full overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">Create New Advertisement</h2>
               </div>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 mt-9">
                 <input
                   type="text"
                   name="title"
                   placeholder="Title"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full border border-[#C9E6F0] rounded-lg p-2 focus outline-none"
+                  className="w-full border border-[#3674B5] rounded-lg p-2 focus outline-none"
                   required
                 />
 
@@ -551,7 +537,7 @@ const Advertisements: React.FC = () => {
                   placeholder="Description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="w-full border border-[#C9E6F0] rounded-lg p-2 focus outline-none"
+                  className="w-full border border-[#3674B5] rounded-lg p-2 focus outline-none"
                   required
                   rows={3}
                 />
@@ -560,7 +546,7 @@ const Advertisements: React.FC = () => {
                   name="vehicleType"
                   value={formData.vehicleType}
                   onChange={handleChange}
-                  className="w-full border border-[#C9E6F0] rounded-lg p-2 focus outline-none"
+                  className="w-full border border-[#3674B5] rounded-lg p-2 focus outline-none"
                   required
                 >
                   <option value="">Select Vehicle Type</option>
@@ -574,7 +560,7 @@ const Advertisements: React.FC = () => {
                   name="materialsUsed"
                   value={formData.materialsUsed}
                   onChange={handleChange}
-                  className="w-full border border-[#C9E6F0] rounded-lg p-2 focus outline-none"
+                  className="w-full border border-[#3674B5] rounded-lg p-2 focus outline-none"
                   required
                   disabled={!formData.vehicleType}
                 >
@@ -588,7 +574,7 @@ const Advertisements: React.FC = () => {
                   name="plan"
                   value={formData.plan}
                   onChange={handleChange}
-                  className="w-full border border-[#C9E6F0] rounded-lg p-2 focus outline-none"
+                  className="w-full border border-[#3674B5] rounded-lg p-2 focus outline-none"
                   required
                 >
                   <option value="">Select Plan</option>
@@ -608,7 +594,7 @@ const Advertisements: React.FC = () => {
                   name="adFormat"
                   value={formData.adFormat}
                   onChange={handleChange}
-                  className="w-full border border-[#C9E6F0] rounded-lg p-2 focus outline-none"
+                  className="w-full border border-[#3674B5] rounded-lg p-2 focus outline-none"
                   required
                 >
                   <option value="">Select Format</option>
@@ -616,7 +602,7 @@ const Advertisements: React.FC = () => {
                   <option value="Video">Video</option>
                 </select>
 
-                <div className="border border-[#C9E6F0] rounded-lg p-2">
+                <div className="border border-[#3674B5] rounded-lg p-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Media Upload</label>
                   <input
                     type="file"
@@ -628,7 +614,7 @@ const Advertisements: React.FC = () => {
                   />
                 </div>
 
-                <div className="flex justify-end space-x-4 pt-4">
+                <div className="flex justify-end space-x-4 pt-16">
                   <button
                     type="button"
                     onClick={() => setShowCreateAdPopup(false)}
