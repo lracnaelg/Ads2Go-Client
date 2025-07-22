@@ -36,12 +36,13 @@ const SideNavbar: React.FC = () => {
   ];
 
   return (
-    <div className="h-screen w-60 bg-white text-black flex flex-col justify-between fixed">
-      <div className="p-6">
+    <div className="w-60 bg-[#1b5087] fixed top-5 left-3 bottom-5 shadow-2xl text-white flex flex-col justify-between rounded-3xl p-6"> {/* Changed shadow-lg to shadow-2xl */}
+
+      <div>
         {/* Logo */}
         <div className="flex items-center space-x-3 mb-10">
           <img src="/image/blue-logo.png" alt="Logo" className="w-8 h-8" />
-          <span className="text-2xl text-black font-bold">Ads2Go</span>
+          <span className="text-2xl text-white font-bold">Ads2Go</span>
         </div>
 
         {/* Navigation */}
@@ -50,8 +51,8 @@ const SideNavbar: React.FC = () => {
             <li key={link.label}>
               <Link
                 to={link.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-3xl hover:bg-[#3674B5] hover:text-white transition ${
-                  location.pathname === link.path ? 'text-white bg-[#3674B5]' : ''
+                className={`flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-[#0E2A47] font-bold hover:text-white transition hover:scale-105 transition-all duration-300 ${
+                  location.pathname === link.path ? 'text-white bg-[#0E2A47]' : ''
                 }`}
               >
                 {link.icon}
@@ -63,20 +64,18 @@ const SideNavbar: React.FC = () => {
       </div>
 
       {/* User Profile & Logout */}
-      <div className="p-6">
+      <div>
         <div
           className="flex items-center space-x-3 mb-4 cursor-pointer"
           onClick={() => navigate('/account')}
         >
           <div className="w-10 h-10 rounded-full bg-[#FF9D3D] flex items-center justify-center relative">
             <span className="text-white font-semibold">{getInitials(user?.name)}</span>
-            {/* Green online dot, similar to image_76f8a9.png */}
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
           </div>
           <div>
-            <p className="font-semibold text-gray-800">{user?.name || "Guest User"}</p>
+            <p className="font-semibold text-gray-100">{user?.name || "Guest User"}</p>
             {/* Changed from user?.location to user?.address */}
-            <p className="text-sm text-gray-500">{user?.address || "Unknown Address"}</p>
+            <p className="text-sm text-gray-300">{user?.address || "Unknown Address"}</p>
           </div>
         </div>
 
